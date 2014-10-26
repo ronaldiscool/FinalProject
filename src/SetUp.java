@@ -38,6 +38,7 @@ public class SetUp extends JFrame {
 		String s="";
 		for(Player p :GameServer.players)
 		{
+			System.out.println(p.getName());
 			s+=p.getName()+"\n";
 		}
 		JLabel jl = new JLabel(s);

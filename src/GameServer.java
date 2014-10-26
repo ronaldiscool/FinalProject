@@ -31,7 +31,7 @@ public class GameServer {
 		for(int i = 0; i < setup.numMaf; i++)
 		{
 			//Socket s = ss.accept();
-			TheMafia p = new Stripper("ronaldismaf");
+			TheMafia p = new GodFather("ronaldismaf");
 			players.add(p);
 			setup.relist();
 

@@ -2,7 +2,6 @@
 class Villager extends Player {
 	
 	public boolean 	alive;
-	public String 	name;
 	
 	
 	public Villager(String name) {
