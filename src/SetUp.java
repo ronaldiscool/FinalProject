@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class SetUp extends JFrame {
+public class SetUp extends JPanel {
 	static final long serialVersionUID = 1;
 	private JComboBox<String> citizenBox;
 	private JComboBox<String> doctorBox;
@@ -35,10 +36,11 @@ public class SetUp extends JFrame {
 	
 	void relist()
 	{
+		System.out.println("LLLLLLLLL");
 		String s="";
 		for(Player p :GameServer.players)
 		{
-			System.out.println(p.getName());
+			System.out.println(p.getName()+"AAAKKKKK");
 			s+=p.getName()+"\n";
 		}
 		JLabel jl = new JLabel(s);
@@ -48,11 +50,6 @@ public class SetUp extends JFrame {
 	}
 	
 	public SetUp() {
-		super("Mafia");
-		setSize(500, 500);
-		setLocation(50, 50);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		JLabel citizenLabel = new JLabel("How many citizens?");
 		JLabel doctorLabel = new JLabel("How many doctors?");
 		JLabel mafiaLabel = new JLabel("How many mafias?");

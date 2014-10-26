@@ -13,7 +13,7 @@ class Cop extends Villager{
 		p.alive = false;
 	}
 	
-	public String getType() {
+	public String getRole() {
 		return "Detective";
 	}
 	

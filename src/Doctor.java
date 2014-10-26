@@ -13,7 +13,7 @@ public class Doctor extends Villager {
 		p.alive = true;
 	}
 	
-	public String getType() {
+	public String getRole() {
 		return "Doctor";
 	}
 }

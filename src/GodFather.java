@@ -17,7 +17,7 @@ class GodFather extends TheMafia {
 		return name;
 	}
 	
-	public String getType() {
+	public String getRole() {
 		return "GodFather";
 	}
 	

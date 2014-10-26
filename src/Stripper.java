@@ -17,7 +17,7 @@ class Stripper extends TheMafia {
 		return name;
 	}
 	
-	public String getType() {
+	public String getRole() {
 		return "Stripper";
 	}
 	

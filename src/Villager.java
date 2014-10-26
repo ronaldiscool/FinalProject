@@ -16,7 +16,7 @@ class Villager extends Player {
 		return name;
 	}
 	
-	public String getType() {
+	public String getRole() {
 		return "Villager";
 	}
 	
