@@ -22,6 +22,29 @@ public class SetUp extends JFrame {
 	private JComboBox<String> copBox;
 	private JComboBox<String> hookerBox;
 	private JLabel messageLabel; // message that signals whether the options are valid
+	public int numPlayers;
+	public int numCop;
+	public int numVil;
+	public int numDoc;
+	public int numMaf;
+	public int numHook;
+	public int goodNum;
+	public int badNum;
+	JPanel playerPanel = new JPanel();
+	public boolean start = false;
+	
+	void relist()
+	{
+		String s="";
+		for(Player p :GameServer.players)
+		{
+			s+=p.getName()+"\n";
+		}
+		JLabel jl = new JLabel(s);
+		playerPanel.add(jl);
+		revalidate();
+		repaint();
+	}
 	
 	public SetUp() {
 		super("Mafia");
@@ -41,31 +64,41 @@ public class SetUp extends JFrame {
 		copBox = new JComboBox<String>();
 		hookerBox = new JComboBox<String>();
 
-		for(int i=0; i<5; ++i) { // Adds the numbers for the boxes
+		for(int i=0; i<11; ++i) { // Adds the numbers for the boxes
 			copBox.addItem("" + i);
 			doctorBox.addItem("" + i);
 			hookerBox.addItem("" + i);
 		}
 
-		for(int i=1; i<5; ++i) { // Adds the numbers for the boxes
+		for(int i=1; i<15; ++i) { // Adds the numbers for the box
 			mafiaBox.addItem("" + i);
 		}
 		
-		for(int i=2; i<10; ++i) { // Adds the numbers for the boxes
+		for(int i=2; i<15; ++i) { // Adds the numbers for the boxes
 			citizenBox.addItem("" + i);
 		}
 		
 		JButton okButton = new JButton("Okay"); // Confirmation button
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				int goodNum = citizenBox.getSelectedIndex();
-				goodNum += copBox.getSelectedIndex();
-				goodNum += doctorBox.getSelectedIndex();
-				int badNum = mafiaBox.getSelectedIndex();
-				badNum += hookerBox.getSelectedIndex();
-				if(goodNum < badNum) // checks ratio NOTE: modify accordingly
+				numVil= citizenBox.getSelectedIndex()+2;
+				goodNum=numVil;
+				numCop = copBox.getSelectedIndex();
+				goodNum+=numCop;
+				numDoc = doctorBox.getSelectedIndex();
+				goodNum+=numDoc;
+				numMaf = mafiaBox.getSelectedIndex()+1;
+				badNum = numMaf;
+				numHook = hookerBox.getSelectedIndex();
+				badNum+=numHook;
+				if(goodNum+1 < badNum) // checks ratio NOTE: modify accordingly
 					messageLabel.setText("Error. You need to more citizens/cop/doctors.");
-				messageLabel.setText("Total number of roles: " + (goodNum + badNum));
+				else
+				{
+					numPlayers = goodNum+badNum;
+					messageLabel.setText("Total number of roles: " + numPlayers);
+					GameServer.startup();
+				}
 			}
 		}
 		);
@@ -109,7 +142,6 @@ public class SetUp extends JFrame {
 		messagePanel.add(messageLabel);
 		messagePanel.setBackground(Color.white);
 
-		JPanel playerPanel = new JPanel();
 		playerPanel.setBackground(Color.gray);
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(1, 2));
@@ -124,8 +156,6 @@ public class SetUp extends JFrame {
 
 		add(hostPanel);
 		setVisible(true);
-		//a
-		//test
 	}
 	
 }
