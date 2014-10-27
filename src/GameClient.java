@@ -28,7 +28,7 @@ public class GameClient extends JFrame implements Runnable{
 	private PrintWriter pw;
 	JPanel jp = new JPanel();
 	JPanel su = new JPanel();
-	SetUp waitRoom = new SetUp();
+	PlayerPanel waitRoom = new PlayerPanel();
 	public Thread t = new Thread(this);
 	JTextField nameField = new JTextField(45);
 
@@ -49,12 +49,30 @@ public class GameClient extends JFrame implements Runnable{
 				pw.flush();
 				CardLayout CL1 = (CardLayout) jp.getLayout();
 				CL1.show(jp,"Wait Room");
+
+				try {
+					String line = br.readLine();
+					System.out.println(line+"B");
+
+					if(line.equals("DONE"))
+					{
+						System.out.println(line+"A");
+						System.out.println(GameServer.players.size());
+						waitRoom.relist();
+						revalidate();
+						repaint();
+					}
+					System.out.println("W");
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		su.add(nameField);
 		su.add(ok);
 		jp.add(su,"login");
-		waitRoom.relist();
 		jp.add(waitRoom, "Wait Room");
 		add(jp);
 		setVisible(true);
@@ -64,7 +82,6 @@ public class GameClient extends JFrame implements Runnable{
 	public GameClient()
 	{
 		super("Mafia");
-		GUIInit();
 		try {
 			Socket s  = new Socket("localhost",6789);
 			this.pw = new PrintWriter(s.getOutputStream());
@@ -73,7 +90,10 @@ public class GameClient extends JFrame implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		GUIInit();
+
 	}
+
 
 	public void run()
 	{

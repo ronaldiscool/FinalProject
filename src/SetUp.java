@@ -31,20 +31,12 @@ public class SetUp extends JPanel {
 	public int numHook;
 	public int goodNum;
 	public int badNum;
-	JPanel playerPanel = new JPanel();
+	PlayerPanel playerPanel = new PlayerPanel();
 	public boolean start = false;
 	
 	void relist()
 	{
-		System.out.println("LLLLLLLLL");
-		String s="";
-		for(Player p :GameServer.players)
-		{
-			System.out.println(p.getName()+"AAAKKKKK");
-			s+=p.getName()+"\n";
-		}
-		JLabel jl = new JLabel(s);
-		playerPanel.add(jl);
+		playerPanel.relist();
 		revalidate();
 		repaint();
 	}
@@ -140,7 +132,6 @@ public class SetUp extends JPanel {
 		messagePanel.add(messageLabel);
 		messagePanel.setBackground(Color.white);
 
-		playerPanel.setBackground(Color.gray);
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(1, 2));
 		mainPanel.add(selectPanel);

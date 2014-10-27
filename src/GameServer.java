@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 public class GameServer extends JFrame{
 	public static Vector<Player> players= new Vector<Player>();
 	public static Vector<GameClient> clients= new Vector<GameClient>();
-	//	public static Vector<ServerThread> st = new Vector<ServerThread>();
+	public static Vector<ServerThread> st = new Vector<ServerThread>();
 	private static SetUp setup = new SetUp();
 	public static ServerSocket ss;
 	
@@ -30,13 +30,16 @@ public class GameServer extends JFrame{
 		}
 	}
 	
-	/*public void sendMessage(String line,ServerThread ct)
+	public static void sendMessage(String line,ServerThread ct)
 	{
 		for(ServerThread ct1 : st)
 		{
-			ct1.send(line);
+			System.out.println("SENT");
+			if(ct==null||!ct.equals(ct1))
+				ct1.send(line);
 		}
-	}*/	
+	}	
+	
 	
 	public static void startup()
 	{
@@ -44,12 +47,13 @@ public class GameServer extends JFrame{
 		{
 			try{
 			Socket s = ss.accept();
+			st.add(new ServerThread(s));
 				BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				String name = br.readLine();
-				while(name==null)
+				/*while(name==null)
 					{
 					name = br.readLine();
-					}
+					}*/
 				System.out.println(i+name);
 				Player p = new Player(name);
 				players.add(p);
@@ -62,6 +66,9 @@ public class GameServer extends JFrame{
 			}
 			catch(Exception e){e.printStackTrace();}
 		}
+		
+		sendMessage("DONE",null);
+		
 		/*for(int i = 0; i < setup.numVil; i++)
 		{
 			Socket s = ss.accept();

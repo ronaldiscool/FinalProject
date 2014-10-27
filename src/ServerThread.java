@@ -1,4 +1,4 @@
-/*import java.io.BufferedReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -7,13 +7,11 @@ import java.net.Socket;
 
 public class ServerThread extends Thread{
 	private Socket s;
-	private GameServer cs;
 	private PrintWriter pw;
-	public ServerThread(Socket s, GameServer cs)
+	public ServerThread(Socket s)
 	{
 		super();
 		this.s = s;
-		this.cs = cs;
 		try {
 			this.pw = new PrintWriter(s.getOutputStream());
 		} catch (IOException e) {
@@ -35,7 +33,7 @@ public class ServerThread extends Thread{
 			while(true)
 				{
 				String line = br.readLine();
-				cs.sendMessage(line, this);
+				GameServer.sendMessage(line, this);
 				
 				}
 		} catch (IOException e) {
@@ -44,4 +42,4 @@ public class ServerThread extends Thread{
 		}
 	}
 	
-}*/
+}
