@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -57,6 +58,7 @@ public class GameServer extends JFrame{
 				System.out.println(i+name);
 				Player p = new Player(name);
 				players.add(p);
+				sendMessage(name,null);
 				setup.relist();
 				setup.revalidate();
 				setup.repaint();
@@ -66,7 +68,7 @@ public class GameServer extends JFrame{
 			}
 			catch(Exception e){e.printStackTrace();}
 		}
-		
+		System.out.println(GameServer.players.size());
 		sendMessage("DONE",null);
 		
 		/*for(int i = 0; i < setup.numVil; i++)
@@ -102,6 +104,8 @@ public class GameServer extends JFrame{
 	}
 	public static void main(String[] args)
 	{
-		new GameServer();
+		
+				new GameServer();	
+
 	}
 }

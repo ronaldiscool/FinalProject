@@ -42,29 +42,35 @@ public class GameClient extends JFrame implements Runnable{
 		JButton ok = new JButton("OKAY");
 		ok.addActionListener(new ActionListener()
 		{
+			void listen() throws IOException
+			{
+				CardLayout CL1 = (CardLayout) jp.getLayout();
+				CL1.show(jp,"Wait Room");
+				waitRoom.removeAll();
+				while(true)
+				{
+					String line = br.readLine();
+					System.out.println(line);
+					if(line.equals("DONE"))
+						break;
+					JLabel jl = new JLabel(line);
+					waitRoom.add(jl);
+					revalidate();
+					repaint();
+				}
+			}
 			public void actionPerformed(ActionEvent ae)
 			{
 				String name = nameField.getText();
 				pw.println(name);
 				pw.flush();
-				CardLayout CL1 = (CardLayout) jp.getLayout();
-				CL1.show(jp,"Wait Room");
+
 
 				try {
-					String line = br.readLine();
-					System.out.println(line+"B");
-
-					if(line.equals("DONE"))
-					{
-						System.out.println(line+"A");
-						System.out.println(GameServer.players.size());
-						waitRoom.relist();
-						revalidate();
-						repaint();
-					}
-					System.out.println("W");
+					listen();
+					System.out.println("HERE NOW");
 					
-				} catch (IOException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

@@ -14,6 +14,8 @@ public class PlayerPanel extends JPanel {
 	void relist()
 	{
 		removeAll();
+		System.out.println(GameServer.players.size());
+
 		for(Player p :GameServer.players)
 		{
 			JLabel jl = new JLabel(p.getName());
