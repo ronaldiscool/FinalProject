@@ -46,17 +46,23 @@ public class GameClient extends JFrame implements Runnable{
 			{
 				CardLayout CL1 = (CardLayout) jp.getLayout();
 				CL1.show(jp,"Wait Room");
-				waitRoom.removeAll();
 				while(true)
 				{
 					String line = br.readLine();
 					System.out.println(line);
 					if(line.equals("DONE"))
 						break;
-					JLabel jl = new JLabel(line);
-					waitRoom.add(jl);
-					revalidate();
-					repaint();
+					else{
+					//waitRoom.removeAll();
+					String[] namel = line.split("\n");
+					for(String n:namel)
+					{
+						System.out.println("TEST"+n);
+						JLabel jl = new JLabel(n);
+						waitRoom.add(jl);
+						waitRoom.revalidate();
+						waitRoom.repaint();
+					}}
 				}
 			}
 			public void actionPerformed(ActionEvent ae)

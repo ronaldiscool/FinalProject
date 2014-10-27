@@ -44,6 +44,7 @@ public class GameServer extends JFrame{
 	
 	public static void startup()
 	{
+		String concatNames = "";
 		for(int i = 0; i <setup.numPlayers; i++)
 		{
 			try{
@@ -58,7 +59,8 @@ public class GameServer extends JFrame{
 				System.out.println(i+name);
 				Player p = new Player(name);
 				players.add(p);
-				sendMessage(name,null);
+				concatNames= concatNames+name+"\n";
+				sendMessage(concatNames,null);
 				setup.relist();
 				setup.revalidate();
 				setup.repaint();
