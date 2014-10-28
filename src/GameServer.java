@@ -35,7 +35,6 @@ public class GameServer extends JFrame{
 	{
 		for(ServerThread ct1 : st)
 		{
-			System.out.println("SENT");
 			if(ct==null||!ct.equals(ct1))
 				ct1.send(line);
 		}
@@ -45,22 +44,21 @@ public class GameServer extends JFrame{
 	public static void startup()
 	{
 		String concatNames = "";
-		for(int i = 0; i <setup.numPlayers; i++)
+		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 			try{
 			Socket s = ss.accept();
-			st.add(new ServerThread(s));
-				BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-				String name = br.readLine();
-				/*while(name==null)
-					{
-					name = br.readLine();
-					}*/
-				System.out.println(i+name);
-				Player p = new Player(name);
-				players.add(p);
-				concatNames= concatNames+name+"\n";
-				sendMessage(concatNames,null);
+			ServerThread ST = new ServerThread(s);
+			st.add(ST);
+			ST.start();
+				//BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+				//String name = br.readLine();
+				
+				//System.out.println(i+name);
+				//Player p = new Player(name);
+				//players.add(p);
+				//concatNames= concatNames+name+"\n";
+				//sendMessage(concatNames,null);
 				setup.relist();
 				setup.revalidate();
 				setup.repaint();

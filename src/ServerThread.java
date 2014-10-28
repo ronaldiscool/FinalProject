@@ -33,7 +33,7 @@ public class ServerThread extends Thread{
 			while(true)
 				{
 				String line = br.readLine();
-				GameServer.sendMessage(line, this);
+				GameServer.sendMessage(line, null);
 				
 				}
 		} catch (IOException e) {
