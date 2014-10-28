@@ -14,6 +14,8 @@ public class GameServer extends JFrame{
 	public static Vector<ServerThread> st = new Vector<ServerThread>();
 	private static SetUp setup = new SetUp();
 	public static ServerSocket ss;
+	String concatNames = "";
+
 	
 	public GameServer()
 	{
@@ -43,7 +45,6 @@ public class GameServer extends JFrame{
 	
 	public static void startup()
 	{
-		String concatNames = "";
 		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 			try{
