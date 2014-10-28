@@ -137,13 +137,11 @@ public class SetUp extends JPanel {
 		mainPanel.add(selectPanel);
 		mainPanel.add(playerPanel);
 		
-		JPanel hostPanel = new JPanel();
-		hostPanel.setLayout(new BorderLayout());
-		hostPanel.add(mainPanel, BorderLayout.CENTER);
-		hostPanel.add(numPanel, BorderLayout.NORTH);
-		hostPanel.add(messagePanel, BorderLayout.SOUTH);
-
-		add(hostPanel);
+		setLayout(new BorderLayout());
+		add(mainPanel, BorderLayout.CENTER);
+		add(numPanel, BorderLayout.NORTH);
+		add(messagePanel, BorderLayout.SOUTH);
+		
 		setVisible(true);
 	}
 	
