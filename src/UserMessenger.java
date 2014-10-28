@@ -12,7 +12,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
-public class userMessenger extends JFrame {
+public class UserMessenger extends JFrame {
 	JLabel timeCycle;
 	JTextArea messageField;
 	JTextArea inputField;
@@ -25,7 +25,7 @@ public class userMessenger extends JFrame {
 	
 	
 	
-	public userMessenger(){
+	public UserMessenger(){
 		this.makeGUI();
 	}
 	
@@ -93,5 +93,10 @@ public class userMessenger extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
+	
+	public static void main(String args[])
+	{
+		new UserMessenger();
+	}
+	}
 
-}
