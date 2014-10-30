@@ -33,8 +33,7 @@ public class ServerThread extends Thread{
 			while(true)
 				{
 				String line = br.readLine();
-				GameServer.sendMessage(line, null);
-				
+				GameServer.sendMessage(line,false);
 				}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -20,17 +20,66 @@ import javax.swing.JTextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+class Repainter extends Thread
+{
+	GameClient gc;
+	public Repainter(GameClient gc)
+	{
+		this.gc = gc;
+	}
+	
+	public void run()
+	{
+		while(true){
+		gc.revalidate();
+		gc.repaint();}
+	}
+}
 
+class Reader extends Thread
+{
+	GameClient gc;
+	BufferedReader br;
+	public Reader(GameClient gc)
+	{
+		super();
+		this.gc=gc;
+		this.br=gc.br;
+	}
+	
+	public void run()
+	{
+		try {
+			while(true)
+			{
+				gc.concatNames = br.readLine();
+				System.out.println(gc.concatNames);
+				if(gc.concatNames.equals("DONE"))
+					break;
+			String[] namel = gc.concatNames.split("\n");
+				//gc.waitRoom.removeAll();
+				for(String n:namel)
+				{
+					JLabel jl = new JLabel(n);
+					gc.waitRoom.add(jl);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
 
 public class GameClient extends JFrame implements Runnable{
 	
-	private BufferedReader br;
+	BufferedReader br;
 	private PrintWriter pw;
 	JPanel jp = new JPanel();
 	JPanel su = new JPanel();
 	PlayerPanel waitRoom = new PlayerPanel();
 	public Thread t = new Thread(this);
 	JTextField nameField = new JTextField(45);
+	String concatNames = "LINE";
 
 	private void GUIInit()
 	{
@@ -42,46 +91,13 @@ public class GameClient extends JFrame implements Runnable{
 		JButton ok = new JButton("OKAY");
 		ok.addActionListener(new ActionListener()
 		{
-			void listen() throws IOException
-			{
-				CardLayout CL1 = (CardLayout) jp.getLayout();
-				CL1.show(jp,"Wait Room");
-				String concatNames = "";
-				while(true)
-				{
-					String line = br.readLine();
-					System.out.println(line);
-					if(line.equals("DONE"))
-						break;
-					else{
-					//waitRoom.removeAll();
-					concatNames+=line+"\n";
-					String[] namel = concatNames.split("\n");
-					for(String n:namel)
-					{
-						System.out.println("TEST"+n);
-						JLabel jl = new JLabel(n);
-						waitRoom.add(jl);
-						waitRoom.revalidate();
-						waitRoom.repaint();
-					}}
-				}
-			}
 			public void actionPerformed(ActionEvent ae)
 			{
 				String name = nameField.getText();
 				pw.println(name);
 				pw.flush();
-
-
-				try {
-					listen();
-					System.out.println("HERE NOW");
-					
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				CardLayout CL1 = (CardLayout) jp.getLayout();
+				CL1.show(jp,"Wait Room");
 			}
 		});
 		su.add(nameField);
@@ -106,28 +122,23 @@ public class GameClient extends JFrame implements Runnable{
 		} 
 		GUIInit();
 
-	}
+	}	
 
 
 	public void run()
 	{
-		while(true)
-		{
-			try {
-				String line = br.readLine();
-				if(line!=null)
-				{}
-					revalidate();
-					repaint();
-					break;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-		}
-		}
+		Reader r = new Reader(this);
+		Repainter rp = new Repainter(this);
+		r.start();
+		rp.start();
+
+		
 	}
 	
 	public static void main(String[] args)
 	{
-		new GameClient();
+		Thread gc =new Thread(new GameClient());
+		gc.start();
+		
 	}
 }

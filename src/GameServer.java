@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class GameServer extends JFrame{
 	public static Vector<Player> players= new Vector<Player>();
@@ -14,7 +15,8 @@ public class GameServer extends JFrame{
 	public static Vector<ServerThread> st = new Vector<ServerThread>();
 	private static SetUp setup = new SetUp();
 	public static ServerSocket ss;
-	String concatNames = "";
+	static String inBuffer = "";
+	static boolean flag = false;
 
 	
 	public GameServer()
@@ -33,25 +35,46 @@ public class GameServer extends JFrame{
 		}
 	}
 	
-	public static void sendMessage(String line,ServerThread ct)
+	public static void sendMessage(String line, boolean send)
 	{
+		if(send)
+		{
 		for(ServerThread ct1 : st)
 		{
-			if(ct==null||!ct.equals(ct1))
 				ct1.send(line);
 		}
+		}
+		else
+			inBuffer= line;
+		flag = true;
 	}	
 	
 	
 	public static void startup()
 	{
+		String concatNames = "";
 		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 			try{
 			Socket s = ss.accept();
 			ServerThread ST = new ServerThread(s);
 			st.add(ST);
-			ST.start();
+			BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+
+				String line = br.readLine();
+				concatNames+=line+"\n";
+				sendMessage(concatNames,true);
+				String[] namel = concatNames.split("\n");
+				for(String n:namel)
+				{
+					System.out.println("TEST"+n);
+					JLabel jl = new JLabel(n);
+					GameServer.setup.playerPanel.add(jl);
+					setup.revalidate();
+					setup.repaint();
+				}
+
+			flag = false;
 				//BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				//String name = br.readLine();
 				
@@ -69,9 +92,9 @@ public class GameServer extends JFrame{
 			}
 			catch(Exception e){e.printStackTrace();}
 		}
-		System.out.println(GameServer.players.size());
-		sendMessage("DONE",null);
-		
+		sendMessage("DONE",true);
+		for(ServerThread ST:st)
+			ST.start();
 		/*for(int i = 0; i < setup.numVil; i++)
 		{
 			Socket s = ss.accept();
