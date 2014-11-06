@@ -1,9 +1,9 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -11,14 +11,15 @@ import javax.swing.JScrollPane;
 
 
 public class PlayerPanel extends JPanel {
+	private DefaultListModel<String> list;
 	public PlayerPanel()
 	{
 		super();
 		setBackground(Color.gray);
-		Object values[] = {"Item 1", "Item 2"};
 		
 		JScrollPane scroll = new JScrollPane();
-		JList playersList = new JList(values);
+		list = new DefaultListModel<String>();
+		JList<String> playersList = new JList<String>(list);
 		scroll.setViewportView(playersList);
 		scroll.setPreferredSize(new Dimension(200, 250));
 		
@@ -34,6 +35,12 @@ public class PlayerPanel extends JPanel {
 		add(panel1);
 		add(Box.createGlue());
 		
+	}
+	public void addName(String name) {
+		for(int i=0; i<list.size(); ++i) // prevents copies of old names
+			if(list.get(i).equals(name))
+				return;
+		list.addElement(name);
 	}
 	void relist()
 	{
