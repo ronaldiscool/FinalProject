@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -26,13 +27,23 @@ public class PlayerPanel extends JPanel {
 		playersList.setBackground(Color.white);
 		
 		JPanel panel1 = new JPanel();
-		panel1.add(scroll);
+		panel1.setLayout(new BorderLayout());
+		panel1.add(scroll, BorderLayout.CENTER);
 		panel1.setBackground(Color.gray);
 		
+		JLabel label = new JLabel("Waiting Room");
+		JPanel panel2 = new JPanel();
+		panel2.add(label);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+		panel1.add(panel2, BorderLayout.NORTH);
+		
+		JPanel panel3 = new JPanel();
+		panel3.add(panel1);
+		panel3.setBackground(Color.gray);
+		
 		add(Box.createGlue());
-		add(panel1);
+		add(panel3);
 		add(Box.createGlue());
 		
 	}
