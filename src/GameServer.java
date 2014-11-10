@@ -67,7 +67,6 @@ public class GameServer extends JFrame{
 				String[] namel = concatNames.split("\n");
 				for(String n:namel)
 				{
-					System.out.println("TEST"+n);
 					JLabel jl = new JLabel(n);
 					GameServer.setup.playerPanel.add(jl);
 					setup.revalidate();
