@@ -5,12 +5,12 @@ public class Doctor extends Villager {
 		super(name);
 	}
 	
-	public void vote(Player p) {
-		p.tally++;
-	}
-	
+	// the player this person picks will be saved for one night
 	public void power(Player p) {
-		p.alive = true;
+		// check if power has been blocked, don't need to inform player
+		if(!getPowerBlocked()){
+			p.setStayAlive(true);
+		}
 	}
 	
 	public String getRole() {
