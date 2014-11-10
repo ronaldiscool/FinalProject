@@ -4,17 +4,15 @@ class GodFather extends TheMafia {
 	public GodFather(String name) {
 		super(name);
 	}
-	
-	public void vote(Player p) {
-		p.tally++;
-	}
-	
 	public void power(Player p) {
-		p.alive = false;
-	}
-	
-	public String getName() {
-		return name;
+		if(p.getStayAlive()){
+			// tell player they failed in killing the person, or whoever its implemented
+		}
+		
+		else{
+			// kill the target
+			p.setAlive(false);
+		}
 	}
 	
 	public String getRole() {

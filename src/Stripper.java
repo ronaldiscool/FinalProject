@@ -5,16 +5,20 @@ class Stripper extends TheMafia {
 		super(name);
 	}
 	
-	public void vote(Player p) {
-		p.tally++;
-	}
-	
 	public void power(Player p) {
+		if(p.getStayAlive()){
+			// tell player they failed in killing the person, or whoever its implemented
+		}
 		
+		else{
+			// kill the target
+			p.setAlive(false);
+		}
 	}
 	
-	public String getName() {
-		return name;
+	// block the power of another player
+	public void power2(Player p){
+		p.setPowerBlocked(true);
 	}
 	
 	public String getRole() {

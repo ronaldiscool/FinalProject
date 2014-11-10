@@ -6,11 +6,13 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Calendar;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -22,6 +24,7 @@ public class SetUp extends JPanel {
 	private JComboBox<String> mafiaBox;
 	private JComboBox<String> copBox;
 	private JComboBox<String> hookerBox;
+	private JLabel numLabel; // message that signals whether the options are valid
 	private JLabel messageLabel; // message that signals whether the options are valid
 	public int numPlayers;
 	public int numCop;
@@ -68,6 +71,25 @@ public class SetUp extends JPanel {
 			citizenBox.addItem("" + i);
 		}
 		
+		ItemListener il = new ItemListener() { // Account for leap year
+			public void itemStateChanged(ItemEvent ie) {
+				int num = 0;
+				num+= citizenBox.getSelectedIndex()+2;
+				num+= copBox.getSelectedIndex();
+				num+= doctorBox.getSelectedIndex();
+				num+= mafiaBox.getSelectedIndex()+1;
+				num+= hookerBox.getSelectedIndex();
+				numLabel.setText("Number of Players: " + num);
+			}
+		};
+
+		citizenBox.addItemListener(il);
+		doctorBox.addItemListener(il);
+		mafiaBox.addItemListener(il);
+		copBox.addItemListener(il);
+		hookerBox.addItemListener(il);
+
+		
 		JButton okButton = new JButton("Okay"); // Confirmation button
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -86,7 +108,7 @@ public class SetUp extends JPanel {
 				else
 				{
 					numPlayers = goodNum+badNum;
-					messageLabel.setText("Total number of roles: " + numPlayers);
+					messageLabel.setText("Processing...");
 					GameServer.startup();
 				}
 			}
@@ -97,29 +119,35 @@ public class SetUp extends JPanel {
 		selectPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		
+		numLabel = new JLabel("Number of Players: 3");
+		
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.insets = new Insets(5, 5, 5, 5);
-		gbc.gridx = 0;		gbc.gridy = 0;
+		
+		gbc.gridx = 0;		gbc.gridy = 0;      gbc.gridwidth = 2;
+		selectPanel.add(numLabel, gbc);
+		
+		gbc.gridx = 0;		gbc.gridy = 1;		gbc.gridwidth = 1;
 		selectPanel.add(citizenBox, gbc);
 		gbc.gridx = 1;
 		selectPanel.add(citizenLabel, gbc);
-		gbc.gridx = 0;		gbc.gridy = 1;
+		gbc.gridx = 0;		gbc.gridy = 2;
 		selectPanel.add(copBox, gbc);
 		gbc.gridx = 1;
 		selectPanel.add(copLabel, gbc);
-		gbc.gridx = 0;		gbc.gridy = 2;
+		gbc.gridx = 0;		gbc.gridy = 3;
 		selectPanel.add(doctorBox, gbc);
 		gbc.gridx = 1;
 		selectPanel.add(doctorLabel, gbc);
-		gbc.gridx = 0;		gbc.gridy = 3;
+		gbc.gridx = 0;		gbc.gridy = 4;
 		selectPanel.add(mafiaBox, gbc);
 		gbc.gridx = 1;
 		selectPanel.add(mafiaLabel, gbc);
-		gbc.gridx = 0;		gbc.gridy = 4;
+		gbc.gridx = 0;		gbc.gridy = 5;
 		selectPanel.add(hookerBox, gbc);
 		gbc.gridx = 1;
 		selectPanel.add(hookerLabel, gbc);
-		gbc.gridy = 5;
+		gbc.gridy = 6;
 		gbc.gridx = 1;
 		selectPanel.add(okButton, gbc);
 		
@@ -127,7 +155,7 @@ public class SetUp extends JPanel {
 		numPanel.add(new JLabel("Choose the number of roles for this round."));
 		numPanel.setBackground(Color.white);
 
-		messageLabel = new JLabel("Number of players: 5"); // Will contain number of roles needed for players
+		messageLabel = new JLabel("Choose the number of roles for this round.");
 		JPanel messagePanel = new JPanel();
 		messagePanel.add(messageLabel);
 		messagePanel.setBackground(Color.white);
