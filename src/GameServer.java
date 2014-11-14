@@ -9,14 +9,63 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class GameServer extends JFrame{
+class ServerRepainter extends Thread
+{
+	GameServer gc;
+	public ServerRepainter(GameServer gc)
+	{
+		this.gc = gc;
+	}
+	
+	public void run()
+	{
+		while(true){
+					gc.revalidate();
+		gc.repaint();}
+	}
+}
+
+class ServerReader extends Thread
+{
+	BufferedReader br;
+	public ServerReader(BufferedReader br)
+	{
+		super();
+		this.br=br;
+	}
+	
+	public void run()
+	{
+		try {
+
+				String line = br.readLine();
+				GameServer.concatNames+=line+"\n";
+				GameServer.sendMessage(GameServer.concatNames,true);
+				String[] namel = GameServer.concatNames.split("\n");
+				for(String n:namel)
+				{
+					JLabel jl = new JLabel(n);
+					GameServer.setup.playerPanel.add(jl);
+				}
+				System.out.println("EEE");
+			GameServer.flag = false;
+		}			
+			
+		 catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+public class GameServer extends JFrame implements Runnable{
 	public static Vector<Player> players= new Vector<Player>();
 	public static Vector<GameClient> clients= new Vector<GameClient>();
 	public static Vector<ServerThread> st = new Vector<ServerThread>();
-	private static SetUp setup = new SetUp();
+	static SetUp setup = new SetUp();
 	public static ServerSocket ss;
 	static String inBuffer = "";
 	static boolean flag = false;
+	static String concatNames = "";
 
 	
 	public GameServer()
@@ -52,7 +101,6 @@ public class GameServer extends JFrame{
 	
 	public static void startup()
 	{
-		String concatNames = "";
 		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 			try{
@@ -60,8 +108,10 @@ public class GameServer extends JFrame{
 			ServerThread ST = new ServerThread(s);
 			st.add(ST);
 			BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-
-				String line = br.readLine();
+			ServerReader sr = new ServerReader(br);
+			sr.start();
+			}
+				/*String line = br.readLine();
 				concatNames+=line+"\n";
 				sendMessage(concatNames,true);
 				String[] namel = concatNames.split("\n");
@@ -88,7 +138,7 @@ public class GameServer extends JFrame{
 			//ServerThread sthread = new ServerThread( s, this);
 			//GameClient client = new GameClient();
 			//clients.add(client);
-			}
+			}*/
 			catch(Exception e){e.printStackTrace();}
 		}
 		sendMessage("DONE",true);
@@ -128,7 +178,14 @@ public class GameServer extends JFrame{
 	public static void main(String[] args)
 	{
 		
-				new GameServer();	
+				Thread gs =new Thread(new GameServer());	
+				gs.start();
+	}
+
+	public void run()
+	{
+		ServerRepainter rp = new ServerRepainter(this);
+		rp.start();
 
 	}
 }
