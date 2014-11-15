@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,16 +41,17 @@ class ServerReader extends Thread
 		try {
 
 				String line = br.readLine();
-				GameServer.concatNames+=line+"\n";
-				GameServer.sendMessage(GameServer.concatNames,true);
-				String[] namel = GameServer.concatNames.split("\n");
+				GameServer.concatNames+=line+"$";
+				String[] namel = GameServer.concatNames.split("$");
 				for(String n:namel)
 				{
 					JLabel jl = new JLabel(n);
 					GameServer.setup.playerPanel.add(jl);
 				}
-				System.out.println("EEE");
 			GameServer.flag = false;
+System.out.println(GameServer.concatNames+"READDING");
+GameServer.sendMessage(GameServer.concatNames,true);
+				GameServer.read.signalAll();
 		}			
 			
 		 catch (Exception e) {
@@ -66,7 +69,8 @@ public class GameServer extends JFrame implements Runnable{
 	static String inBuffer = "";
 	static boolean flag = false;
 	static String concatNames = "";
-
+	static ReentrantLock lock = new ReentrantLock();
+	static Condition read = lock.newCondition();
 	
 	public GameServer()
 	{
@@ -104,7 +108,10 @@ public class GameServer extends JFrame implements Runnable{
 		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 			try{
+			//	lock.lock();
+			//	read.await();
 			Socket s = ss.accept();
+			//lock.unlock();
 			ServerThread ST = new ServerThread(s);
 			st.add(ST);
 			BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -141,9 +148,20 @@ public class GameServer extends JFrame implements Runnable{
 			}*/
 			catch(Exception e){e.printStackTrace();}
 		}
-		sendMessage("DONE",true);
+		lock.lock();
+		try {
+			read.await();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		lock.unlock();
+		sendMessage(concatNames,true);
+		System.out.println(concatNames+"AAAAAAAA");
+		sendMessage("DONEe",true);
 		for(ServerThread ST:st)
 			ST.start();
+		sendMessage("DONE",true);
 		/*for(int i = 0; i < setup.numVil; i++)
 		{
 			Socket s = ss.accept();
