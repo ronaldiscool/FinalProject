@@ -1,8 +1,8 @@
 
 public class Doctor extends Villager {
-
-	public Doctor(String name) {
-		super(name);
+	
+	public Doctor(String name, ServerThread st, ServerReader reader) {
+		super(name, st, reader);
 	}
 	
 	// the player this person picks will be saved for one night

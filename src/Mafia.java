@@ -1,8 +1,8 @@
 
 class Mafia extends TheMafia {
 	
-	public Mafia(String name) {
-		super(name);
+	public Mafia(String name, ServerThread st, ServerReader reader) {
+		super(name, st, reader);
 	}
 	public void power(Player p) {
 		if(p.getStayAlive()){

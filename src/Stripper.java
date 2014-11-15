@@ -1,8 +1,8 @@
 
 class Stripper extends TheMafia {
 
-	public Stripper(String name) {
-		super(name);
+	public Stripper(String name, ServerThread st, ServerReader reader) {
+		super(name, st, reader);
 	}
 	
 	public void power(Player p) {

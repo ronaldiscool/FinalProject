@@ -18,14 +18,18 @@ abstract class Player{
 	private boolean alive;
 	public int 	tally;
 	protected String name;
+	protected ServerThread st;
+	protected ServerReader reader;
 	// doctor has chosen this player to stay alive, negating any attempts to kill
 	private boolean stayAlive;
 	// roleblocker has blocked this person from using powers
 	private boolean powerBlocked;
-	public Player(String name) {
+	public Player(String name, ServerThread st, ServerReader reader) {
 		super();
 		alive=true;
 		this.name = name;
+		this.st = st;
+		this.reader = reader;
 		stayAlive=false;
 		powerBlocked=false;
 	}
