@@ -41,20 +41,20 @@ class ServerReader extends Thread
 	public void run()
 	{
 		try {
-
-				String line = br.readLine();
-				GameServer.concatNames+=line+"$";
-				String[] namel = GameServer.concatNames.split("$");
-				for(String n:namel)
-				{
-					JLabel jl = new JLabel(n);
-					GameServer.setup.playerPanel.add(jl);
-				}
+			// reads 
+			String line = br.readLine();
+			GameServer.concatNames+=line+"$";
+			String[] namel = GameServer.concatNames.split("$");
+			for(String n:namel)
+			{
+				JLabel jl = new JLabel(n);
+				GameServer.setup.playerPanel.add(jl);
+			}
 			GameServer.flag = false;
-GameServer.sendMessage(GameServer.concatNames,true, null);
-				GameServer.lock.lock();
-				GameServer.read.signalAll();
-				GameServer.lock.unlock();
+			GameServer.sendMessage(GameServer.concatNames,true, null);
+			GameServer.lock.lock();
+			GameServer.read.signalAll();
+			GameServer.lock.unlock();
 
 				//GameServer.received.signalAll();
 		}			
@@ -74,9 +74,9 @@ public class GameServer extends JFrame implements Runnable{
 	public static Vector<TheMafia> mafia= new Vector<TheMafia>();
 	public static Vector<Stripper> strippers= new Vector<Stripper>();
 	public static Vector<Doctor> doctors= new Vector<Doctor>();
-	CardLayout c1=new CardLayout();
-	UserMessenger serverMessenger=new UserMessenger();
-	public JPanel serverPanel=new JPanel();
+	public static CardLayout c1=new CardLayout();
+	public static UserMessenger serverMessenger=new UserMessenger();
+	static public JPanel serverPanel=new JPanel();
 	static SetUp setup = new SetUp();
 	public static ServerSocket ss;
 	static String inBuffer = "";
@@ -89,13 +89,17 @@ public class GameServer extends JFrame implements Runnable{
 	public GameServer()
 	{
 		super("Mafia");
-		//serverPanel.setLayout(c1);
-		//c1.add(serverMessenger,"message");
+		
+		// cardlayout for the messenger and the setup panel
+		serverPanel.setLayout(c1);
+		serverPanel.add(serverMessenger,"message");
+		serverPanel.add(setup, "setup");
+		c1.show(serverPanel, "setup");
 		
 		setSize(500, 500);
 		setLocation(50, 50);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		add(setup);
+		add(serverPanel);
 		setVisible(true);
 		
 		try {
@@ -107,15 +111,21 @@ public class GameServer extends JFrame implements Runnable{
 	
 	public static void sendMessage(String line, boolean send, Vector<Player> receivers)
 	{
+		// set receivers to vector of players
 		if(receivers == null)
 			receivers = players;
 		if(send)
 		{
-		for(Player player : receivers)
+		/*for(Player player : receivers)
 		{
 				ServerThread ct1 = player.st;
 				ct1.send(line);
-		}
+		}*/
+			// 
+			for(ServerThread ct1 : st)
+			{
+				ct1.send(line);
+			}
 		}
 		else
 			inBuffer= line;
@@ -135,10 +145,12 @@ public class GameServer extends JFrame implements Runnable{
 			BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			ServerReader sr = new ServerReader(br);
 			sr.start();
-			if(i<0)
-			{lock.lock();
+			if(i<0){
+				System.out.println("Lock engaged");
+				lock.lock();
 				received.await();
 				lock.unlock();}
+				System.out.println("Lock disnegaged");
 			}
 				/*String line = br.readLine();
 				concatNames+=line+"\n";
@@ -168,7 +180,7 @@ public class GameServer extends JFrame implements Runnable{
 			//GameClient client = new GameClient();
 			//clients.add(client);
 			}*/
-			
+			//PLAYERNAME~ALL~CHAT~"MESSAGE"
 			catch(Exception e){e.printStackTrace();}
 		}
 		lock.lock();
@@ -182,7 +194,9 @@ public class GameServer extends JFrame implements Runnable{
 		sendMessage(concatNames,true, null);
 		for(ServerThread ST:st)
 			ST.start();
+
 		sendMessage("DONE",true,null);
+		System.out.println("D");
 		/*for(int i = 0; i < setup.numVil; i++)
 		{
 			Villager p = new Villager();
