@@ -170,7 +170,7 @@ public class GameServer extends JFrame implements Runnable{
 		for(ServerThread ST:st)
 			ST.start();
 		sendMessage("DONE",true);
-		for(int i = 0; i < setup.numVil; i++)
+		/*for(int i = 0; i < setup.numVil; i++)
 		{
 			Villager p = new Villager();
 			players.add(p);
@@ -202,7 +202,7 @@ public class GameServer extends JFrame implements Runnable{
 			players.add(p);
 			setup.relist();
 
-		}
+		}*/
 
 	}
 	public static void main(String[] args)
