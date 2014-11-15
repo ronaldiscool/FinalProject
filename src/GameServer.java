@@ -49,8 +49,10 @@ class ServerReader extends Thread
 					GameServer.setup.playerPanel.add(jl);
 				}
 			GameServer.flag = false;
-GameServer.sendMessage(GameServer.concatNames,true);
+GameServer.sendMessage(GameServer.concatNames,true, null);
+				GameServer.lock.lock();
 				GameServer.read.signalAll();
+				GameServer.lock.unlock();
 				//GameServer.received.signalAll();
 		}			
 			
@@ -95,12 +97,15 @@ public class GameServer extends JFrame implements Runnable{
 		}
 	}
 	
-	public static void sendMessage(String line, boolean send)
+	public static void sendMessage(String line, boolean send, Vector<Player> receivers)
 	{
+		if(receivers == null)
+			receivers = players;
 		if(send)
 		{
-		for(ServerThread ct1 : st)
+		for(Player player : receivers)
 		{
+				ServerThread ct1 = player.st;
 				ct1.send(line);
 		}
 		}
@@ -170,7 +175,7 @@ public class GameServer extends JFrame implements Runnable{
 		for(ServerThread ST:st)
 			ST.start();
 		sendMessage("DONE",true);
-		/*for(int i = 0; i < setup.numVil; i++)
+		for(int i = 0; i < setup.numVil; i++)
 		{
 			Villager p = new Villager();
 			players.add(p);
@@ -202,7 +207,7 @@ public class GameServer extends JFrame implements Runnable{
 			players.add(p);
 			setup.relist();
 
-		}*/
+		}
 
 	}
 	public static void main(String[] args)
