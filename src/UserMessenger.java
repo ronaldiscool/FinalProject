@@ -12,7 +12,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
-public class UserMessenger extends JFrame {
+public class UserMessenger extends JPanel {
 	JLabel timeCycle;
 	JTextArea messageField;
 	JTextArea inputField;
@@ -87,11 +87,8 @@ public class UserMessenger extends JFrame {
 		votes=new JTextArea(" ", 20,15);
 		messagePanel.add(votes,gbc);
 		
-		this.setTitle("Messenger");
 		this.add(messagePanel);
 		this.setSize(750, 750);
-		this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
 	public static void main(String args[])
