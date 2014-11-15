@@ -22,7 +22,7 @@ class ServerRepainter extends Thread
 	public void run()
 	{
 		while(true){
-					gc.revalidate();
+		gc.revalidate();
 		gc.repaint();}
 	}
 }
@@ -49,8 +49,10 @@ class ServerReader extends Thread
 					GameServer.setup.playerPanel.add(jl);
 				}
 			GameServer.flag = false;
-GameServer.sendMessage(GameServer.concatNames,true);
-				GameServer.read.signalAll();
+			GameServer.sendMessage(GameServer.concatNames,true);
+			GameServer.lock.lock();
+			GameServer.read.signalAll();
+			GameServer.lock.unlock();
 				//GameServer.received.signalAll();
 		}			
 			
