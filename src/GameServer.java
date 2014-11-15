@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.locks.Condition;
@@ -20,10 +24,11 @@ class ServerRepainter extends Thread
 	{
 		this.gc = gc;
 	}
-	
+
 	public void run()
 	{
 		while(true){
+
 		gc.revalidate();
 		gc.repaint();}
 	}
@@ -37,35 +42,53 @@ class ServerReader extends Thread
 		super();
 		this.br=br;
 	}
-	
+
 	public void run()
 	{
 		try {
+<<<<<<< HEAD
 			// reads 
 			String line = br.readLine();
 			GameServer.concatNames+=line+"$";
 			String[] namel = GameServer.concatNames.split("$");
 			for(String n:namel)
+=======
+
+			String line = br.readLine();
+			GameServer.concatNames+=line+"$";
+			GameServer.name1 = GameServer.concatNames.split("$");
+			for(String n:GameServer.name1)
+>>>>>>> origin/master
 			{
 				JLabel jl = new JLabel(n);
 				GameServer.setup.playerPanel.add(jl);
 			}
 			GameServer.flag = false;
+<<<<<<< HEAD
 			GameServer.sendMessage(GameServer.concatNames,true, null);
 			GameServer.lock.lock();
 			GameServer.read.signalAll();
 			GameServer.lock.unlock();
+=======
+
+GameServer.sendMessage(GameServer.concatNames,true, null);
+				GameServer.lock.lock();
+				GameServer.read.signalAll();
+				GameServer.lock.unlock();
+>>>>>>> origin/master
 
 				//GameServer.received.signalAll();
 		}			
-			
-		 catch (Exception e) {
+
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 }
 
 public class GameServer extends JFrame implements Runnable{
+	public static String[] name1;
+	public static int pCount = 0;
 	public static Vector<Player> players= new Vector<Player>();
 	public static Vector<GameClient> clients= new Vector<GameClient>();
 	public static Vector<ServerThread> st = new Vector<ServerThread>();
@@ -74,9 +97,16 @@ public class GameServer extends JFrame implements Runnable{
 	public static Vector<TheMafia> mafia= new Vector<TheMafia>();
 	public static Vector<Stripper> strippers= new Vector<Stripper>();
 	public static Vector<Doctor> doctors= new Vector<Doctor>();
+<<<<<<< HEAD
 	public static CardLayout c1=new CardLayout();
 	public static UserMessenger serverMessenger=new UserMessenger();
 	static public JPanel serverPanel=new JPanel();
+=======
+	public static Vector<ServerReader> readers = new Vector<ServerReader>();
+	CardLayout c1=new CardLayout();
+	UserMessenger serverMessenger=new UserMessenger();
+	public JPanel serverPanel=new JPanel();
+>>>>>>> origin/master
 	static SetUp setup = new SetUp();
 	public static ServerSocket ss;
 	static String inBuffer = "";
@@ -85,7 +115,7 @@ public class GameServer extends JFrame implements Runnable{
 	static ReentrantLock lock = new ReentrantLock();
 	static Condition read = lock.newCondition();
 	static Condition received = lock.newCondition();
-	
+
 	public GameServer()
 	{
 		super("Mafia");
@@ -101,13 +131,14 @@ public class GameServer extends JFrame implements Runnable{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(serverPanel);
 		setVisible(true);
-		
+
 		try {
 			ss = new ServerSocket(6789);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
 	
 	public static void sendMessage(String line, boolean send, Vector<Player> receivers)
 	{
@@ -116,6 +147,7 @@ public class GameServer extends JFrame implements Runnable{
 			receivers = players;
 		if(send)
 		{
+<<<<<<< HEAD
 		/*for(Player player : receivers)
 		{
 				ServerThread ct1 = player.st;
@@ -125,19 +157,27 @@ public class GameServer extends JFrame implements Runnable{
 			for(ServerThread ct1 : st)
 			{
 				ct1.send(line);
+=======
+
+		for(Player player : receivers)
+		{
+				ServerThread ct1 = player.st;
+				ct1.send(line);
+>>>>>>> origin/master
 			}
 		}
 		else
 			inBuffer= line;
 		flag = true;
 	}	
-	
-	
+
+
 	public static void startup()
 	{
 		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 			try{
+<<<<<<< HEAD
 				
 			Socket s = ss.accept();
 			ServerThread ST = new ServerThread(s);
@@ -151,8 +191,23 @@ public class GameServer extends JFrame implements Runnable{
 				received.await();
 				lock.unlock();}
 				System.out.println("Lock disnegaged");
+=======
+
+				Socket s = ss.accept();
+				ServerThread ST = new ServerThread(s);
+				st.add(ST);
+				BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+				ServerReader sr = new ServerReader(br);
+				readers.add(sr);
+				sr.start();
+				if(i<0)
+				{
+					lock.lock();
+					received.await();
+					lock.unlock();}
+>>>>>>> origin/master
 			}
-				/*String line = br.readLine();
+			/*String line = br.readLine();
 				concatNames+=line+"\n";
 				sendMessage(concatNames,true);
 				String[] namel = concatNames.split("\n");
@@ -167,7 +222,7 @@ public class GameServer extends JFrame implements Runnable{
 			flag = false;
 				//BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				//String name = br.readLine();
-				
+
 				//System.out.println(i+name);
 				//Player p = new Player(name);
 				//players.add(p);
@@ -180,7 +235,11 @@ public class GameServer extends JFrame implements Runnable{
 			//GameClient client = new GameClient();
 			//clients.add(client);
 			}*/
+<<<<<<< HEAD
 			//PLAYERNAME~ALL~CHAT~"MESSAGE"
+=======
+
+>>>>>>> origin/master
 			catch(Exception e){e.printStackTrace();}
 		}
 		lock.lock();
@@ -196,47 +255,60 @@ public class GameServer extends JFrame implements Runnable{
 			ST.start();
 
 		sendMessage("DONE",true,null);
+<<<<<<< HEAD
 		System.out.println("D");
 		/*for(int i = 0; i < setup.numVil; i++)
+=======
+		long seed = System.nanoTime();
+		Collections.shuffle(Arrays.asList(name1), new Random(seed));
+		Collections.shuffle(st, new Random(seed));
+		Collections.shuffle(readers, new Random(seed));
+
+		for(int i = 0; i < setup.numVil; i++)
+>>>>>>> origin/master
 		{
-			Villager p = new Villager();
+			Villager p = new Villager(name1[pCount], st.get(pCount), readers.get(pCount));
+			pCount++;
 			players.add(p);
 			setup.relist();
 		}
 		for(int i = 0; i < setup.numCop; i++)
 		{
-			Cop p = new Cop();
+			Cop p = new Cop(name1[pCount], st.get(pCount), readers.get(pCount));
+			pCount++;
 			players.add(p);
 			setup.relist();
 		}
 		for(int i = 0; i < setup.numDoc; i++)
 		{
-			Socket s = ss.accept();
-			Doctor p = new Doctor();
+			Doctor p = new Doctor(name1[pCount], st.get(pCount), readers.get(pCount));
+			pCount++;
 			players.add(p);
 			setup.relist();
 		}
 		for(int i = 0; i < setup.numMaf; i++)
 		{
-			TheMafia p = new Mafia("ronaldismaf");
+			TheMafia p = new Mafia(name1[pCount], st.get(pCount), readers.get(pCount));
+			pCount++;
 			players.add(p);
 			setup.relist();
 
 		}
 		for(int i = 0; i < setup.numHook; i++)
 		{
-			TheMafia p = new Stripper("ronaldismaf");
+			TheMafia p = new Stripper(name1[pCount], st.get(pCount), readers.get(pCount));
+			pCount++;
 			players.add(p);
 			setup.relist();
+		}
 
 		}
-		*/
-	}
+
+
 	public static void main(String[] args)
 	{
-		
-				Thread gs =new Thread(new GameServer());	
-				gs.start();
+		Thread gs =new Thread(new GameServer());	
+		gs.start();
 	}
 
 	public void run()

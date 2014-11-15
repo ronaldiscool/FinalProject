@@ -1,8 +1,8 @@
 
-class Cop extends Villager{
+class Cop extends Player{
 	
-	public Cop(String name) {
-		super(name);
+	public Cop(String name, ServerThread st, ServerReader reader) {
+		super(name, st, reader);
 	}
 	
 	public void power(Player p) {
