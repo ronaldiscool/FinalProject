@@ -53,6 +53,16 @@ class Reader extends Thread
 				gc.concatNames = temp;
 				String names[] = gc.concatNames.split("$");
 				gc.addName(gc.concatNames);
+				
+				gc.jp.add(gc.um,"User Messenger");
+				gc.um=new UserMessenger();
+				try {
+					this.sleep(5000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				gc.CL.show(gc.jp,"User Messenger");
 				//System.out.println(temp);
 
 				//gc.waitRoom.removeAll();
@@ -65,15 +75,18 @@ class Reader extends Thread
 }
 
 public class GameClient extends JFrame implements Runnable{
-	
+	UserMessenger um;
 	BufferedReader br;
 	private PrintWriter pw;
+	// panel with cardlayout
 	JPanel jp;
+	// initial user name chooser
 	JPanel su;
 	PlayerPanel waitRoom = new PlayerPanel();
 	public Thread t = new Thread(this);
 	JTextField nameField = new JTextField(45);
 	String concatNames = "";
+	CardLayout CL = new CardLayout();
 	public void addName(String name) {
 		waitRoom.addName(name);
 	}
@@ -84,7 +97,6 @@ public class GameClient extends JFrame implements Runnable{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		jp = new JPanel();
-		CardLayout CL = new CardLayout();
 		jp.setLayout(CL);
 		
 		JButton ok = new JButton("OKAY");
@@ -108,16 +120,17 @@ public class GameClient extends JFrame implements Runnable{
 		northPanel.add(new JLabel("Enter a username to be used in the game.") ); // adds instruction
 		centerPanel.add(nameField);
 		centerPanel.add(ok);
-		
+
 		su = new JPanel();
 		su.setLayout(new BorderLayout());
 		su.add(northPanel, BorderLayout.NORTH);
 		su.add(centerPanel, BorderLayout.CENTER);
 		
+		
 		jp.add(su,"login");
 		jp.add(waitRoom, "Wait Room");
 		add(jp);
-		setVisible(true);
+		setVisible(true);		
 	}
 	
 	
@@ -129,11 +142,9 @@ public class GameClient extends JFrame implements Runnable{
 			this.pw = new PrintWriter(s.getOutputStream());
 			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		GUIInit();
-
 	}	
 
 
@@ -142,15 +153,12 @@ public class GameClient extends JFrame implements Runnable{
 		Reader r = new Reader(this);
 		Repainter rp = new Repainter(this);
 		r.start();
-		rp.start();
-
-		
+		rp.start();		
 	}
 	
 	public static void main(String[] args)
 	{
 		Thread gc = new Thread(new GameClient());
 		gc.start();
-		
 	}
 }

@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 
 abstract class Player{
 	
+	public ServerThread st;
 	private boolean alive;
 	public int 	tally;
 	protected String name;
