@@ -49,9 +49,9 @@ class ServerReader extends Thread
 					GameServer.setup.playerPanel.add(jl);
 				}
 			GameServer.flag = false;
-System.out.println(GameServer.concatNames+"READDING");
 GameServer.sendMessage(GameServer.concatNames,true);
 				GameServer.read.signalAll();
+				//GameServer.received.signalAll();
 		}			
 			
 		 catch (Exception e) {
@@ -71,6 +71,7 @@ public class GameServer extends JFrame implements Runnable{
 	static String concatNames = "";
 	static ReentrantLock lock = new ReentrantLock();
 	static Condition read = lock.newCondition();
+	static Condition received = lock.newCondition();
 	
 	public GameServer()
 	{
@@ -108,15 +109,17 @@ public class GameServer extends JFrame implements Runnable{
 		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 			try{
-			//	lock.lock();
-			//	read.await();
+				
 			Socket s = ss.accept();
-			//lock.unlock();
 			ServerThread ST = new ServerThread(s);
 			st.add(ST);
 			BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			ServerReader sr = new ServerReader(br);
 			sr.start();
+			if(i<0)
+			{lock.lock();
+				received.await();
+				lock.unlock();}
 			}
 				/*String line = br.readLine();
 				concatNames+=line+"\n";
@@ -146,6 +149,7 @@ public class GameServer extends JFrame implements Runnable{
 			//GameClient client = new GameClient();
 			//clients.add(client);
 			}*/
+			
 			catch(Exception e){e.printStackTrace();}
 		}
 		lock.lock();
@@ -157,21 +161,17 @@ public class GameServer extends JFrame implements Runnable{
 		}
 		lock.unlock();
 		sendMessage(concatNames,true);
-		System.out.println(concatNames+"AAAAAAAA");
-		sendMessage("DONEe",true);
 		for(ServerThread ST:st)
 			ST.start();
 		sendMessage("DONE",true);
 		/*for(int i = 0; i < setup.numVil; i++)
 		{
-			Socket s = ss.accept();
 			Villager p = new Villager();
 			players.add(p);
 			setup.relist();
 		}
 		for(int i = 0; i < setup.numCop; i++)
 		{
-			Socket s = ss.accept();
 			Cop p = new Cop();
 			players.add(p);
 			setup.relist();
@@ -185,8 +185,7 @@ public class GameServer extends JFrame implements Runnable{
 		}
 		for(int i = 0; i < setup.numMaf; i++)
 		{
-			//Socket s = ss.accept();
-			TheMafia p = new GodFather("ronaldismaf");
+			TheMafia p = new Mafia("ronaldismaf");
 			players.add(p);
 			setup.relist();
 

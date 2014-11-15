@@ -53,7 +53,7 @@ class Reader extends Thread
 				gc.concatNames = temp;
 				String names[] = gc.concatNames.split("$");
 				gc.addName(gc.concatNames);
-				System.out.println(temp);
+				//System.out.println(temp);
 
 				//gc.waitRoom.removeAll();
 
