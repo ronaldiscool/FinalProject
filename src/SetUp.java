@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
+
 public class SetUp extends JPanel {
 	static final long serialVersionUID = 1;
 	private JComboBox<String> citizenBox;
@@ -109,6 +110,7 @@ public class SetUp extends JPanel {
 				{
 					numPlayers = goodNum+badNum;
 					messageLabel.setText("Processing...");
+					//GameServer gs = new GameServer();
 					GameServer.startup();
 				}
 			}

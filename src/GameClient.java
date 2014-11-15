@@ -47,12 +47,14 @@ class Reader extends Thread
 		try {
 			while(true)
 			{
-				gc.concatNames = br.readLine();
-				System.out.println(gc.concatNames);
-				if(gc.concatNames.equals("DONE"))
+				String temp = br.readLine();
+				if(temp.equals("DONE"))
 					break;
-				String[] namel = gc.concatNames.split("\n");
+				gc.concatNames = temp;
+				String names[] = gc.concatNames.split("$");
 				gc.addName(gc.concatNames);
+				//System.out.println(temp);
+
 				//gc.waitRoom.removeAll();
 
 			}
@@ -71,7 +73,7 @@ public class GameClient extends JFrame implements Runnable{
 	PlayerPanel waitRoom = new PlayerPanel();
 	public Thread t = new Thread(this);
 	JTextField nameField = new JTextField(45);
-	String concatNames = "LINE";
+	String concatNames = "";
 	public void addName(String name) {
 		waitRoom.addName(name);
 	}
