@@ -61,8 +61,9 @@ class Reader extends Thread
 					break;
 				}
 				gc.concatNames = temp;
-				String names[] = gc.concatNames.split("//$");
-				gc.addName(gc.concatNames);
+				String names[] = gc.concatNames.split("~");
+				for(int i=0; i<names.length; ++i)
+					gc.addName(names[i]);
 				
 				
 				System.out.println(temp);
@@ -70,6 +71,12 @@ class Reader extends Thread
 				//gc.waitRoom.removeAll();
 
 			}
+			while(true) // Receives the message from other players
+			{
+				String temp = br.readLine();
+				gc.getMessenger().addMessage(temp);
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -77,7 +84,7 @@ class Reader extends Thread
 }
 
 public class GameClient extends JFrame implements Runnable{
-	UserMessenger um=new UserMessenger();
+	UserMessenger um = new UserMessenger(this);
 	BufferedReader br;
 	private PrintWriter pw;
 	// panel with cardlayout
@@ -89,9 +96,20 @@ public class GameClient extends JFrame implements Runnable{
 	JTextField nameField = new JTextField(45);
 	String concatNames = "";
 	CardLayout CL = new CardLayout();
+	private String name;
+	
 	public void addName(String name) {
 		waitRoom.addName(name);
 	}
+	public UserMessenger getMessenger() {
+		return um;
+	}
+	
+	public void sendMessage(String message) {
+		pw.println(name + ": " + message);
+		pw.flush();
+	}
+	
 	private void GUIInit()
 	{
 		setSize(640,480);
@@ -106,7 +124,7 @@ public class GameClient extends JFrame implements Runnable{
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String name = nameField.getText();
+				name = nameField.getText();
 				pw.println(name);
 				pw.flush();
 				CardLayout CL1 = (CardLayout) jp.getLayout();
