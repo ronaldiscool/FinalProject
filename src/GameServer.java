@@ -46,36 +46,20 @@ class ServerReader extends Thread
 	public void run()
 	{
 		try {
-<<<<<<< HEAD
-			// reads 
-			String line = br.readLine();
-			GameServer.concatNames+=line+"$";
-			String[] namel = GameServer.concatNames.split("$");
-			for(String n:namel)
-=======
-
 			String line = br.readLine();
 			GameServer.concatNames+=line+"$";
 			GameServer.name1 = GameServer.concatNames.split("$");
 			for(String n:GameServer.name1)
->>>>>>> origin/master
+
 			{
 				JLabel jl = new JLabel(n);
 				GameServer.setup.playerPanel.add(jl);
 			}
 			GameServer.flag = false;
-<<<<<<< HEAD
 			GameServer.sendMessage(GameServer.concatNames,true, null);
 			GameServer.lock.lock();
 			GameServer.read.signalAll();
 			GameServer.lock.unlock();
-=======
-
-GameServer.sendMessage(GameServer.concatNames,true, null);
-				GameServer.lock.lock();
-				GameServer.read.signalAll();
-				GameServer.lock.unlock();
->>>>>>> origin/master
 
 				//GameServer.received.signalAll();
 		}			
@@ -97,16 +81,11 @@ public class GameServer extends JFrame implements Runnable{
 	public static Vector<TheMafia> mafia= new Vector<TheMafia>();
 	public static Vector<Stripper> strippers= new Vector<Stripper>();
 	public static Vector<Doctor> doctors= new Vector<Doctor>();
-<<<<<<< HEAD
+	public static Vector<ServerReader> readers = new Vector<ServerReader>();
 	public static CardLayout c1=new CardLayout();
 	public static UserMessenger serverMessenger=new UserMessenger();
-	static public JPanel serverPanel=new JPanel();
-=======
-	public static Vector<ServerReader> readers = new Vector<ServerReader>();
-	CardLayout c1=new CardLayout();
-	UserMessenger serverMessenger=new UserMessenger();
-	public JPanel serverPanel=new JPanel();
->>>>>>> origin/master
+	public static JPanel serverPanel=new JPanel();
+
 	static SetUp setup = new SetUp();
 	public static ServerSocket ss;
 	static String inBuffer = "";
@@ -147,23 +126,17 @@ public class GameServer extends JFrame implements Runnable{
 			receivers = players;
 		if(send)
 		{
-<<<<<<< HEAD
-		/*for(Player player : receivers)
-		{
-				ServerThread ct1 = player.st;
-				ct1.send(line);
-		}*/
-			// 
-			for(ServerThread ct1 : st)
-			{
-				ct1.send(line);
-=======
 
 		for(Player player : receivers)
 		{
 				ServerThread ct1 = player.st;
 				ct1.send(line);
->>>>>>> origin/master
+		}
+			// 
+			for(ServerThread ct1 : st)
+			{
+				ct1.send(line);
+
 			}
 		}
 		else
@@ -177,21 +150,6 @@ public class GameServer extends JFrame implements Runnable{
 		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 			try{
-<<<<<<< HEAD
-				
-			Socket s = ss.accept();
-			ServerThread ST = new ServerThread(s);
-			st.add(ST);
-			BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			ServerReader sr = new ServerReader(br);
-			sr.start();
-			if(i<0){
-				System.out.println("Lock engaged");
-				lock.lock();
-				received.await();
-				lock.unlock();}
-				System.out.println("Lock disnegaged");
-=======
 
 				Socket s = ss.accept();
 				ServerThread ST = new ServerThread(s);
@@ -205,8 +163,7 @@ public class GameServer extends JFrame implements Runnable{
 					lock.lock();
 					received.await();
 					lock.unlock();}
->>>>>>> origin/master
-			}
+				}
 			/*String line = br.readLine();
 				concatNames+=line+"\n";
 				sendMessage(concatNames,true);
@@ -235,11 +192,11 @@ public class GameServer extends JFrame implements Runnable{
 			//GameClient client = new GameClient();
 			//clients.add(client);
 			}*/
-<<<<<<< HEAD
-			//PLAYERNAME~ALL~CHAT~"MESSAGE"
-=======
 
->>>>>>> origin/master
+			//PLAYERNAME~ALL~CHAT~"MESSAGE"
+
+
+
 			catch(Exception e){e.printStackTrace();}
 		}
 		lock.lock();
@@ -255,7 +212,6 @@ public class GameServer extends JFrame implements Runnable{
 			ST.start();
 
 		sendMessage("DONE",true,null);
-<<<<<<< HEAD
 		System.out.println("D");
 		/*for(int i = 0; i < setup.numVil; i++)
 =======
@@ -301,10 +257,10 @@ public class GameServer extends JFrame implements Runnable{
 			players.add(p);
 			setup.relist();
 		}
-
+	*/
 		}
-
-
+		
+		
 	public static void main(String[] args)
 	{
 		Thread gs =new Thread(new GameServer());	
