@@ -1,3 +1,4 @@
+import java.awt.CardLayout;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,6 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 class ServerRepainter extends Thread
 {
@@ -71,7 +73,9 @@ public class GameServer extends JFrame implements Runnable{
 	public static Vector<TheMafia> mafia= new Vector<TheMafia>();
 	public static Vector<Stripper> strippers= new Vector<Stripper>();
 	public static Vector<Doctor> doctors= new Vector<Doctor>();
-
+	CardLayout c1=new CardLayout();
+	UserMessenger serverMessenger=new UserMessenger();
+	public JPanel serverPanel=new JPanel();
 	static SetUp setup = new SetUp();
 	public static ServerSocket ss;
 	static String inBuffer = "";
@@ -84,6 +88,9 @@ public class GameServer extends JFrame implements Runnable{
 	public GameServer()
 	{
 		super("Mafia");
+		//serverPanel.setLayout(c1);
+		//c1.add(serverMessenger,"message");
+		
 		setSize(500, 500);
 		setLocation(50, 50);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
