@@ -172,11 +172,11 @@ public class GameServer extends JFrame implements Runnable{
 			e.printStackTrace();
 		}
 		lock.unlock();
-		sendMessage(concatNames,true);
+		sendMessage(concatNames,true, null);
 		for(ServerThread ST:st)
 			ST.start();
-		sendMessage("DONE",true);
-		for(int i = 0; i < setup.numVil; i++)
+		sendMessage("DONE",true,null);
+		/*for(int i = 0; i < setup.numVil; i++)
 		{
 			Villager p = new Villager();
 			players.add(p);
@@ -209,7 +209,7 @@ public class GameServer extends JFrame implements Runnable{
 			setup.relist();
 
 		}
-
+		*/
 	}
 	public static void main(String[] args)
 	{
