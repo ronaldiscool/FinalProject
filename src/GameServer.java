@@ -66,6 +66,12 @@ public class GameServer extends JFrame implements Runnable{
 	public static Vector<Player> players= new Vector<Player>();
 	public static Vector<GameClient> clients= new Vector<GameClient>();
 	public static Vector<ServerThread> st = new Vector<ServerThread>();
+	public static Vector<Villager> villagers= new Vector<Villager>();
+	public static Vector<Cop> cops= new Vector<Cop>();
+	public static Vector<TheMafia> mafia= new Vector<TheMafia>();
+	public static Vector<Stripper> strippers= new Vector<Stripper>();
+	public static Vector<Doctor> doctors= new Vector<Doctor>();
+
 	static SetUp setup = new SetUp();
 	public static ServerSocket ss;
 	static String inBuffer = "";
@@ -188,6 +194,13 @@ public class GameServer extends JFrame implements Runnable{
 		for(int i = 0; i < setup.numMaf; i++)
 		{
 			TheMafia p = new Mafia("ronaldismaf");
+			players.add(p);
+			setup.relist();
+
+		}
+		for(int i = 0; i < setup.numHook; i++)
+		{
+			TheMafia p = new Stripper("ronaldismaf");
 			players.add(p);
 			setup.relist();
 
