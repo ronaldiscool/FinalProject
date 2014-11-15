@@ -28,13 +28,9 @@ class ServerRepainter extends Thread
 	public void run()
 	{
 		while(true){
-<<<<<<< HEAD
-			gc.revalidate();
-			gc.repaint();}
-=======
+
 		gc.revalidate();
 		gc.repaint();}
->>>>>>> 863b67fef02a38f8b4a5d99794090d40860d6b7a
 	}
 }
 
@@ -60,18 +56,13 @@ class ServerReader extends Thread
 				GameServer.setup.playerPanel.add(jl);
 			}
 			GameServer.flag = false;
-<<<<<<< HEAD
-			GameServer.sendMessage(GameServer.concatNames,true);
-			GameServer.read.signalAll();
-			//GameServer.received.signalAll();
-=======
+
 GameServer.sendMessage(GameServer.concatNames,true, null);
 				GameServer.lock.lock();
 				GameServer.read.signalAll();
 				GameServer.lock.unlock();
 
 				//GameServer.received.signalAll();
->>>>>>> 863b67fef02a38f8b4a5d99794090d40860d6b7a
 		}			
 
 		catch (Exception e) {
@@ -82,7 +73,6 @@ GameServer.sendMessage(GameServer.concatNames,true, null);
 
 public class GameServer extends JFrame implements Runnable{
 	public static String[] name1;
-	public static String[] name0;
 	public static int pCount = 0;
 	public static Vector<Player> players= new Vector<Player>();
 	public static Vector<GameClient> clients= new Vector<GameClient>();
@@ -92,14 +82,10 @@ public class GameServer extends JFrame implements Runnable{
 	public static Vector<TheMafia> mafia= new Vector<TheMafia>();
 	public static Vector<Stripper> strippers= new Vector<Stripper>();
 	public static Vector<Doctor> doctors= new Vector<Doctor>();
-<<<<<<< HEAD
 	public static Vector<ServerReader> readers = new Vector<ServerReader>();
-
-=======
 	CardLayout c1=new CardLayout();
 	UserMessenger serverMessenger=new UserMessenger();
 	public JPanel serverPanel=new JPanel();
->>>>>>> 863b67fef02a38f8b4a5d99794090d40860d6b7a
 	static SetUp setup = new SetUp();
 	public static ServerSocket ss;
 	static String inBuffer = "";
@@ -127,26 +113,18 @@ public class GameServer extends JFrame implements Runnable{
 			e.printStackTrace();
 		}
 	}
-<<<<<<< HEAD
 
-	public static void sendMessage(String line, boolean send)
-=======
 	
 	public static void sendMessage(String line, boolean send, Vector<Player> receivers)
->>>>>>> 863b67fef02a38f8b4a5d99794090d40860d6b7a
 	{
 		if(receivers == null)
 			receivers = players;
 		if(send)
 		{
-<<<<<<< HEAD
-			for(ServerThread ct1 : st)
-			{
-=======
+
 		for(Player player : receivers)
 		{
 				ServerThread ct1 = player.st;
->>>>>>> 863b67fef02a38f8b4a5d99794090d40860d6b7a
 				ct1.send(line);
 			}
 		}
