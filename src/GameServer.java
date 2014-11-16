@@ -106,6 +106,7 @@ public class GameServer extends JFrame implements Runnable{
 	static Condition received2 = lock.newCondition();
 	//static GameClient gc;
 	static boolean show = true;
+	static boolean initializing = true;
 
 	public GameServer()
 	{
@@ -142,16 +143,18 @@ public class GameServer extends JFrame implements Runnable{
 			receivers = players;
 		if(send)
 		{
-
-		/*for(Player player : receivers)
+			if(!initializing)
+			{
+		for(Player player : receivers)
 		{
 				ServerThread ct1 = player.st;
 				ct1.send(line);
-<<<<<<< HEAD
-			}*/
+			}}
+			if(initializing)
+			{
 			for(ServerThread ct1:st)
 				ct1.send(line);
-		}
+		}}
 			
 		else
 			inBuffer= line;
@@ -166,15 +169,7 @@ public class GameServer extends JFrame implements Runnable{
 		Thread gc = new Thread(new GameClient());
 		gc.start();
 
-		/*try {
-			lock.lock();
-			received2.signalAll();
-			received.await();
-			lock.unlock();
-		} catch (Exception e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}*/
+
 
 		try {
 			gc.join();
@@ -210,35 +205,7 @@ public class GameServer extends JFrame implements Runnable{
 					received.await();
 					lock.unlock();}
 				}
-			/*String line = br.readLine();
-				concatNames+=line+"\n";
-				sendMessage(concatNames,true);
-				String[] namel = concatNames.split("\n");
-				for(String n:namel)
-				{
-					JLabel jl = new JLabel(n);
-					GameServer.setup.playerPanel.add(jl);
-					setup.revalidate();
-					setup.repaint();
-				}
-
-			flag = false;
-				//BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-				//String name = br.readLine();
-
-				//System.out.println(i+name);
-				//Player p = new Player(name);
-				//players.add(p);
-				//concatNames= concatNames+name+"\n";
-				//sendMessage(concatNames,null);
-				setup.relist();
-				setup.revalidate();
-				setup.repaint();
-			//ServerThread sthread = new ServerThread( s, this);
-			//GameClient client = new GameClient();
-			//clients.add(client);
-			}*/
-
+			
 			//PLAYERNAME~ALL~CHAT~"MESSAGE"
 
 
@@ -256,33 +223,31 @@ public class GameServer extends JFrame implements Runnable{
 		sendMessage(concatNames,true, null);
 		for(ServerThread ST:st)
 			ST.start();
-
 		sendMessage("DONE",true,null);
-		long seed = System.nanoTime();
+		initializing=false;
+		long seed;
+		seed = System.nanoTime();
 		Collections.shuffle(Arrays.asList(name1), new Random(seed));
 		Collections.shuffle(st, new Random(seed));
 		Collections.shuffle(readers, new Random(seed));
-	
+		
 		for(int i = 0; i < setup.numVil; i++)
 		{
 			Villager p = new Villager(name1[pCount], st.get(pCount), readers.get(pCount));
 			pCount++;
 			players.add(p);
-			setup.relist();
 		}
 		for(int i = 0; i < setup.numCop; i++)
 		{
 			Cop p = new Cop(name1[pCount], st.get(pCount), readers.get(pCount));
 			pCount++;
 			players.add(p);
-			setup.relist();
 		}
 		for(int i = 0; i < setup.numDoc; i++)
 		{
 			Doctor p = new Doctor(name1[pCount], st.get(pCount), readers.get(pCount));
 			pCount++;
 			players.add(p);
-			setup.relist();
 		}
 		
 		System.out.println(setup.numMaf);
@@ -292,7 +257,6 @@ public class GameServer extends JFrame implements Runnable{
 			TheMafia p = new Mafia(name1[pCount], st.get(pCount), readers.get(pCount));
 			pCount++;
 			players.add(p);
-			setup.relist();
 
 		}
 		for(int i = 0; i < setup.numHook; i++)
@@ -303,6 +267,8 @@ public class GameServer extends JFrame implements Runnable{
 			setup.relist();
 		}
 	}
+		
+
 
 		
 		
