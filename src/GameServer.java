@@ -107,7 +107,6 @@ public class GameServer extends JFrame implements Runnable{
 	public static Vector<Doctor> doctors= new Vector<Doctor>();
 	public static Vector<ServerReader> readers = new Vector<ServerReader>();
 	public static CardLayout c1=new CardLayout();
-	public UserMessenger serverMessenger=new UserMessenger(this);
 	public static JPanel serverPanel=new JPanel();
 
 	static SetUp setup = new SetUp();
@@ -131,7 +130,6 @@ public class GameServer extends JFrame implements Runnable{
 
 		// cardlayout for the messenger and the setup panel
 		serverPanel.setLayout(c1);
-		serverPanel.add(serverMessenger,"message");
 		serverPanel.add(setup, "setup");
 		c1.show(serverPanel, "setup");
 
@@ -225,17 +223,17 @@ public class GameServer extends JFrame implements Runnable{
 	{
 		show = false;
 		//Thread accept = new Thread(new AcceptSocket(ss));
-		GameClient gc =new GameClient();
+		GameClient gc = new GameClient();
 		Thread gcthread = new Thread(gc);
 		gcthread.start();
 
 
 		try {
-			Socket sss = ss.accept();
-			ServerThread ST0 = new ServerThread(sss);
+			Socket s = ss.accept();
+			ServerThread ST0 = new ServerThread(s);
 			st.add(ST0);
-			br0 = new BufferedReader(new InputStreamReader(sss.getInputStream()));
-			ServerReader sr0 = new ServerReader(br0, sss);
+			br0 = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			ServerReader sr0 = new ServerReader(br0, s);
 			readers.add(sr0);
 			sr0.start();
 		} catch (Exception e1) {
@@ -247,7 +245,6 @@ public class GameServer extends JFrame implements Runnable{
 		{
 
 			try{
-
 				Socket s = ss.accept();
 				ServerThread ST = new ServerThread(s);
 				st.add(ST);
@@ -293,47 +290,43 @@ public class GameServer extends JFrame implements Runnable{
 
 		
 
-		for(String s : name1)
-		{
-			System.out.println("NANME:"+s);
-			GameServer.names.add(s);
-		}
+
 		
 		GameClient.names0=names;
 		
 		for(int i = 0; i < setup.numVil; i++)
 		{
+			st.get(pCount).send("VILLAGER");
 			Villager p = new Villager(name1[pCount], st.get(pCount), readers.get(pCount));
 			pCount++;
 			players.add(p);
 			villagers.add(p);
-			st.get(pCount).send("VILLAGER");
 		}
 		for(int i = 0; i < setup.numCop; i++)
 		{
+			System.out.println(pCount);
 			Cop p = new Cop(name1[pCount], st.get(pCount), readers.get(pCount));
+			st.get(pCount).send("COP");
 			pCount++;
 			players.add(p);
 			cops.add(p);
-			st.get(pCount).send("COP");
 		}
 		for(int i = 0; i < setup.numDoc; i++)
 		{
 			Doctor p = new Doctor(name1[pCount], st.get(pCount), readers.get(pCount));
+			st.get(pCount).send("DOCTOR");
 			pCount++;
 			players.add(p);
 			doctors.add(p);
-			st.get(pCount).send("DOCTOR");
 		}
 
 		for(int i = 0; i < setup.numMaf; i++)
 		{
-
 			TheMafia p = new Mafia(name1[pCount], st.get(pCount), readers.get(pCount));
+			st.get(pCount).send("MAFIA");
 			pCount++;
 			players.add(p);
 			mafia.add(p);
-			st.get(pCount).send("MAFIA");
 }
 	}
 

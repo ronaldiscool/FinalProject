@@ -17,29 +17,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-class Repainter extends Thread
-{
-	GameClient gc;
-	public Repainter(GameClient gc)
-	{
-		this.gc = gc;
-	}
-	
-	public void run()
-	{
-		while(true){
-		gc.revalidate();
-		gc.repaint();}
-	}
-}
-
 class Reader extends Thread
 {
 	GameClient gc;
 	BufferedReader br;
 	UserMessenger um;
-	
-	
 	
 	public Reader(GameClient gc, UserMessenger um)
 	{
@@ -160,8 +142,8 @@ public class GameClient extends JFrame implements Runnable{
 	private void GUIInit()
 	{
 
-		setSize(640,480);
-		setLocation(200,200);
+		setSize(640,525);
+		setLocation(100,100);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		jp = new JPanel();
@@ -224,9 +206,7 @@ public class GameClient extends JFrame implements Runnable{
 	public void run()
 	{
 		Reader r = new Reader(this,um);
-		Repainter rp = new Repainter(this);
 		r.start();
-		rp.start();		
 	}
 	
 	public static void main(String[] args)
