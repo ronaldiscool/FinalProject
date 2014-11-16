@@ -62,10 +62,10 @@ class Reader extends Thread
 				}
 				gc.concatNames = temp;
 
+
 				String names[] = gc.concatNames.split("~");
 				for(int i=0; i<names.length; ++i)
 					gc.addName(names[i]);
-				
 				
 				System.out.println(temp);
 

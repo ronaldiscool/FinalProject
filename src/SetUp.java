@@ -16,8 +16,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
-
 public class SetUp extends JPanel {
 	static final long serialVersionUID = 1;
 	private JComboBox<String> citizenBox;

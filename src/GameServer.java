@@ -53,6 +53,7 @@ class ServerReader extends Thread
 			String line = br.readLine();
 			GameServer.concatNames+=line+"~";
 			GameServer.name1 = GameServer.concatNames.split("~");
+
 			for(String n:GameServer.name1)
 
 			{
@@ -222,7 +223,6 @@ public class GameServer extends JFrame implements Runnable{
 		sendMessage(concatNames,true, null);
 		for(ServerThread ST:st)
 			ST.start();
-
 		sendMessage("DONE",true,null);
 		initializing=false;
 		long seed;
@@ -269,8 +269,9 @@ public class GameServer extends JFrame implements Runnable{
 			players.add(p);
 			strippers.add(p);
 		}*/
+			setup.relist();
+	}
 
-		}
 		
 		
 	public static void main(String[] args)
