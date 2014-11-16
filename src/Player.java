@@ -19,7 +19,6 @@ abstract class Player{
 	private boolean alive;
 	public int 	tally;
 	protected String name;
-	protected ServerThread st;
 	protected ServerReader reader;
 	// doctor has chosen this player to stay alive, negating any attempts to kill
 	private boolean stayAlive;

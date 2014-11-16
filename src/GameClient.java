@@ -48,22 +48,24 @@ class Reader extends Thread
 			while(true)
 			{
 				String temp = br.readLine();
+				System.out.println("DA");
 				if(temp.equals("DONE"))
+				{
+					try {
+						this.sleep(5000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					gc.CL.show(gc.jp,"User Messenger");
 					break;
+				}
 				gc.concatNames = temp;
-				String names[] = gc.concatNames.split("$");
+				String names[] = gc.concatNames.split("//$");
 				gc.addName(gc.concatNames);
 				
-				gc.jp.add(gc.um,"User Messenger");
-				gc.um=new UserMessenger();
-				try {
-					this.sleep(5000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				gc.CL.show(gc.jp,"User Messenger");
-				//System.out.println(temp);
+				
+				System.out.println(temp);
 
 				//gc.waitRoom.removeAll();
 
@@ -75,7 +77,7 @@ class Reader extends Thread
 }
 
 public class GameClient extends JFrame implements Runnable{
-	UserMessenger um;
+	UserMessenger um=new UserMessenger();
 	BufferedReader br;
 	private PrintWriter pw;
 	// panel with cardlayout
@@ -92,13 +94,14 @@ public class GameClient extends JFrame implements Runnable{
 	}
 	private void GUIInit()
 	{
+
 		setSize(640,480);
 		setLocation(200,200);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		jp = new JPanel();
 		jp.setLayout(CL);
-		
+
 		JButton ok = new JButton("OKAY");
 		ok.addActionListener(new ActionListener() // ok button leads to the wait room
 		{
@@ -129,8 +132,13 @@ public class GameClient extends JFrame implements Runnable{
 		
 		jp.add(su,"login");
 		jp.add(waitRoom, "Wait Room");
+		jp.add(um,"User Messenger");
+		CL.show(jp,"login");
 		add(jp);
-		setVisible(true);		
+		System.out.println("AQUI");
+
+		setVisible(true);	
+	
 	}
 	
 	
