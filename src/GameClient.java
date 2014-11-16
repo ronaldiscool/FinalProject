@@ -54,12 +54,13 @@ class Reader extends Thread
 
 				if(temp.equals("DONE"))
 				{
+					if(!gc.name.equals("HOST")){
 					try {
 						this.sleep(5000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}}
 					gc.CL.show(gc.jp,"User Messenger");
 					/*try {
 						GameServer.lock.lock();
@@ -72,6 +73,7 @@ class Reader extends Thread
 						e.printStackTrace();
 					}*/
 					um.updateVotes();
+					um.updateLyncher();
 					System.out.println("FFFFFFFFFFF");
 					break;
 				}
@@ -83,7 +85,6 @@ class Reader extends Thread
 				for(int i=0; i<names.length; ++i)
 					gc.addName(names[i]);
 				
-				System.out.println(temp);
 
 				//gc.waitRoom.removeAll();
 
@@ -114,7 +115,7 @@ public class GameClient extends JFrame implements Runnable{
 	JTextField nameField = new JTextField(45);
 	String concatNames = "";
 	CardLayout CL = new CardLayout();
-	private String name="HOST";
+	String name="HOST";
 	
 	public void addName(String name) {
 		waitRoom.addName(name);

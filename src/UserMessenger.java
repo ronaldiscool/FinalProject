@@ -113,6 +113,13 @@ public class UserMessenger extends JPanel {
 	// this method will remove the specified player's entry in the combobox
 	public void updateLyncher(){
 		// clear players, iterate through container of players adding each alive player back to lyncher
+		lyncher.addItem("HOST");
+
+		String[] playernames = gc.concatNames.split("~");
+		for(String s : playernames)
+		{
+			lyncher.addItem(s);
+		}
 	}
 	public void updateVotes() {
 		for(String name0 : GameServer.concatNames.split("~"))
