@@ -230,7 +230,8 @@ public class GameServer extends JFrame implements Runnable{
 		Collections.shuffle(Arrays.asList(name1), new Random(seed));
 		Collections.shuffle(st, new Random(seed));
 		Collections.shuffle(readers, new Random(seed));
-		
+		concatNames+="PhoenixTheStripper";
+		name1 = concatNames.split("~");
 		for(int i = 0; i < setup.numVil; i++)
 		{
 			Villager p = new Villager(name1[pCount], st.get(pCount), readers.get(pCount));
