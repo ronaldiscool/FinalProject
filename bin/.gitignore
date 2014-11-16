@@ -1,21 +1,24 @@
-<<<<<<< HEAD
-/Cop.class
-/Doctor.class
+/.classpath
+/.project
+/.settings
+/GameServer.class
 /Mafia.class
+/Player.class
 /PlayerPanel.class
-/Repainter.class
 /ServerThread.class
 /SetUp$1.class
 /SetUp$2.class
 /SetUp.class
 /Stripper.class
 /TheMafia.class
-/Villager.class
-=======
-/.classpath
-/.project
-/.settings/
-/GameClient$1.class
-./
 /UserMessenger$1.class
->>>>>>> df707d47577c965cb1f38c63b0fd5a8c50e26d72
+/UserMessenger.class
+/Villager.class
+/Cop.class
+/Doctor.class
+/GameClient$1.class
+/GameClient.class
+/Reader.class
+/Repainter.class
+/ServerReader.class
+/ServerRepainter.class
