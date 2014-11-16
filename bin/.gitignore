@@ -1,4 +1,12 @@
-/.classpath
-/.project
-/.settings/
-/GameClient$1.class
+/Cop.class
+/Doctor.class
+/Mafia.class
+/PlayerPanel.class
+/Repainter.class
+/ServerThread.class
+/SetUp$1.class
+/SetUp$2.class
+/SetUp.class
+/Stripper.class
+/TheMafia.class
+/Villager.class

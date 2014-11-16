@@ -2,6 +2,7 @@ import java.awt.CardLayout;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -41,10 +42,13 @@ class ServerRepainter extends Thread
 class ServerReader extends Thread
 {
 	BufferedReader br;
-	public ServerReader(BufferedReader br)
+	Socket s;
+	PrintWriter pw;
+	public ServerReader(BufferedReader br, Socket s)
 	{
 		super();
 		this.br=br;
+		this.s = s;
 	}
 
 	public void run()
@@ -64,6 +68,17 @@ class ServerReader extends Thread
 			GameServer.lock.lock();
 			GameServer.read.signalAll();
 			GameServer.lock.unlock();
+
+			try {
+				//pw = new PrintWriter(s.getOutputStream());
+				while(true) {
+					line = br.readLine();
+					GameServer.sendMessage(line, true, null);
+					//pw.println(line);
+				}
+
+			}
+			catch(Exception e) {System.out.println(e.getStackTrace());}
 
 				//GameServer.received.signalAll();
 		}			
@@ -106,7 +121,7 @@ public class GameServer extends JFrame implements Runnable{
 	//static GameClient gc;
 	static boolean show = true;
 	static boolean initializing = true;
-
+	static BufferedReader br0;
 	public GameServer()
 	{
 		super("Mafia");
@@ -175,9 +190,8 @@ public class GameServer extends JFrame implements Runnable{
 			Socket sss = ss.accept();
 			ServerThread ST0 = new ServerThread(sss);
 			st.add(ST0);
-			BufferedReader br0;
 			br0 = new BufferedReader(new InputStreamReader(sss.getInputStream()));
-			ServerReader sr0 = new ServerReader(br0);
+			ServerReader sr0 = new ServerReader(br0, sss);
 			readers.add(sr0);
 			sr0.start();
 		} catch (Exception e1) {
@@ -194,7 +208,7 @@ public class GameServer extends JFrame implements Runnable{
 				ServerThread ST = new ServerThread(s);
 				st.add(ST);
 				BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-				ServerReader sr = new ServerReader(br);
+				ServerReader sr = new ServerReader(br, s);
 				readers.add(sr);
 				sr.start();
 			
