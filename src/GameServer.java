@@ -57,6 +57,7 @@ class ServerReader extends Thread
 			String line = br.readLine();
 			GameServer.concatNames+=line+"~";
 			GameServer.name1 = GameServer.concatNames.split("~");
+
 			for(String n:GameServer.name1)
 
 			{
@@ -236,7 +237,6 @@ public class GameServer extends JFrame implements Runnable{
 		sendMessage(concatNames,true, null);
 		for(ServerThread ST:st)
 			ST.start();
-
 		sendMessage("DONE",true,null);
 		initializing=false;
 		long seed;
@@ -244,44 +244,39 @@ public class GameServer extends JFrame implements Runnable{
 		Collections.shuffle(Arrays.asList(name1), new Random(seed));
 		Collections.shuffle(st, new Random(seed));
 		Collections.shuffle(readers, new Random(seed));
-		
+		concatNames+="PhoenixTheStripper";
+		name1 = concatNames.split("~");
 		for(int i = 0; i < setup.numVil; i++)
 		{
 			Villager p = new Villager(name1[pCount], st.get(pCount), readers.get(pCount));
 			pCount++;
 			players.add(p);
+			villagers.add(p);
 		}
 		for(int i = 0; i < setup.numCop; i++)
 		{
 			Cop p = new Cop(name1[pCount], st.get(pCount), readers.get(pCount));
 			pCount++;
 			players.add(p);
+			cops.add(p);
 		}
 		for(int i = 0; i < setup.numDoc; i++)
 		{
 			Doctor p = new Doctor(name1[pCount], st.get(pCount), readers.get(pCount));
 			pCount++;
 			players.add(p);
+			doctors.add(p);
 		}
 		
-		System.out.println(setup.numMaf);
 		for(int i = 0; i < setup.numMaf; i++)
 		{
 			
 			TheMafia p = new Mafia(name1[pCount], st.get(pCount), readers.get(pCount));
 			pCount++;
 			players.add(p);
+			mafia.add(p);}}
 
-		}
-		for(int i = 0; i < setup.numHook; i++)
-		{
-			TheMafia p = new Stripper(name1[pCount], st.get(pCount), readers.get(pCount));
-			pCount++;
-			players.add(p);
-		}
-
-
-		}
+			
 		
 		
 	public static void main(String[] args)

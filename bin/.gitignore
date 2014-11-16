@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /Cop.class
 /Doctor.class
 /Mafia.class
@@ -10,3 +11,11 @@
 /Stripper.class
 /TheMafia.class
 /Villager.class
+=======
+/.classpath
+/.project
+/.settings/
+/GameClient$1.class
+./
+/UserMessenger$1.class
+>>>>>>> df707d47577c965cb1f38c63b0fd5a8c50e26d72

@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 
 
 public class UserMessenger extends JPanel {
+	//TODO : possible container to hold the current players in the game, the lyncher combobox will be updated to hold the names of the players
+	// 
 	JLabel timeCycle;
 	JTextArea messageField;
 	JTextArea inputField;
@@ -52,11 +54,9 @@ public class UserMessenger extends JPanel {
 		timeCycle=new JLabel("Day");
 		messagePanel.add(timeCycle,gbc);
 		
-
 		gbc.ipady=0;
 		gbc.gridwidth=1;
 		gbc.gridheight=3;
-		gbc.gridx=0;
 		gbc.gridy=1;
 		gbc.anchor=GridBagConstraints.FIRST_LINE_START;
 		messageField=new JTextArea(" ",18,25);
@@ -66,7 +66,6 @@ public class UserMessenger extends JPanel {
 	
 		gbc.gridheight=1;
 		gbc.weighty=1;
-		gbc.gridx=0;
 		gbc.gridy=4;
 		gbc.anchor=GridBagConstraints.FIRST_LINE_START;
 		inputField=new JTextArea(" ",5,25);
@@ -76,7 +75,6 @@ public class UserMessenger extends JPanel {
 		gbc.weighty=0;
 		gbc.weightx=1;
 		gbc.gridx=1;
-		gbc.gridy=4;
 		gbc.anchor=GridBagConstraints.CENTER;
 		sendButton=new JButton("Send");
 		messagePanel.add(sendButton,gbc);
@@ -95,15 +93,7 @@ public class UserMessenger extends JPanel {
 		gbc.weighty=1;
 		gbc.anchor=GridBagConstraints.NORTH;
 		lyncher=new JComboBox<String>();
-		lyncher.addItem("Stripper");
-		lyncher.addItem("Cop");
-		lyncher.addItem("Doctor");
-		lyncher.addItem("GodFather");
-		lyncher.addItem("Detective");
-		lyncher.addItem("GodFather");
-		lyncher.addItem("Villager");
 		messagePanel.add(lyncher,gbc);
-		
 		
 		gbc.gridx=1;
 		gbc.gridy=3;
@@ -118,9 +108,9 @@ public class UserMessenger extends JPanel {
 		this.setVisible(true);
 	}
 	
-	//public static void main(String args[])
-	//{
-	//	new UserMessenger();
-	//}
+	// this method will remove the specified player's entry in the combobox
+	public void updateLyncher(){
+		// clear players, iterate through container of players adding each alive player back to lyncher
 	}
+}
 

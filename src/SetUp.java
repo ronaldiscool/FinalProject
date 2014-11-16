@@ -16,8 +16,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
-
 public class SetUp extends JPanel {
 	static final long serialVersionUID = 1;
 	private JComboBox<String> citizenBox;
@@ -165,7 +163,6 @@ public class SetUp extends JPanel {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(1, 2));
 		mainPanel.add(selectPanel);
-		mainPanel.add(playerPanel);
 		
 		setLayout(new BorderLayout());
 		add(mainPanel, BorderLayout.CENTER);
