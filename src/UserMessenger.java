@@ -21,9 +21,10 @@ public class UserMessenger extends JPanel {
 	JLabel timeCycle;
 	JTextArea messageField;
 	JTextArea inputField;
-	JButton sendButton;
+	JButton sendButton, voteButton;
 	JComboBox<String> lyncher;
 	JTextArea votes;
+	String lynchvotes="";
 	JPanel messagePanel;
 	JScrollPane textFieldPane;
 	JScrollPane inputFieldPane;
@@ -82,11 +83,25 @@ public class UserMessenger extends JPanel {
 		sendButton=new JButton("Send");
 		messagePanel.add(sendButton,gbc);
 		
+		gbc.gridx=3;
+		voteButton = new JButton("Vote");
+		messagePanel.add(voteButton,gbc);
+
+		
+		voteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+							String target = lyncher.getSelectedItem().toString();
+				gc.sendMessage(target, 1);
+				UserMessenger.this.voteButton.setEnabled(false);
+			}
+		}
+		);
+		
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String message = inputField.getText();
 				if (!message.equals("")) {
-					gc.sendMessage(message);
+					gc.sendMessage(message,0);
 				}
 				inputField.setText("");
 			}
@@ -128,15 +143,11 @@ public class UserMessenger extends JPanel {
 			lyncher.addItem(s);
 		}
 	}
-	public void updateVotes() {
-		for(String name0 : GameServer.concatNames.split("~"))
-		{
-			//Player p = GameServer.players.get(i);
-			//String name = p.getName() + ":";
+	public void updateVotes(String voter, String target) {
+		
 			String textOfChat=votes.getText();
-			textOfChat=name0+"\n";
+			textOfChat+=voter+ " votes for "+target+"\n";
 			votes.setText(textOfChat);		
-		}
 
 	}
 }

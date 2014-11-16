@@ -26,6 +26,8 @@ public class PlayerPanel extends JPanel {
 		
 		playersList.setBackground(Color.white);
 		
+		list.addElement("HOST");
+		
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout());
 		panel1.add(scroll, BorderLayout.CENTER);
@@ -45,6 +47,8 @@ public class PlayerPanel extends JPanel {
 		add(Box.createGlue());
 		add(panel3);
 		add(Box.createGlue());
+		
+		
 		
 	}
 	public void addName(String name) {

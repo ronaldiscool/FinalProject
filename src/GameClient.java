@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -37,12 +39,39 @@ class Reader extends Thread
 	BufferedReader br;
 	UserMessenger um;
 	
+	
+	
 	public Reader(GameClient gc, UserMessenger um)
 	{
 		super();
 		this.gc=gc;
 		this.br=gc.br;
 		this.um = um;
+	}
+	
+	private void parsecommand(String line)
+	{
+		StringTokenizer st = new StringTokenizer(line, "~", false);
+		String name = st.nextToken();
+		System.out.println("name: " + name);
+				
+		// read command
+		String command = st.nextToken();
+		System.out.println("command: " + command);
+		// commands at end of this function
+		
+		String content = st.nextToken();
+		System.out.println("content: " + content);
+		if (command.equalsIgnoreCase("chat")) {
+			gc.getMessenger().addMessage(name+": "+content);
+
+		}
+		else if (command.equalsIgnoreCase("vote")) {
+			gc.getMessenger().updateVotes(name,content);
+		}
+		else if (command.equalsIgnoreCase("power")) {
+			
+		}
 	}
 	
 	public void run()
@@ -57,25 +86,13 @@ class Reader extends Thread
 					if(!gc.name.equals("HOST")){
 					try {
 						this.sleep(2000);
-					} catch (InterruptedException e) {
+
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}}
 					gc.CL.show(gc.jp,"User Messenger");
-					gc.setTitle(gc.name+"-DAY");
-					/*try {
-						GameServer.lock.lock();
-						GameServer.vectorsupdated.await();
-						GameServer.lock.unlock();
-						System.out.println("FFaaaaaaaaaaaaaaaaF");
-
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}*/
-					um.updateVotes();
 					um.updateLyncher();
-					System.out.println("FFFFFFFFFFF");
 					break;
 				}
 				else
@@ -90,10 +107,16 @@ class Reader extends Thread
 				//gc.waitRoom.removeAll();
 
 			}
+			
+			String role = br.readLine();
+			gc.role=role;
+			gc.setTitle(gc.name+"-"+gc.role+"-DAY");
+
+			
 			while(true) // Receives the message from other players
 			{
 				String temp = br.readLine();
-				gc.getMessenger().addMessage(temp);
+				parsecommand(temp);
 			}
 			
 		} catch (IOException e) {
@@ -104,6 +127,7 @@ class Reader extends Thread
 
 public class GameClient extends JFrame implements Runnable{
 
+	public static Vector<String> names0;
 	UserMessenger um = new UserMessenger(this);
 	BufferedReader br;
 	private PrintWriter pw;
@@ -117,6 +141,7 @@ public class GameClient extends JFrame implements Runnable{
 	String concatNames = "";
 	CardLayout CL = new CardLayout();
 	String name="HOST";
+	String role;
 	
 	public void addName(String name) {
 		waitRoom.addName(name);
@@ -125,8 +150,10 @@ public class GameClient extends JFrame implements Runnable{
 		return um;
 	}
 	
-	public void sendMessage(String message) {
-		pw.println(name + "~ALL~CHAT~" + message);
+	public void sendMessage(String message, int votechoice) {
+		String[] votechoices={"CHAT","VOTE"};
+		
+			pw.println(name + "~ALL~"+votechoices[votechoice]+"~" + message);
 		pw.flush();
 	}
 	
@@ -205,6 +232,7 @@ public class GameClient extends JFrame implements Runnable{
 	public static void main(String[] args)
 	{
 		Thread gc = new Thread(new GameClient());
+		
 		gc.start();
 	}
 }
