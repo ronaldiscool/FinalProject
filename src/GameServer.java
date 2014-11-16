@@ -259,13 +259,6 @@ public class GameServer extends JFrame implements Runnable{
 			players.add(p);
 
 		}
-		for(int i = 0; i < setup.numHook; i++)
-		{
-			TheMafia p = new Stripper(name1[pCount], st.get(pCount), readers.get(pCount));
-			pCount++;
-			players.add(p);
-			setup.relist();
-		}
 	}
 		
 
