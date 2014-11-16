@@ -39,7 +39,7 @@ public class UserMessenger extends JPanel {
 	}	
 	
 	public void addMessage(String message){
-		messageField.setText(messageField.getText() + message);
+		messageField.setText(messageField.getText() +"\n"+ message);
 	}
 	
 	public void makeGUI(){

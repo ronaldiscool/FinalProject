@@ -61,7 +61,7 @@ class Reader extends Thread
 						e.printStackTrace();
 					}
 					gc.CL.show(gc.jp,"User Messenger");
-					try {
+					/*try {
 						GameServer.lock.lock();
 						GameServer.vectorsupdated.await();
 						GameServer.lock.unlock();
@@ -70,7 +70,7 @@ class Reader extends Thread
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}*/
 					um.updateVotes();
 					System.out.println("FFFFFFFFFFF");
 					break;
@@ -114,7 +114,7 @@ public class GameClient extends JFrame implements Runnable{
 	JTextField nameField = new JTextField(45);
 	String concatNames = "";
 	CardLayout CL = new CardLayout();
-	private String name;
+	private String name="HOST";
 	
 	public void addName(String name) {
 		waitRoom.addName(name);
@@ -124,7 +124,7 @@ public class GameClient extends JFrame implements Runnable{
 	}
 	
 	public void sendMessage(String message) {
-		pw.println(name + ": " + message);
+		pw.println(name + "~ALL~CHAT~" + message);
 		pw.flush();
 	}
 	

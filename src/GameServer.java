@@ -245,7 +245,7 @@ public class GameServer extends JFrame implements Runnable{
 		Collections.shuffle(st, new Random(seed));
 		Collections.shuffle(readers, new Random(seed));
 
-		concatNames+="PhoenixTheStripper";
+		concatNames+="HOST";
 		name1 = concatNames.split("~");
 
 		for(int i = 0; i < setup.numVil; i++)
