@@ -56,12 +56,13 @@ class Reader extends Thread
 				{
 					if(!gc.name.equals("HOST")){
 					try {
-						this.sleep(5000);
+						this.sleep(2000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}}
 					gc.CL.show(gc.jp,"User Messenger");
+					gc.setTitle(gc.name+"-DAY");
 					/*try {
 						GameServer.lock.lock();
 						GameServer.vectorsupdated.await();
