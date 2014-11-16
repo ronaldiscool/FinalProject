@@ -35,11 +35,14 @@ class Reader extends Thread
 {
 	GameClient gc;
 	BufferedReader br;
-	public Reader(GameClient gc)
+	UserMessenger um;
+	
+	public Reader(GameClient gc, UserMessenger um)
 	{
 		super();
 		this.gc=gc;
 		this.br=gc.br;
+		this.um = um;
 	}
 	
 	public void run()
@@ -58,6 +61,15 @@ class Reader extends Thread
 						e.printStackTrace();
 					}
 					gc.CL.show(gc.jp,"User Messenger");
+					try {
+						GameServer.lock.lock();
+						GameServer.vectorsupdated.await();
+						GameServer.lock.unlock();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					um.updateVotes();
 					break;
 				}
 				gc.concatNames = temp;
@@ -178,7 +190,7 @@ public class GameClient extends JFrame implements Runnable{
 
 	public void run()
 	{
-		Reader r = new Reader(this);
+		Reader r = new Reader(this,um);
 		Repainter rp = new Repainter(this);
 		r.start();
 		rp.start();		
