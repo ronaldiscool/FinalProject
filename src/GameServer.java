@@ -72,11 +72,11 @@ class ServerReader extends Thread
 			GameServer.lock.unlock();
 			try {
 				//pw = new PrintWriter(s.getOutputStream());
-				while(true) {
-					line = br.readLine();
-					GameServer.sendMessage(line, true, null);
+				//while(true) {
+					//line = br.readLine();
+					//GameServer.sendMessage(line, true, null);
 					//pw.println(line);
-				}
+				//}
 
 			}
 			catch(Exception e) {System.out.println(e.getStackTrace());}
