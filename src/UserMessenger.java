@@ -1,6 +1,8 @@
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,12 +24,21 @@ public class UserMessenger extends JPanel {
 	JPanel messagePanel;
 	JScrollPane textFieldPane;
 	JScrollPane inputFieldPane;
+	private GameClient gc;
+	private GameServer gs;
 	
-	
-	
-	public UserMessenger(){
+	public UserMessenger(GameClient gc){
 		this.makeGUI();
+		this.gc = gc;
 	}	
+	public UserMessenger(GameServer gs){
+		this.makeGUI();
+		this.gs = gs;
+	}	
+	
+	public void addMessage(String message){
+		messageField.setText(messageField.getText() + message);
+	}
 	
 	public void makeGUI(){
 		messagePanel=new JPanel();
@@ -69,6 +80,14 @@ public class UserMessenger extends JPanel {
 		gbc.anchor=GridBagConstraints.CENTER;
 		sendButton=new JButton("Send");
 		messagePanel.add(sendButton,gbc);
+		
+		sendButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				String message = messageField.getText();
+				
+			}
+		}
+		);
 		
 		gbc.gridx=1;
 		gbc.gridy=1;
