@@ -9,6 +9,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -39,7 +40,9 @@ public class UserMessenger extends JPanel {
 	}	
 	
 	public void addMessage(String message){
-		messageField.setText(messageField.getText() +"\n"+ message);
+		messageField.setText(messageField.getText() + message + "\n");
+		JScrollBar vertical = textFieldPane.getVerticalScrollBar();
+		vertical.setValue(vertical.getMaximum());
 	}
 	
 	public void makeGUI(){
@@ -82,7 +85,10 @@ public class UserMessenger extends JPanel {
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String message = inputField.getText();
-				gc.sendMessage(message);
+				if (!message.equals("")) {
+					gc.sendMessage(message);
+				}
+				inputField.setText("");
 			}
 		}
 		);

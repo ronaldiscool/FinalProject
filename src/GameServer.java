@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -150,6 +151,52 @@ public class GameServer extends JFrame implements Runnable{
 
 	}
 
+	public static void parse(String line) {
+		StringTokenizer st = new StringTokenizer(line, "~", false);
+		String name = st.nextToken();
+		System.out.println("name: " + name);
+		
+		// read Target
+		String target = st.nextToken();
+		System.out.println("target: " + target);
+		
+		// read command
+		String command = st.nextToken();
+		System.out.println("command: " + command);
+		// commands at end of this function
+		
+		String content = st.nextToken();
+		System.out.println("content: " + content);
+		
+		if (command.equalsIgnoreCase("chat")) {
+			content = name + ": " + content;
+			if (target.equalsIgnoreCase("all")) {
+				sendMessage(content, true, null);
+			}
+			else if (target.equalsIgnoreCase("mafia")) {
+				// targetMafia = true;
+			}
+			else if (target.equalsIgnoreCase("doctor")) {
+				// targetDoctor = true;
+			}
+			else if (target.equalsIgnoreCase("cops")) {
+				// targetCops = true;
+			}
+			else {
+				System.out.println("Error: target cannot be parsed");
+			}
+		}
+		else if (command.equalsIgnoreCase("vote")) {
+			
+		}
+		else if (command.equalsIgnoreCase("power")) {
+			
+		}
+		else {
+			System.out.println("Error: command cannot be parsed");
+		}
+		
+	}
 
 	public static void sendMessage(String line, boolean send, Vector<Player> receivers)
 	{

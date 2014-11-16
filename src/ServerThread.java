@@ -34,7 +34,9 @@ public class ServerThread extends Thread{
 				{
 				String line = br.readLine();
 				String[] parts = line.split("~");
-				GameServer.sendMessage(line,false, null);
+				//GameServer.sendMessage(line,false, null);
+				GameServer.parse(line);
+				
 				}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
