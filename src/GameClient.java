@@ -48,7 +48,7 @@ class Reader extends Thread
 			while(true)
 			{
 				String temp = br.readLine();
-				
+
 				if(temp.equals("DONE"))
 				{
 					try {
@@ -61,15 +61,23 @@ class Reader extends Thread
 					break;
 				}
 				gc.concatNames = temp;
-				String names[] = gc.concatNames.split("\\$");
-				gc.addName(gc.concatNames);
-				
+
+
+				String names[] = gc.concatNames.split("~");
+				for(int i=0; i<names.length; ++i)
+					gc.addName(names[i]);
 				
 				System.out.println(temp);
 
 				//gc.waitRoom.removeAll();
 
 			}
+			while(true) // Receives the message from other players
+			{
+				String temp = br.readLine();
+				gc.getMessenger().addMessage(temp);
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -77,7 +85,8 @@ class Reader extends Thread
 }
 
 public class GameClient extends JFrame implements Runnable{
-	UserMessenger um=new UserMessenger();
+
+	UserMessenger um = new UserMessenger(this);
 	BufferedReader br;
 	private PrintWriter pw;
 	// panel with cardlayout
@@ -89,24 +98,36 @@ public class GameClient extends JFrame implements Runnable{
 	JTextField nameField = new JTextField(45);
 	String concatNames = "";
 	CardLayout CL = new CardLayout();
+	private String name;
+	
 	public void addName(String name) {
 		waitRoom.addName(name);
 	}
+	public UserMessenger getMessenger() {
+		return um;
+	}
+	
+	public void sendMessage(String message) {
+		pw.println(name + ": " + message);
+		pw.flush();
+	}
+	
 	private void GUIInit()
 	{
+
 		setSize(640,480);
 		setLocation(200,200);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		jp = new JPanel();
 		jp.setLayout(CL);
-		
+
 		JButton ok = new JButton("OKAY");
 		ok.addActionListener(new ActionListener() // ok button leads to the wait room
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
-				String name = nameField.getText();
+				name = nameField.getText();
 				pw.println(name);
 				pw.flush();
 				CardLayout CL1 = (CardLayout) jp.getLayout();
@@ -134,7 +155,10 @@ public class GameClient extends JFrame implements Runnable{
 		jp.add(um,"User Messenger");
 		CL.show(jp,"login");
 		add(jp);
-		setVisible(true);		
+		System.out.println("AQUI");
+
+		setVisible(true);	
+	
 	}
 	
 	
