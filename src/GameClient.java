@@ -61,7 +61,7 @@ class Reader extends Thread
 					break;
 				}
 				gc.concatNames = temp;
-				String names[] = gc.concatNames.split("//$");
+				String names[] = gc.concatNames.split("\\$");
 				gc.addName(gc.concatNames);
 				
 				

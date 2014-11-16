@@ -48,7 +48,7 @@ class ServerReader extends Thread
 		try {
 			String line = br.readLine();
 			GameServer.concatNames+=line+"$";
-			GameServer.name1 = GameServer.concatNames.split("$");
+			GameServer.name1 = GameServer.concatNames.split("\\$");
 			for(String n:GameServer.name1)
 
 			{
@@ -213,15 +213,13 @@ public class GameServer extends JFrame implements Runnable{
 
 		sendMessage("DONE",true,null);
 		System.out.println("D");
-		/*for(int i = 0; i < setup.numVil; i++)
-=======
+		
 		long seed = System.nanoTime();
 		Collections.shuffle(Arrays.asList(name1), new Random(seed));
 		Collections.shuffle(st, new Random(seed));
 		Collections.shuffle(readers, new Random(seed));
-
+		
 		for(int i = 0; i < setup.numVil; i++)
->>>>>>> origin/master
 		{
 			Villager p = new Villager(name1[pCount], st.get(pCount), readers.get(pCount));
 			pCount++;
@@ -257,8 +255,7 @@ public class GameServer extends JFrame implements Runnable{
 			players.add(p);
 			setup.relist();
 		}
-	*/
-		}
+}
 		
 		
 	public static void main(String[] args)
