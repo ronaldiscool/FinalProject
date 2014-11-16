@@ -1,6 +1,6 @@
 
 class Cop extends Player{
-	
+
 	public Cop(String name, ServerThread st, ServerReader reader) {
 		super(name, st, reader);
 	}
