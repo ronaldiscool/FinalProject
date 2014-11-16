@@ -81,7 +81,7 @@ public class UserMessenger extends JPanel {
 		
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				String message = messageField.getText();
+				String message = inputField.getText();
 				gc.sendMessage(message);
 			}
 		}
