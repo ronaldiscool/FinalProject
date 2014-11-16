@@ -280,6 +280,7 @@ public class GameServer extends JFrame implements Runnable{
 		GameServer.lock.lock();
 		vectorsupdated.signalAll();
 		lock.unlock();
+		System.out.println("PHOOOOOOOO");
 	}
 
 	

@@ -65,11 +65,14 @@ class Reader extends Thread
 						GameServer.lock.lock();
 						GameServer.vectorsupdated.await();
 						GameServer.lock.unlock();
+						System.out.println("FFaaaaaaaaaaaaaaaaF");
+
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					um.updateVotes();
+					System.out.println("FFFFFFFFFFF");
 					break;
 				}
 				else
