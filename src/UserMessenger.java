@@ -114,5 +114,17 @@ public class UserMessenger extends JPanel {
 	public void updateLyncher(){
 		// clear players, iterate through container of players adding each alive player back to lyncher
 	}
+	public void updateVotes() {
+		for(String name0 : GameServer.concatNames.split("~"))
+		{
+			//Player p = GameServer.players.get(i);
+			//String name = p.getName() + ":";
+			System.out.println("Adolf" + name0);
+			String textOfChat=votes.getText();
+			textOfChat=name0+"\n";
+			votes.setText(textOfChat);		
+		}
+
+	}
 }
 
