@@ -48,7 +48,7 @@ public class UserMessenger extends JPanel {
 		GridBagConstraints gbc=new GridBagConstraints();
 		gbc.gridx=0;
 		gbc.gridy=0;
-		gbc.gridwidth=2;
+		gbc.gridwidth=4;
 		gbc.ipady=55;
 		gbc.anchor=GridBagConstraints.NORTH;
 		timeCycle=new JLabel("Day");
@@ -73,8 +73,8 @@ public class UserMessenger extends JPanel {
 		messagePanel.add(inputFieldPane,gbc);
 		
 		gbc.weighty=0;
-		gbc.weightx=1;
-		gbc.gridx=1;
+		gbc.weightx=2;
+		gbc.gridx=2;
 		gbc.anchor=GridBagConstraints.CENTER;
 		sendButton=new JButton("Send");
 		messagePanel.add(sendButton,gbc);
@@ -87,23 +87,25 @@ public class UserMessenger extends JPanel {
 		}
 		);
 		
-		gbc.gridx=1;
+		gbc.gridx=2;
 		gbc.gridy=1;
-		gbc.ipadx=20;
+		gbc.ipadx=50;
 		gbc.weighty=1;
 		gbc.anchor=GridBagConstraints.NORTH;
 		lyncher=new JComboBox<String>();
 		messagePanel.add(lyncher,gbc);
 		
-		gbc.gridx=1;
+		gbc.gridwidth=2;
+		gbc.gridx=2;
 		gbc.gridy=3;
 		gbc.weighty=0;
+		gbc.ipady=30;
 		gbc.anchor=GridBagConstraints.CENTER;
 		votes=new JTextArea(" ", 15,15);
 		votes.setEditable(false);
 		messagePanel.add(votes,gbc);
 		
-		this.add(messagePanel);
+		this.add(messagePanel,gbc);
 		this.setSize(500, 500);
 		this.setVisible(true);
 	}
