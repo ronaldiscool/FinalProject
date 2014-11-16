@@ -60,7 +60,8 @@ class Reader extends Thread
 					gc.CL.show(gc.jp,"User Messenger");
 					break;
 				}
-				gc.concatNames = temp;
+				else
+					gc.concatNames = temp;
 
 
 				String names[] = gc.concatNames.split("~");
