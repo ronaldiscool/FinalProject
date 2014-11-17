@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -117,9 +118,8 @@ public class GameServer extends JFrame implements Runnable{
 	static String concatNames = "";
 	static ReentrantLock lock = new ReentrantLock();
 	static Condition read = lock.newCondition();
-	static Condition received = lock.newCondition();
-	static Condition received2 = lock.newCondition();
-	static Condition vectorsupdated = lock.newCondition();
+	static Condition allvotes = lock.newCondition();
+	static Semaphore allvotesSem;
 	//static GameClient gc;
 	static boolean show = true;
 	static boolean initializing = true;
@@ -155,7 +155,6 @@ public class GameServer extends JFrame implements Runnable{
 	{
 		for(int i = 0; i < words.size(); i++)
 		{
-			System.out.println(words.get(i)+" " +s1);
 			if(words.get(i).equals(s1))
 				return i;
 		}
@@ -165,36 +164,64 @@ public class GameServer extends JFrame implements Runnable{
 	public static void parseTarget(String line) {
 		StringTokenizer st = new StringTokenizer(line, "~", false);
 		String name = st.nextToken();
-		System.out.println("name: " + name);
+		//System.out.println("name: " + name);
 		
 		// read Target
 		String target = st.nextToken();
-		System.out.println("target: " + target);
+		//System.out.println("target: " + target);
 		
 		// read command
 		String command = st.nextToken();
-		System.out.println("command: " + command);
+		//System.out.println("command: " + command);
 		// commands at end of this function
 		
 		String content = st.nextToken();
-		System.out.println("content: " + content);
+		//System.out.println("content: " + content);
 		
-			content = name + "~" +command+"~"+ content;
-			if (target.equalsIgnoreCase("all")) {
-				sendMessage(content, null);
-			}
-			else if (target.equalsIgnoreCase("mafia")) {
-				// targetMafia = true;
-			}
-			else if (target.equalsIgnoreCase("doctor")) {
-				// targetDoctor = true;
-			}
-			else if (target.equalsIgnoreCase("cops")) {
-				// targetCops = true;
-			}
-			else {
-				System.out.println("Error: target cannot be parsed");
-			}
+			String content1 = name + "~" +command+"~"+ content;
+			if (command.equalsIgnoreCase("vote")) {
+							if (target.equalsIgnoreCase("all")) {
+							sendMessage(content1,null);
+							Player p = players.get(names.indexOf(name));
+							Player ptarget = players.get(names.indexOf(content));
+							p.vote(ptarget);
+							}
+							else if (target.equalsIgnoreCase("mafia")) {
+								// targetMafia = true;
+							}
+							else if (target.equalsIgnoreCase("doctor")) {
+								// targetDoctor = true;
+							}
+							else if (target.equalsIgnoreCase("cops")) {
+								// targetCops = true;
+							}
+							else {
+								System.out.println("Error: target cannot be parsed");
+							}
+						}
+						else if (command.equalsIgnoreCase("chat")) {
+							if (target.equalsIgnoreCase("all")) {
+								sendMessage(content1,null);
+								}
+								else if (target.equalsIgnoreCase("mafia")) {
+									// targetMafia = true;
+								}
+								else if (target.equalsIgnoreCase("doctor")) {
+									// targetDoctor = true;
+								}
+								else if (target.equalsIgnoreCase("cops")) {
+									// targetCops = true;
+								}
+								else {
+									System.out.println("Error: target cannot be parsed");
+								}
+						}
+						else if (command.equalsIgnoreCase("power")) {
+							
+						}
+						else {
+							System.out.println("Error: command cannot be parsed");
+						}
 
 		
 		
@@ -256,11 +283,7 @@ public class GameServer extends JFrame implements Runnable{
 				readers.add(sr);
 				sr.start();
 
-				if(i<0)
-				{
-					lock.lock();
-					received.await();
-					lock.unlock();}
+
 			}
 
 			//PLAYERNAME~ALL~CHAT~"MESSAGE"
@@ -281,7 +304,6 @@ public class GameServer extends JFrame implements Runnable{
 		for(ServerThread ST:st)
 			ST.start();
 		sendMessage("DONE",null);
-		initializing=false;
 		
 		concatNames+="HOST";
 		name1 = concatNames.split("~");
@@ -304,37 +326,43 @@ public class GameServer extends JFrame implements Runnable{
 		for(int i = 0; i < setup.numVil; i++)
 		{
 			Villager p = new Villager(name1[pCount], st.get(pCount), readers.get(pCount));
-			pCount++;
 			players.add(p);
 			villagers.add(p);
 			st.get(pCount).send("VILLAGER");
+			pCount++;
+
 		}
 		for(int i = 0; i < setup.numCop; i++)
 		{
 			Cop p = new Cop(name1[pCount], st.get(pCount), readers.get(pCount));
-			pCount++;
 			players.add(p);
 			cops.add(p);
 			st.get(pCount).send("COP");
+			pCount++;
+
 		}
 		for(int i = 0; i < setup.numDoc; i++)
 		{
 			Doctor p = new Doctor(name1[pCount], st.get(pCount), readers.get(pCount));
-			pCount++;
 			players.add(p);
 			doctors.add(p);
 			st.get(pCount).send("DOCTOR");
+			pCount++;
+
 		}
 
 		for(int i = 0; i < setup.numMaf; i++)
 		{
 
 			TheMafia p = new Mafia(name1[pCount], st.get(pCount), readers.get(pCount));
-			pCount++;
 			players.add(p);
 			mafia.add(p);
 			st.get(pCount).send("MAFIA");
+			pCount++;
+
 }
+		initializing=false;
+
 	}
 
 	

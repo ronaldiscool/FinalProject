@@ -35,7 +35,41 @@ abstract class Player{
 	}
 	
 	public void vote(Player p) {
-		p.tally++;
+		try {
+			System.out.println("PERMITSSSS00000"+GameServer.allvotesSem.availablePermits());
+
+			GameServer.allvotesSem.acquire();
+			p.tally++;
+			System.out.println("PERMITSSSS"+GameServer.allvotesSem.availablePermits());
+			if(GameServer.allvotesSem.availablePermits()!=0)
+			{
+			GameServer.lock.lock();
+			GameServer.allvotes.await();
+			GameServer.lock.unlock();
+			}
+			else
+			{
+				int maxTally = 0;
+				Player mostVoted = null;
+				for(Player p0:GameServer.players)
+				{		
+					if(maxTally<p0.tally)
+						maxTally=p0.tally;
+					mostVoted=p0;
+				}
+				System.out.println("FFFFF"+mostVoted.name);
+				GameServer.lock.lock();
+				GameServer.allvotes.signalAll();
+				GameServer.lock.unlock();
+				GameServer.sendMessage("OVER", null);
+			}
+			GameServer.allvotesSem.release();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 	}
 	
 	public String getName(){

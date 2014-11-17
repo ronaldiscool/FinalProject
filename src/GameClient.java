@@ -51,17 +51,18 @@ class Reader extends Thread
 	
 	private void parsecommand(String line)
 	{
+		if(line.equals("OVER"))
+		{	
+			um.reset();
+			return;}
 		StringTokenizer st = new StringTokenizer(line, "~", false);
 		String name = st.nextToken();
-		System.out.println("name: " + name);
 				
 		// read command
 		String command = st.nextToken();
-		System.out.println("command: " + command);
 		// commands at end of this function
 		
 		String content = st.nextToken();
-		System.out.println("content: " + content);
 		if (command.equalsIgnoreCase("chat")) {
 			gc.getMessenger().addMessage(name+": "+content);
 
@@ -152,8 +153,8 @@ public class GameClient extends JFrame implements Runnable{
 	
 	public void sendMessage(String message, int votechoice) {
 		String[] votechoices={"CHAT","VOTE"};
-		
-			pw.println(name + "~ALL~"+votechoices[votechoice]+"~" + message);
+		String pisstemp = name + "~ALL~"+votechoices[votechoice]+"~" + message;
+		pw.println(pisstemp);
 		pw.flush();
 	}
 	
@@ -200,7 +201,6 @@ public class GameClient extends JFrame implements Runnable{
 		jp.add(um,"User Messenger");
 		CL.show(jp,"login");
 		add(jp);
-		System.out.println("AQUI");
 
 		setVisible(true);	
 	

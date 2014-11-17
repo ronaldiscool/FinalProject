@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 public class UserMessenger extends JPanel {
 	//TODO : possible container to hold the current players in the game, the lyncher combobox will be updated to hold the names of the players
 	// 
-	JLabel timeCycle;
+	JLabel timeCycle=new JLabel("Day");
 	JTextArea messageField;
 	JTextArea inputField;
 	JButton sendButton, voteButton;
@@ -30,6 +30,25 @@ public class UserMessenger extends JPanel {
 	JScrollPane inputFieldPane;
 	private GameClient gc;
 	private GameServer gs;
+	int dayCount = 1;
+	
+	public void reset()
+	{
+		if(timeCycle.getText().substring(0,3).equals("Day"))
+			timeCycle.setText("Night" + dayCount);
+		else
+		{
+			timeCycle.setText("Day " + ++dayCount);
+		}
+		messageField.setText(messageField.getText()+"\n--------------------\n"+timeCycle.getText()+"\n--------------------\n");
+		inputField.setText("");
+		voteButton.setEnabled(true);
+		lyncher.removeAll();
+		updateLyncher();
+		votes.setText("");
+		lynchvotes="";
+	}
+	
 	
 	public UserMessenger(GameClient gc){
 		this.makeGUI();

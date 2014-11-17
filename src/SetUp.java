@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Calendar;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -102,6 +103,7 @@ public class SetUp extends JPanel {
 				badNum = numMaf;
 				numHook = hookerBox.getSelectedIndex();
 				badNum+=numHook;
+				GameServer.allvotesSem = new Semaphore(goodNum+badNum);
 				if(goodNum+1 < badNum) // checks ratio NOTE: modify accordingly
 					messageLabel.setText("Error. You need to more citizens/cop/doctors.");
 				else
