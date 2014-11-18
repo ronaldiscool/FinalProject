@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Vector;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -53,17 +55,69 @@ abstract class Player{
 				Player mostVoted = null;
 				for(Player p0:GameServer.players)
 				{		
+					if(maxTally == p0.tally && maxTally!=0)
+						break;
 					if(maxTally<p0.tally)
-						maxTally=p0.tally;
-					mostVoted=p0;
+					{	maxTally=p0.tally;
+					mostVoted=p0;}
 				}
-				System.out.println("FFFFF"+mostVoted.name);
+				if(mostVoted!=null)
+				{
+					String targetrole = mostVoted.getRole();
+					switch(targetrole)
+					{
+					case "Villager":
+						GameServer.villagers.remove(mostVoted);
+					case "Mafia":
+						GameServer.mafia.remove(mostVoted);
+					case "Cop":
+						GameServer.cops.remove(mostVoted);
+					case "Doctor":
+						GameServer.doctors.remove(mostVoted);
+					}
+					Vector killmv = new Vector<Player>();
+					killmv.add(mostVoted);
+					GameServer.sendMessage("~~DIE~~", killmv);
+					GameServer.st.remove(GameServer.players.indexOf(mostVoted));
+					GameServer.readers.remove(GameServer.players.indexOf(mostVoted));
+					GameServer.names.remove(GameServer.players.indexOf(mostVoted));
+					GameServer.players.remove(GameServer.players.indexOf(mostVoted));
+					}
 				GameServer.lock.lock();
 				GameServer.allvotes.signalAll();
 				GameServer.lock.unlock();
-				GameServer.sendMessage("OVER", null);
+				GameServer.sendMessage("~~KILLED~~", null);
+				if(mostVoted!=null)
+				{
+					GameServer.sendMessage(mostVoted.getName(), null);
+					GameServer.sendMessage(mostVoted.getRole(),null);
+				}
+				else
+					GameServer.sendMessage("~~~~~", null);
+				if(GameServer.players.size()<=(2*GameServer.mafia.size()))
+				{
+					GameServer.sendMessage("~~GAME OVER~~", null);
+					GameServer.sendMessage("MAFIA",null);
+					return;
+				}
+			if(GameServer.mafia.size()==0)
+			{
+				GameServer.sendMessage("~~GAME OVER~~", null);
+				GameServer.sendMessage("VILLAGERS",null);
+				return;
 			}
+			if(null!=mostVoted)
+			{
+				GameServer.lock.lock();
+				GameServer.released.await();
+				GameServer.lock.unlock();
+				GameServer.allvotesSem.acquire();
+			}
+			}                                
+			GameServer.lock.lock();
 			GameServer.allvotesSem.release();
+			GameServer.released.signalAll();
+			GameServer.lock.unlock();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

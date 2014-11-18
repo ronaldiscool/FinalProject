@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -17,29 +20,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-class Repainter extends Thread
-{
-	GameClient gc;
-	public Repainter(GameClient gc)
-	{
-		this.gc = gc;
-	}
-	
-	public void run()
-	{
-		while(true){
-		gc.revalidate();
-		gc.repaint();}
-	}
-}
-
 class Reader extends Thread
 {
 	GameClient gc;
 	BufferedReader br;
 	UserMessenger um;
-	
-	
 	
 	public Reader(GameClient gc, UserMessenger um)
 	{
@@ -49,15 +34,50 @@ class Reader extends Thread
 		this.um = um;
 	}
 	
-	private void parsecommand(String line)
+	private void parsecommand(String line, BufferedReader br)
 	{
-		if(line.equals("OVER"))
+		System.out.println(line);
+		if(line.equals("~~GAME OVER~~"))
+		{
+			um.addMessage("Game Over");
+			um.sendButton.setEnabled(false);
+			um.voteButton.setEnabled(false);
+			try {
+				String winner = br.readLine();
+				um.addMessage(winner+" WON");
+				return;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
+		}
+		if(line.equals("~~DIE~~"))
+		{
+			um.addMessage("You died.");
+			um.sendButton.setEnabled(false);
+			return;
+		}
+		if(line.equals("~~KILLED~~"))
 		{	
-			um.reset();
+			try {
+				String nextLine = br.readLine();
+				if(nextLine.equals("~~~~~"))
+					um.reset("Nobody");
+				else
+				{
+					gc.names0.remove(nextLine);
+					String role = br.readLine();
+					um.reset(nextLine+", the "+ role+",");
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return;}
 		StringTokenizer st = new StringTokenizer(line, "~", false);
 		String name = st.nextToken();
 				
+		
 		// read command
 		String command = st.nextToken();
 		// commands at end of this function
@@ -86,13 +106,15 @@ class Reader extends Thread
 				{
 					if(!gc.name.equals("HOST")){
 					try {
-						this.sleep(2000);
+						this.sleep(1000);
 
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}}
 					gc.CL.show(gc.jp,"User Messenger");
+					gc.names0 = new HashSet<String>(Arrays.asList(gc.concatNames.split("~")));
+					gc.names0.add("HOST");
 					um.updateLyncher();
 					break;
 				}
@@ -112,15 +134,16 @@ class Reader extends Thread
 			String role = br.readLine();
 			gc.role=role;
 			gc.setTitle(gc.name+"-"+gc.role+"-DAY");
-
 			
 			while(true) // Receives the message from other players
 			{
 				String temp = br.readLine();
-				parsecommand(temp);
+				if(temp==null)
+					return;
+				parsecommand(temp,br);
 			}
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -128,10 +151,10 @@ class Reader extends Thread
 
 public class GameClient extends JFrame implements Runnable{
 
-	public static Vector<String> names0;
+	public static HashSet<String> names0;
 	UserMessenger um = new UserMessenger(this);
 	BufferedReader br;
-	private PrintWriter pw;
+	PrintWriter pw;
 	// panel with cardlayout
 	JPanel jp;
 	// initial user name chooser
@@ -154,6 +177,7 @@ public class GameClient extends JFrame implements Runnable{
 	public void sendMessage(String message, int votechoice) {
 		String[] votechoices={"CHAT","VOTE"};
 		String pisstemp = name + "~ALL~"+votechoices[votechoice]+"~" + message;
+		System.out.println("MESAGE ALSO:"+pisstemp);
 		pw.println(pisstemp);
 		pw.flush();
 	}
@@ -161,8 +185,8 @@ public class GameClient extends JFrame implements Runnable{
 	private void GUIInit()
 	{
 
-		setSize(640,480);
-		setLocation(200,200);
+		setSize(640,525);
+		setLocation(100,100);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		jp = new JPanel();
@@ -224,9 +248,7 @@ public class GameClient extends JFrame implements Runnable{
 	public void run()
 	{
 		Reader r = new Reader(this,um);
-		Repainter rp = new Repainter(this);
 		r.start();
-		rp.start();		
 	}
 	
 	public static void main(String[] args)

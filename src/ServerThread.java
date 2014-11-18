@@ -33,14 +33,14 @@ public class ServerThread extends Thread{
 			while(true)
 				{
 				String line = br.readLine();
-				String[] parts = line.split("~");
+				System.out.println("MESAGE#"+line);
 				//GameServer.sendMessage(line,false, null);
 				GameServer.parseTarget(line);
 				
 				}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//GameServer.removeThread(this);
 		}
 	}
 	

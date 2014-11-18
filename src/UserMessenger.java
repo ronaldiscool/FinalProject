@@ -29,10 +29,9 @@ public class UserMessenger extends JPanel {
 	JScrollPane textFieldPane;
 	JScrollPane inputFieldPane;
 	private GameClient gc;
-	private GameServer gs;
 	int dayCount = 1;
 	
-	public void reset()
+	public void reset(String deadPerson)
 	{
 		if(timeCycle.getText().substring(0,3).equals("Day"))
 			timeCycle.setText("Night" + dayCount);
@@ -40,10 +39,10 @@ public class UserMessenger extends JPanel {
 		{
 			timeCycle.setText("Day " + ++dayCount);
 		}
-		messageField.setText(messageField.getText()+"\n--------------------\n"+timeCycle.getText()+"\n--------------------\n");
+		messageField.setText(messageField.getText()+"\n--------------------\n"+timeCycle.getText()+"\n"+deadPerson+" was killed.\n");
 		inputField.setText("");
 		voteButton.setEnabled(true);
-		lyncher.removeAll();
+		lyncher.removeAllItems();
 		updateLyncher();
 		votes.setText("");
 		lynchvotes="";
@@ -54,11 +53,6 @@ public class UserMessenger extends JPanel {
 		this.makeGUI();
 		this.gc = gc;
 	}	
-	public UserMessenger(GameServer gs){
-		this.makeGUI();
-		this.gs = gs;
-	}	
-	
 	public void addMessage(String message){
 		messageField.setText(messageField.getText() + message + "\n");
 		JScrollBar vertical = textFieldPane.getVerticalScrollBar();
@@ -119,6 +113,7 @@ public class UserMessenger extends JPanel {
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String message = inputField.getText();
+				System.out.println("MESSAGE"+message);
 				if (!message.equals("")) {
 					gc.sendMessage(message,0);
 				}
@@ -153,11 +148,8 @@ public class UserMessenger extends JPanel {
 	// this method will remove the specified player's entry in the combobox
 	public void updateLyncher(){
 		// clear players, iterate through container of players adding each alive player back to lyncher
-		lyncher.addItem("NOBODY");
-		lyncher.addItem("HOST");
-
-		String[] playernames = gc.concatNames.split("~");
-		for(String s : playernames)
+		//lyncher.addItem("NOBODY");
+		for(String s : gc.names0)
 		{
 			lyncher.addItem(s);
 		}

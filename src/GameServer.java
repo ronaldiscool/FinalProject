@@ -51,7 +51,9 @@ class ServerReader extends Thread
 		super();
 		this.br=br;
 		this.s = s;
+		
 	}
+
 
 	public void run()
 	{
@@ -66,11 +68,13 @@ class ServerReader extends Thread
 				JLabel jl = new JLabel(n);
 				GameServer.setup.playerPanel.add(jl);
 			}
-			GameServer.flag = false;
 			GameServer.sendMessage(GameServer.concatNames, null);
-			GameServer.lock.lock();
+			++GameServer.numReg;
+			System.out.println("RERGISTERED:"+GameServer.numReg+"  "+GameServer.setup.numPlayers);
+			if(GameServer.numReg==GameServer.setup.numPlayers)
+			{GameServer.lock.lock();
 			GameServer.read.signalAll();
-			GameServer.lock.unlock();
+			GameServer.lock.unlock();}
 			try {
 				//pw = new PrintWriter(s.getOutputStream());
 				//while(true) {
@@ -108,21 +112,21 @@ public class GameServer extends JFrame implements Runnable{
 	public static Vector<Doctor> doctors= new Vector<Doctor>();
 	public static Vector<ServerReader> readers = new Vector<ServerReader>();
 	public static CardLayout c1=new CardLayout();
-	public UserMessenger serverMessenger=new UserMessenger(this);
 	public static JPanel serverPanel=new JPanel();
 
 	static SetUp setup = new SetUp();
 	public static ServerSocket ss;
 	static String inBuffer = "";
-	static boolean flag = false;
 	static String concatNames = "";
 	static ReentrantLock lock = new ReentrantLock();
 	static Condition read = lock.newCondition();
 	static Condition allvotes = lock.newCondition();
+	static Condition released = lock.newCondition();
 	static Semaphore allvotesSem;
 	//static GameClient gc;
 	static boolean show = true;
 	static boolean initializing = true;
+	static int numReg = 0;
 	static BufferedReader br0;
 	public GameServer()
 	{
@@ -131,7 +135,6 @@ public class GameServer extends JFrame implements Runnable{
 
 		// cardlayout for the messenger and the setup panel
 		serverPanel.setLayout(c1);
-		serverPanel.add(serverMessenger,"message");
 		serverPanel.add(setup, "setup");
 		c1.show(serverPanel, "setup");
 
@@ -151,17 +154,10 @@ public class GameServer extends JFrame implements Runnable{
 
 	}
 
-	public static int findInVec(Vector<String> words, String s1)
-	{
-		for(int i = 0; i < words.size(); i++)
-		{
-			if(words.get(i).equals(s1))
-				return i;
-		}
-		return -1;
-	}
+
 	
 	public static void parseTarget(String line) {
+		System.out.println(line);
 		StringTokenizer st = new StringTokenizer(line, "~", false);
 		String name = st.nextToken();
 		//System.out.println("name: " + name);
@@ -229,6 +225,7 @@ public class GameServer extends JFrame implements Runnable{
 
 	public static void sendMessage(String line,  Vector<Player> receivers)
 	{
+		System.out.println("THIS IS ALSO THE LINE"+line);
 		// set receivers to vector of players
 		if(receivers == null)
 			receivers = players;
@@ -244,14 +241,15 @@ public class GameServer extends JFrame implements Runnable{
 				for(ServerThread ct1:st)
 					ct1.send(line);
 			}
-		flag = true;
 	}	
 
+	public static void removeThread(ServerThread ct) {
+		st.remove(ct);
+	}
 
 	public static void startup()
 	{
 		show = false;
-		//Thread accept = new Thread(new AcceptSocket(ss));
 		GameClient gc =new GameClient();
 		Thread gcthread = new Thread(gc);
 		gcthread.start();
@@ -270,6 +268,8 @@ public class GameServer extends JFrame implements Runnable{
 			e1.printStackTrace();
 		}
 
+		gc.pw.println("HOST");
+		gc.pw.flush();
 		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 
@@ -279,7 +279,7 @@ public class GameServer extends JFrame implements Runnable{
 				ServerThread ST = new ServerThread(s);
 				st.add(ST);
 				BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-				ServerReader sr = new ServerReader(br, s);
+				ServerReader sr = new ServerReader(br,s);
 				readers.add(sr);
 				sr.start();
 
@@ -293,19 +293,18 @@ public class GameServer extends JFrame implements Runnable{
 			catch(Exception e){e.printStackTrace();}
 		}
 		lock.lock();
-		try {
+	try {
 			read.await();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		lock.unlock();
-		sendMessage(concatNames, null);
 		for(ServerThread ST:st)
 			ST.start();
 		sendMessage("DONE",null);
 		
-		concatNames+="HOST";
+		concatNames=concatNames;
 		name1 = concatNames.split("~");
 		long seed;
 		seed = System.nanoTime();
@@ -320,9 +319,7 @@ public class GameServer extends JFrame implements Runnable{
 			System.out.println("NANME:"+s);
 			GameServer.names.add(s);
 		}
-		
-		GameClient.names0=names;
-		
+				
 		for(int i = 0; i < setup.numVil; i++)
 		{
 			Villager p = new Villager(name1[pCount], st.get(pCount), readers.get(pCount));
@@ -366,6 +363,11 @@ public class GameServer extends JFrame implements Runnable{
 	}
 
 	
+	private static ServerReader ServerReader(BufferedReader br, Socket s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public static void main(String[] args)
 	{
 		Thread gs =new Thread(new GameServer());	
