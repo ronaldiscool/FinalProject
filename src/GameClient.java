@@ -88,6 +88,7 @@ class Reader extends Thread
 
 		}
 		else if (command.equalsIgnoreCase("vote")) {
+			
 			gc.getMessenger().updateVotes(name,content);
 		}
 		else if (command.equalsIgnoreCase("power")) {

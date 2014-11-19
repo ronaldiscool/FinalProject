@@ -103,7 +103,7 @@ public class UserMessenger extends JPanel {
 		
 		voteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-							String target = lyncher.getSelectedItem().toString();
+				String target = lyncher.getSelectedItem().toString();
 				gc.sendMessage(target, 1);
 				UserMessenger.this.voteButton.setEnabled(false);
 			}
@@ -148,7 +148,7 @@ public class UserMessenger extends JPanel {
 	// this method will remove the specified player's entry in the combobox
 	public void updateLyncher(){
 		// clear players, iterate through container of players adding each alive player back to lyncher
-		//lyncher.addItem("NOBODY");
+		lyncher.addItem("NOBODY");
 		for(String s : gc.names0)
 		{
 			lyncher.addItem(s);

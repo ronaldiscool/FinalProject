@@ -178,8 +178,12 @@ public class GameServer extends JFrame implements Runnable{
 			if (command.equalsIgnoreCase("vote")) {
 							if (target.equalsIgnoreCase("all")) {
 							sendMessage(content1,null);
-							Player p = players.get(names.indexOf(name));
-							Player ptarget = players.get(names.indexOf(content));
+							Player ptarget;
+							Player	p = players.get(names.indexOf(name));
+							if(content.equals("NOBODY"))
+								ptarget=null;
+							else
+								ptarget = players.get(names.indexOf(content));
 							p.vote(ptarget);
 							}
 							else if (target.equalsIgnoreCase("mafia")) {

@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 abstract class Player{
 	
+	static int nobodyVote = 0;
 	ServerThread st;
 	private boolean alive;
 	public int 	tally;
@@ -41,7 +42,9 @@ abstract class Player{
 			System.out.println("PERMITSSSS00000"+GameServer.allvotesSem.availablePermits());
 
 			GameServer.allvotesSem.acquire();
-			p.tally++;
+			if(p==null){nobodyVote++;}
+			else
+				p.tally++;
 			System.out.println("PERMITSSSS"+GameServer.allvotesSem.availablePermits());
 			if(GameServer.allvotesSem.availablePermits()!=0)
 			{
@@ -56,11 +59,16 @@ abstract class Player{
 				for(Player p0:GameServer.players)
 				{		
 					if(maxTally == p0.tally && maxTally!=0)
+					{
+						mostVoted=null;
 						break;
+					}
 					if(maxTally<p0.tally)
 					{	maxTally=p0.tally;
 					mostVoted=p0;}
 				}
+				if(maxTally<nobodyVote)
+					mostVoted=null;
 				if(mostVoted!=null)
 				{
 					String targetrole = mostVoted.getRole();
@@ -118,6 +126,7 @@ abstract class Player{
 			GameServer.allvotesSem.release();
 			GameServer.released.signalAll();
 			GameServer.lock.unlock();
+			nobodyVote=0;
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
