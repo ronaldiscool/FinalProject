@@ -76,12 +76,16 @@ abstract class Player{
 					{
 					case "Villager":
 						GameServer.villagers.remove(mostVoted);
+						break;
 					case "Mafia":
 						GameServer.mafia.remove(mostVoted);
+						break;
 					case "Cop":
 						GameServer.cops.remove(mostVoted);
+						break;
 					case "Doctor":
 						GameServer.doctors.remove(mostVoted);
+						break;
 					}
 					Vector killmv = new Vector<Player>();
 					killmv.add(mostVoted);
@@ -120,6 +124,18 @@ abstract class Player{
 				GameServer.released.await();
 				GameServer.lock.unlock();
 				GameServer.allvotesSem.acquire();
+				String targetrole = mostVoted.getRole();
+				switch(targetrole)
+				{
+				case "Mafia":
+					GameServer.allmafSem.acquire();
+					break;
+				//case "Cop":
+					//GameServer.cops.remove(mostVoted);
+				case "Doctor":
+					GameServer.alldocSem.acquire();
+					break;
+				}
 			}
 			}                                
 			GameServer.lock.lock();
@@ -132,8 +148,10 @@ abstract class Player{
 			e.printStackTrace();
 		}
 
-		
 	}
+	
+	abstract void power(Player p);
+
 	
 	public String getName(){
 		return name;

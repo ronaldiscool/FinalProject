@@ -104,13 +104,14 @@ public class SetUp extends JPanel {
 				numHook = hookerBox.getSelectedIndex();
 				badNum+=numHook;
 				GameServer.allvotesSem = new Semaphore(goodNum+badNum);
+				GameServer.allmafSem = new Semaphore(numMaf);
+				GameServer.alldocSem=new Semaphore(numDoc);
 				if(goodNum+1 < badNum) // checks ratio NOTE: modify accordingly
 					messageLabel.setText("Error. You need to more citizens/cop/doctors.");
 				else
 				{
 					numPlayers = goodNum+badNum;
 					messageLabel.setText("Processing...");
-					//GameServer gs = new GameServer();
 					GameServer.startup();
 				}
 			}

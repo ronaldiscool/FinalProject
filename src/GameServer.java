@@ -107,7 +107,7 @@ public class GameServer extends JFrame implements Runnable{
 	public static Vector<ServerThread> st = new Vector<ServerThread>();
 	public static Vector<Villager> villagers= new Vector<Villager>();
 	public static Vector<Cop> cops= new Vector<Cop>();
-	public static Vector<TheMafia> mafia= new Vector<TheMafia>();
+	public static Vector<Mafia> mafia= new Vector<Mafia>();
 	public static Vector<Stripper> strippers= new Vector<Stripper>();
 	public static Vector<Doctor> doctors= new Vector<Doctor>();
 	public static Vector<ServerReader> readers = new Vector<ServerReader>();
@@ -122,12 +122,19 @@ public class GameServer extends JFrame implements Runnable{
 	static Condition read = lock.newCondition();
 	static Condition allvotes = lock.newCondition();
 	static Condition released = lock.newCondition();
+	static Condition allmafvotes = lock.newCondition();
+	static Condition mafreleased = lock.newCondition();
+	static Condition alldocvotes = lock.newCondition();
+	static Condition doctorDone2 = lock.newCondition();
 	static Semaphore allvotesSem;
-	//static GameClient gc;
+	static Semaphore allmafSem;
+	static Semaphore alldocSem;
 	static boolean show = true;
 	static boolean initializing = true;
 	static int numReg = 0;
 	static BufferedReader br0;
+	volatile static boolean doctorDone = false;
+	
 	public GameServer()
 	{
 		super("Mafia");
@@ -154,8 +161,6 @@ public class GameServer extends JFrame implements Runnable{
 
 	}
 
-
-	
 	public static void parseTarget(String line) {
 		System.out.println(line);
 		StringTokenizer st = new StringTokenizer(line, "~", false);
@@ -186,7 +191,7 @@ public class GameServer extends JFrame implements Runnable{
 								ptarget = players.get(names.indexOf(content));
 							p.vote(ptarget);
 							}
-							else if (target.equalsIgnoreCase("mafia")) {
+							/*else if (target.equalsIgnoreCase("mafia")) {
 								// targetMafia = true;
 							}
 							else if (target.equalsIgnoreCase("doctor")) {
@@ -197,27 +202,42 @@ public class GameServer extends JFrame implements Runnable{
 							}
 							else {
 								System.out.println("Error: target cannot be parsed");
-							}
+							}*/
 						}
 						else if (command.equalsIgnoreCase("chat")) {
 							if (target.equalsIgnoreCase("all")) {
 								sendMessage(content1,null);
 								}
 								else if (target.equalsIgnoreCase("mafia")) {
-									// targetMafia = true;
+									sendMessage(content1,mafia);
 								}
 								else if (target.equalsIgnoreCase("doctor")) {
-									// targetDoctor = true;
+									sendMessage(content1,doctors);
 								}
 								else if (target.equalsIgnoreCase("cops")) {
-									// targetCops = true;
+									sendMessage(content1,cops);
 								}
 								else {
 									System.out.println("Error: target cannot be parsed");
 								}
 						}
 						else if (command.equalsIgnoreCase("power")) {
-							
+							if (target.equalsIgnoreCase("mafia")) {
+									sendMessage(content1,mafia);
+								}
+								else if (target.equalsIgnoreCase("doctor")) {
+									sendMessage(content1,doctors);
+								}
+								else if (target.equalsIgnoreCase("cops")) {
+									sendMessage(content1,cops);
+								}
+							Player ptarget;
+							Player	p = players.get(names.indexOf(name));
+							if(content.equals("NOBODY"))
+								ptarget=null;
+							else
+								ptarget = players.get(names.indexOf(content));
+							p.power(ptarget);
 						}
 						else {
 							System.out.println("Error: command cannot be parsed");
@@ -227,15 +247,14 @@ public class GameServer extends JFrame implements Runnable{
 		
 	}
 
-	public static void sendMessage(String line,  Vector<Player> receivers)
+	public static <T extends Player> void sendMessage(String line,  Vector<T> receivers)
 	{
-		System.out.println("THIS IS ALSO THE LINE"+line);
 		// set receivers to vector of players
 		if(receivers == null)
-			receivers = players;
+			receivers = (Vector<T>) players;
 			if(!initializing)
 			{
-				for(Player player : receivers)
+				for(T player : receivers)
 				{
 					ServerThread ct1 = player.st;
 					ct1.send(line);
@@ -355,12 +374,11 @@ public class GameServer extends JFrame implements Runnable{
 		for(int i = 0; i < setup.numMaf; i++)
 		{
 
-			TheMafia p = new Mafia(name1[pCount], st.get(pCount), readers.get(pCount));
+			Mafia p = new Mafia(name1[pCount], st.get(pCount), readers.get(pCount));
 			players.add(p);
 			mafia.add(p);
 			st.get(pCount).send("MAFIA");
 			pCount++;
-
 }
 		initializing=false;
 

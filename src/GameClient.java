@@ -51,20 +51,37 @@ class Reader extends Thread
 				//e.printStackTrace();
 			}
 		}
+		if(line.equals("~~SAVED~~"))
+		{
+			try {
+				String saved= br.readLine();
+				um.reset("Nobody");
+				um.addMessage(saved+" was attacked by the mafia but saved by the doctor");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 		if(line.equals("~~DIE~~"))
 		{
 			um.addMessage("You died.");
 			um.sendButton.setEnabled(false);
+			um.voteButton.setEnabled(false);
 			return;
 		}
 		if(line.equals("~~KILLED~~"))
 		{	
+			boolean daytime = true;
 			try {
+				if(um.timeCycle.getText().substring(0,3).equals("Day"))
+					daytime=false;
 				String nextLine = br.readLine();
 				if(nextLine.equals("~~~~~"))
 					um.reset("Nobody");
 				else
 				{
+					System.out.println("cmon folks");
 					gc.names0.remove(nextLine);
 					String role = br.readLine();
 					um.reset(nextLine+", the "+ role+",");
@@ -73,6 +90,14 @@ class Reader extends Thread
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+				if(!daytime&&gc.role.equalsIgnoreCase("villager"))
+				{
+					System.out.println(gc.role+gc.name);
+					um.voteButton.setEnabled(false);
+					um.sendButton.setEnabled(false);
+				}
+				else
+					um.voteButton.setEnabled(true);
 			return;}
 		StringTokenizer st = new StringTokenizer(line, "~", false);
 		String name = st.nextToken();
@@ -92,7 +117,8 @@ class Reader extends Thread
 			gc.getMessenger().updateVotes(name,content);
 		}
 		else if (command.equalsIgnoreCase("power")) {
-			
+			gc.getMessenger().updateVotes(name,content);
+
 		}
 	}
 	
@@ -176,9 +202,16 @@ public class GameClient extends JFrame implements Runnable{
 	}
 	
 	public void sendMessage(String message, int votechoice) {
-		String[] votechoices={"CHAT","VOTE"};
-		String pisstemp = name + "~ALL~"+votechoices[votechoice]+"~" + message;
-		System.out.println("MESAGE ALSO:"+pisstemp);
+		String[] votechoices={"CHAT","VOTE", "POWER"};
+			String pisstemp = null;
+		if(um.timeCycle.getText().substring(0,3).equals("Day"))
+			pisstemp = name + "~ALL~"+votechoices[votechoice]+"~" + message;
+		if(um.timeCycle.getText().substring(0,3).equals("Nig"))
+		{
+			pisstemp = name + "~"+role+"~"+votechoices[votechoice]+"~" + message;
+			if(votechoice==1)
+				pisstemp = name + "~"+role+"~POWER~" + message;
+		}
 		pw.println(pisstemp);
 		pw.flush();
 	}

@@ -7,5 +7,11 @@ class Villager extends Player {
 	public String getRole() {
 		return "Villager";
 	}
+
+	@Override
+	void power(Player p) {
+		return;
+		
+	}
 	
 }
