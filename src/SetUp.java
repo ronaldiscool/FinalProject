@@ -23,7 +23,6 @@ public class SetUp extends JPanel {
 	private JComboBox<String> doctorBox;
 	private JComboBox<String> mafiaBox;
 	private JComboBox<String> copBox;
-	private JComboBox<String> hookerBox;
 	private JLabel numLabel; // message that signals whether the options are valid
 	private JLabel messageLabel; // message that signals whether the options are valid
 	public int numPlayers;
@@ -55,12 +54,10 @@ public class SetUp extends JPanel {
 		doctorBox = new JComboBox<String>();
 		mafiaBox = new JComboBox<String>();
 		copBox = new JComboBox<String>();
-		hookerBox = new JComboBox<String>();
 
 		for(int i=0; i<11; ++i) { // Adds the numbers for the boxes
 			copBox.addItem("" + i);
 			doctorBox.addItem("" + i);
-			hookerBox.addItem("" + i);
 		}
 
 		for(int i=1; i<15; ++i) { // Adds the numbers for the box
@@ -78,7 +75,6 @@ public class SetUp extends JPanel {
 				num+= copBox.getSelectedIndex();
 				num+= doctorBox.getSelectedIndex();
 				num+= mafiaBox.getSelectedIndex()+1;
-				num+= hookerBox.getSelectedIndex();
 				numLabel.setText("Number of Players: " + num);
 			}
 		};
@@ -87,7 +83,6 @@ public class SetUp extends JPanel {
 		doctorBox.addItemListener(il);
 		mafiaBox.addItemListener(il);
 		copBox.addItemListener(il);
-		hookerBox.addItemListener(il);
 
 		
 		JButton okButton = new JButton("Okay"); // Confirmation button
@@ -101,8 +96,6 @@ public class SetUp extends JPanel {
 				goodNum+=numDoc;
 				numMaf = mafiaBox.getSelectedIndex()+1;
 				badNum = numMaf;
-				numHook = hookerBox.getSelectedIndex();
-				badNum+=numHook;
 				GameServer.allvotesSem = new Semaphore(goodNum+badNum);
 				GameServer.allmafSem = new Semaphore(numMaf);
 				GameServer.alldocSem=new Semaphore(numDoc);
@@ -147,10 +140,6 @@ public class SetUp extends JPanel {
 		gbc.gridx = 1;
 		selectPanel.add(mafiaLabel, gbc);
 		gbc.gridx = 0;		gbc.gridy = 5;
-		selectPanel.add(hookerBox, gbc);
-		gbc.gridx = 1;
-		selectPanel.add(hookerLabel, gbc);
-		gbc.gridy = 6;
 		gbc.gridx = 1;
 		selectPanel.add(okButton, gbc);
 		

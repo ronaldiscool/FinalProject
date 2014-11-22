@@ -1,8 +1,8 @@
 import java.util.Vector;
 
 
-class Mafia extends TheMafia {
-	
+class Mafia extends Player {
+	private int nobodyVote;
 	public Mafia(String name, ServerThread st, ServerReader reader) {
 		super(name, st, reader);
 	}
