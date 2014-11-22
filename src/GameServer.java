@@ -107,10 +107,10 @@ public class GameServer extends JFrame implements Runnable{
 	public static  Vector<ServerThread> st = new Vector<ServerThread>();
 	public static Vector<Villager> villagers= new Vector<Villager>();
 	public static Vector<Cop> cops= new Vector<Cop>();
-	public static  Vector<Mafia> mafia= new Vector<Mafia>();
-	public static Vector<Stripper> strippers= new Vector<Stripper>();
-	public static  Vector<Doctor> doctors= new Vector<Doctor>();
-	public static  Vector<ServerReader> readers = new Vector<ServerReader>();
+	public static Vector<Mafia> mafia= new Vector<Mafia>();
+	//public static Vector<Stripper> strippers= new Vector<Stripper>();
+	public static Vector<Doctor> doctors= new Vector<Doctor>();
+	public static Vector<ServerReader> readers = new Vector<ServerReader>();
 	public static CardLayout c1=new CardLayout();
 	public static JPanel serverPanel=new JPanel();
 
