@@ -74,8 +74,8 @@ class Reader extends Thread
 		{	
 			boolean daytime = true;
 			try {
-				//if(um.timeCycle.getText().substring(0,3).equals("Day"))
-					//daytime=false;
+				if(um.timeCycle.getText().substring(0,3).equals("Day"))
+					daytime=false;
 				String nextLine = br.readLine();
 				if(nextLine.equals("~~~~~"))
 					um.reset("Nobody");
