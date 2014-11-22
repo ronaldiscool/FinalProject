@@ -33,14 +33,14 @@ public class ServerThread extends Thread{
 			while(true)
 				{
 				String line = br.readLine();
-				System.out.println("MESAGE#"+line);
+				System.out.println("YAYA"+line);
 				//GameServer.sendMessage(line,false, null);
 				GameServer.parseTarget(line);
 				
 				}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			//GameServer.removeThread(this);
+			GameServer.removeThread(this);
 		}
 	}
 	

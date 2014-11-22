@@ -33,7 +33,7 @@ public class UserMessenger extends JPanel {
 	
 	public void reset(String deadPerson)
 	{
-		if(timeCycle.getText().substring(0,3).equals("Day"))
+		if(false)//timeCycle.getText().substring(0,3).equals("Day"))
 			timeCycle.setText("Night " + dayCount);
 		else
 		{
@@ -69,7 +69,7 @@ public class UserMessenger extends JPanel {
 		gbc.gridwidth=4;
 		gbc.ipady=55;
 		gbc.anchor=GridBagConstraints.NORTH;
-		timeCycle=new JLabel("Night 0");
+		timeCycle=new JLabel("Day 1");
 		messagePanel.add(timeCycle,gbc);
 		
 		gbc.ipady=0;
@@ -105,16 +105,16 @@ public class UserMessenger extends JPanel {
 		voteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String target = lyncher.getSelectedItem().toString();
-				gc.sendMessage(target, 1);
 				UserMessenger.this.voteButton.setEnabled(false);
-			}
+				UserMessenger.this.sendButton.setEnabled(false);
+				gc.sendMessage(target, 1);
+							}
 		}
 		);
 		
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				String message = inputField.getText();
-				System.out.println("MESSAGE"+message);
 				if (!message.equals("")) {
 					gc.sendMessage(message,0);
 				}

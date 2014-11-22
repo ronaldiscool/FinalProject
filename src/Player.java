@@ -19,7 +19,7 @@ abstract class Player{
 	
 	static int nobodyVote = 0;
 	ServerThread st;
-	private boolean alive;
+	private boolean alive = true;
 	public int 	tally;
 	protected String name;
 	protected ServerReader reader;
@@ -61,11 +61,13 @@ abstract class Player{
 					if(maxTally == p0.tally && maxTally!=0)
 					{
 						mostVoted=null;
+						p0.tally=0;
 						break;
 					}
-					if(maxTally<p0.tally)
+					else if(maxTally<p0.tally)
 					{	maxTally=p0.tally;
 					mostVoted=p0;}
+					p0.tally=0;
 				}
 				if(maxTally<nobodyVote)
 					mostVoted=null;
@@ -87,13 +89,12 @@ abstract class Player{
 						GameServer.doctors.remove(mostVoted);
 						break;
 					}
-					Vector killmv = new Vector<Player>();
+					Vector<Player> killmv = new Vector<Player>();
 					killmv.add(mostVoted);
 					GameServer.sendMessage("~~DIE~~", killmv);
-					GameServer.st.remove(GameServer.players.indexOf(mostVoted));
-					GameServer.readers.remove(GameServer.players.indexOf(mostVoted));
-					GameServer.names.remove(GameServer.players.indexOf(mostVoted));
-					GameServer.players.remove(GameServer.players.indexOf(mostVoted));
+					GameServer.players.remove(mostVoted);
+					for(Player p0 :GameServer.players)
+						System.out.println("TEST"+p0.name);
 					}
 				GameServer.lock.lock();
 				GameServer.allvotes.signalAll();
@@ -125,6 +126,7 @@ abstract class Player{
 				GameServer.lock.unlock();
 				GameServer.allvotesSem.acquire();
 				String targetrole = mostVoted.getRole();
+				System.out.println("ROLE"+targetrole);
 				switch(targetrole)
 				{
 				case "Mafia":

@@ -103,14 +103,14 @@ public class GameServer extends JFrame implements Runnable{
 	public static String[] name1;
 	public static int pCount = 0;
 	public volatile static Vector<String> names = new Vector<String>(); 
-	public static Vector<Player> players= new Vector<Player>();
-	public static Vector<ServerThread> st = new Vector<ServerThread>();
+	public static  Vector<Player> players= new Vector<Player>();
+	public static  Vector<ServerThread> st = new Vector<ServerThread>();
 	public static Vector<Villager> villagers= new Vector<Villager>();
 	public static Vector<Cop> cops= new Vector<Cop>();
-	public static Vector<Mafia> mafia= new Vector<Mafia>();
+	public static  Vector<Mafia> mafia= new Vector<Mafia>();
 	public static Vector<Stripper> strippers= new Vector<Stripper>();
-	public static Vector<Doctor> doctors= new Vector<Doctor>();
-	public static Vector<ServerReader> readers = new Vector<ServerReader>();
+	public static  Vector<Doctor> doctors= new Vector<Doctor>();
+	public static  Vector<ServerReader> readers = new Vector<ServerReader>();
 	public static CardLayout c1=new CardLayout();
 	public static JPanel serverPanel=new JPanel();
 
@@ -161,8 +161,14 @@ public class GameServer extends JFrame implements Runnable{
 
 	}
 
+	static Player find_name(String s)
+	{
+		for(Player p : players)
+			if(p.name.equals(s))
+				return p;
+		return null;
+	}
 	public static void parseTarget(String line) {
-		System.out.println(line);
 		StringTokenizer st = new StringTokenizer(line, "~", false);
 		String name = st.nextToken();
 		//System.out.println("name: " + name);
@@ -184,11 +190,11 @@ public class GameServer extends JFrame implements Runnable{
 							if (target.equalsIgnoreCase("all")) {
 							sendMessage(content1,null);
 							Player ptarget;
-							Player	p = players.get(names.indexOf(name));
+							Player	p = find_name(name);
 							if(content.equals("NOBODY"))
 								ptarget=null;
 							else
-								ptarget = players.get(names.indexOf(content));
+								ptarget = find_name(content);
 							p.vote(ptarget);
 							}
 							/*else if (target.equalsIgnoreCase("mafia")) {
@@ -232,11 +238,12 @@ public class GameServer extends JFrame implements Runnable{
 									sendMessage(content1,cops);
 								}
 							Player ptarget;
-							Player	p = players.get(names.indexOf(name));
+							Player	p = find_name(name);
 							if(content.equals("NOBODY"))
 								ptarget=null;
 							else
-								ptarget = players.get(names.indexOf(content));
+								ptarget = find_name(content);
+							System.out.println(p.getName()+"ENTERED");
 							p.power(ptarget);
 						}
 						else {
@@ -247,18 +254,28 @@ public class GameServer extends JFrame implements Runnable{
 		
 	}
 
-	public static <T extends Player> void sendMessage(String line,  Vector<T> receivers)
+	synchronized public static <T extends Player> void sendMessage(String line,  Vector<T> receivers)
 	{
 		// set receivers to vector of players
-		if(receivers == null)
-			receivers = (Vector<T>) players;
+
 			if(!initializing)
+			{
+				if(receivers==null)
+				{
+					for(Player player : players)
+					{
+						ServerThread ct1 = player.st;
+						ct1.send(line);
+					}
+				}
+			else
 			{
 				for(T player : receivers)
 				{
 					ServerThread ct1 = player.st;
 					ct1.send(line);
 				}}
+			}
 			if(initializing)
 			{
 				for(ServerThread ct1:st)
@@ -282,6 +299,7 @@ public class GameServer extends JFrame implements Runnable{
 			Socket sss = ss.accept();
 			ServerThread ST0 = new ServerThread(sss);
 			st.add(ST0);
+			//ST0.start();
 			br0 = new BufferedReader(new InputStreamReader(sss.getInputStream()));
 			ServerReader sr0 = new ServerReader(br0, sss);
 			readers.add(sr0);
@@ -331,64 +349,64 @@ public class GameServer extends JFrame implements Runnable{
 		name1 = concatNames.split("~");
 		long seed;
 		seed = System.nanoTime();
-		Collections.shuffle(Arrays.asList(name1), new Random(seed));
-		Collections.shuffle(st, new Random(seed));
-		Collections.shuffle(readers, new Random(seed));
-
-		
-
-		for(String s : name1)
+		Vector<Integer> indices = new Vector<Integer>();
+		for(int i  = 0; i < setup.numPlayers; i++)
 		{
-			System.out.println("NANME:"+s);
-			GameServer.names.add(s);
+			indices.add(i);
 		}
+		Collections.shuffle(indices);
+		//Collections.shuffle(Arrays.asList(name1), new Random(seed));
+		//Collections.shuffle(st, new Random(seed));
+		//Collections.shuffle(readers, new Random(seed));
+
 				
 		for(int i = 0; i < setup.numVil; i++)
 		{
-			Villager p = new Villager(name1[pCount], st.get(pCount), readers.get(pCount));
+			int index=indices.get(pCount);
+			Villager p = new Villager(name1[index], st.get(index), readers.get(index));
 			players.add(p);
 			villagers.add(p);
-			st.get(pCount).send("VILLAGER");
+			st.get(index).send("VILLAGER");
 			pCount++;
 
 		}
 		for(int i = 0; i < setup.numCop; i++)
 		{
-			Cop p = new Cop(name1[pCount], st.get(pCount), readers.get(pCount));
+			int index=indices.get(pCount);
+			Cop p = new Cop(name1[index], st.get(index), readers.get(index));
 			players.add(p);
 			cops.add(p);
-			st.get(pCount).send("COP");
+			st.get(index).send("COP");
 			pCount++;
 
 		}
 		for(int i = 0; i < setup.numDoc; i++)
 		{
-			Doctor p = new Doctor(name1[pCount], st.get(pCount), readers.get(pCount));
+			int index=indices.get(pCount);
+
+			Doctor p = new Doctor(name1[index], st.get(index), readers.get(index));
 			players.add(p);
 			doctors.add(p);
-			st.get(pCount).send("DOCTOR");
+			st.get(index).send("DOCTOR");
 			pCount++;
 
 		}
 
 		for(int i = 0; i < setup.numMaf; i++)
 		{
+			int index=indices.get(pCount);
 
-			Mafia p = new Mafia(name1[pCount], st.get(pCount), readers.get(pCount));
+			Mafia p = new Mafia(name1[index], st.get(index), readers.get(index));
 			players.add(p);
 			mafia.add(p);
-			st.get(pCount).send("MAFIA");
+			st.get(index).send("MAFIA");
 			pCount++;
 }
 		initializing=false;
 
 	}
 
-	
-	private static ServerReader ServerReader(BufferedReader br, Socket s) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	public static void main(String[] args)
 	{

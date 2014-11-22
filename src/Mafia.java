@@ -8,12 +8,16 @@ class Mafia extends TheMafia {
 	}
 	public void power(Player p) {
 		try {
+			System.out.println("DDDDDDDDDDDD");
 			if(GameServer.doctors.size()>0&&!GameServer.doctorDone)
 			{
+				System.out.println(GameServer.doctors.size()+"::A:A:A:A");
 				GameServer.lock.lock();
 			GameServer.doctorDone2.await();
 			GameServer.lock.unlock();
 			}
+			System.out.println("MAFFFFFFearly"+GameServer.allmafSem.availablePermits());
+
 			GameServer.allmafSem.acquire();
 			System.out.println("MAFFFFFF"+GameServer.allmafSem.availablePermits());
 			if(p==null){nobodyVote++;}
@@ -24,6 +28,7 @@ class Mafia extends TheMafia {
 			GameServer.lock.lock();
 			GameServer.allmafvotes.await();
 			GameServer.lock.unlock();
+			System.out.println("DONE WAITING)");
 			}
 			else
 			{
@@ -108,6 +113,7 @@ class Mafia extends TheMafia {
 				GameServer.lock.unlock();
 				GameServer.allvotesSem.acquire();
 				String targetrole = mostVoted.getRole();
+				System.out.println("ACQUIRING");
 				switch(targetrole)
 				{
 				case "Mafia":
@@ -119,6 +125,7 @@ class Mafia extends TheMafia {
 					GameServer.alldocSem.acquire();
 					break;
 				}
+				System.out.println("ACQUIRED");
 			}
 			}                                
 			GameServer.lock.lock();

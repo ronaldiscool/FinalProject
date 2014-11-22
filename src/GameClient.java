@@ -36,7 +36,7 @@ class Reader extends Thread
 	
 	private void parsecommand(String line, BufferedReader br)
 	{
-		System.out.println(line);
+		System.out.println("LINE:"+line);
 		if(line.equals("~~GAME OVER~~"))
 		{
 			um.addMessage("Game Over");
@@ -74,14 +74,14 @@ class Reader extends Thread
 		{	
 			boolean daytime = true;
 			try {
-				if(um.timeCycle.getText().substring(0,3).equals("Day"))
-					daytime=false;
+				//if(um.timeCycle.getText().substring(0,3).equals("Day"))
+					//daytime=false;
 				String nextLine = br.readLine();
 				if(nextLine.equals("~~~~~"))
 					um.reset("Nobody");
 				else
 				{
-					System.out.println("cmon folks");
+					System.out.println(nextLine);
 					gc.names0.remove(nextLine);
 					String role = br.readLine();
 					um.reset(nextLine+", the "+ role+",");
@@ -92,7 +92,7 @@ class Reader extends Thread
 			}
 				if(!daytime&&gc.role.equalsIgnoreCase("villager"))
 				{
-					System.out.println(gc.role+gc.name);
+					//System.out.println(gc.role+gc.name);
 					um.voteButton.setEnabled(false);
 					um.sendButton.setEnabled(false);
 				}
@@ -141,7 +141,7 @@ class Reader extends Thread
 					}}
 					gc.CL.show(gc.jp,"User Messenger");
 					gc.names0 = new HashSet<String>(Arrays.asList(gc.concatNames.split("~")));
-					gc.names0.add("HOST");
+					//gc.names0.add("HOST");
 					um.updateLyncher();
 					break;
 				}
@@ -212,6 +212,7 @@ public class GameClient extends JFrame implements Runnable{
 			if(votechoice==1)
 				pisstemp = name + "~"+role+"~POWER~" + message;
 		}
+		System.out.println("pisstempgonnapiss");
 		pw.println(pisstemp);
 		pw.flush();
 	}
