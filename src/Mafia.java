@@ -23,6 +23,7 @@ class Mafia extends Player {
 			if(p==null){nobodyVote++;}
 			else
 				p.tally++;
+			boolean acq = false, mafneed = false, docneed=false, copneed=false;
 			if(GameServer.allmafSem.availablePermits()!=0)
 			{
 			GameServer.lock.lock();
@@ -32,22 +33,30 @@ class Mafia extends Player {
 			}
 			else
 			{
+				acq=true;
 				//Find Majority
 				int maxTally = 0;
 				Player mostVoted = null;
+				boolean tie = false;
 				for(Player p0:GameServer.players)
 				{		
 					if(maxTally == p0.tally && maxTally!=0)
 					{
 						mostVoted=null;
-						break;
+						p0.tally=0;
+						tie=true;
 					}
-					if(maxTally<p0.tally)
+					else if(maxTally<p0.tally)
 					{	maxTally=p0.tally;
-					mostVoted=p0;}
+					mostVoted=p0;
+					tie=false;}
+					p0.tally=0;
 				}
 				if(maxTally<nobodyVote)
+				{
 					mostVoted=null;
+					acq=false;
+				}
 				if(mostVoted!=null)
 				{
 					//Kill Player if doctor has not done anything
@@ -58,20 +67,22 @@ class Mafia extends Player {
 					{
 					case "Villager":
 						GameServer.villagers.remove(mostVoted);
+						break;
 					case "Mafia":
 						GameServer.mafia.remove(mostVoted);
+						break;
 					case "Cop":
 						GameServer.cops.remove(mostVoted);
+						break;
 					case "Doctor":
 						GameServer.doctors.remove(mostVoted);
+						break;
 					}
 					Vector killmv = new Vector<Player>();
 					killmv.add(mostVoted);
 					GameServer.sendMessage("~~DIE~~", killmv);
-					GameServer.st.remove(GameServer.players.indexOf(mostVoted));
-					GameServer.readers.remove(GameServer.players.indexOf(mostVoted));
-					GameServer.names.remove(GameServer.players.indexOf(mostVoted));
-					GameServer.players.remove(GameServer.players.indexOf(mostVoted));
+					
+					GameServer.players.remove(mostVoted);
 					}
 					}
 				GameServer.lock.lock();
@@ -82,17 +93,26 @@ class Mafia extends Player {
 					GameServer.sendMessage("~~KILLED~~", null);
 					GameServer.sendMessage(mostVoted.getName(), null);
 					GameServer.sendMessage(mostVoted.getRole(),null);
+					
 				}
 				else if (mostVoted==null)
 				{
 					GameServer.sendMessage("~~KILLED~~", null);
 					GameServer.sendMessage("~~~~~", null);
 				}
-				else
+				else if(mostVoted!= null && mostVoted.getStayAlive())
 				{
 					mostVoted.setStayAlive(false);
 					GameServer.sendMessage("~~SAVED~~",null);
 					GameServer.sendMessage(mostVoted.getName(), null);
+					mostVoted.setStayAlive(false);
+					GameServer.lock.lock();
+					GameServer.allmafSem.release();
+					GameServer.mafreleased.signalAll();
+					GameServer.lock.unlock();
+					nobodyVote=0;
+					GameServer.doctorDone=false;
+					return;
 				}
 				if(GameServer.players.size()<=(2*GameServer.mafia.size()))
 				{
@@ -106,23 +126,20 @@ class Mafia extends Player {
 				GameServer.sendMessage("VILLAGERS",null);
 				return;
 			}
-			if(null!=mostVoted)
+			if(null!=mostVoted&&!mostVoted.getStayAlive())
 			{
-				GameServer.lock.lock();
-				GameServer.mafreleased.await();
-				GameServer.lock.unlock();
-				GameServer.allvotesSem.acquire();
 				String targetrole = mostVoted.getRole();
 				System.out.println("ACQUIRING");
 				switch(targetrole)
 				{
 				case "Mafia":
-					GameServer.allmafSem.acquire();
+					mafneed=true;
 					break;
-				//case "Cop":
-					//GameServer.cops.remove(mostVoted);
+				case "Cop":
+					copneed=true;
+					break;
 				case "Doctor":
-					GameServer.alldocSem.acquire();
+					docneed=true;
 					break;
 				}
 				System.out.println("ACQUIRED");
@@ -132,6 +149,15 @@ class Mafia extends Player {
 			GameServer.allmafSem.release();
 			GameServer.mafreleased.signalAll();
 			GameServer.lock.unlock();
+			if(acq){
+			System.out.println("General Permits"+GameServer.allvotesSem.availablePermits());
+			GameServer.allvotesSem.acquire();
+			System.out.println("General Permits"+GameServer.allvotesSem.availablePermits());}
+			if(mafneed)
+				GameServer.allmafSem.acquire();
+			if(docneed)
+				GameServer.alldocSem.acquire();
+
 			nobodyVote=0;
 			GameServer.doctorDone=false;
 			System.out.println("MMMMMMMMMMMM");

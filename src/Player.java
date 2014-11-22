@@ -46,6 +46,7 @@ abstract class Player{
 			else
 				p.tally++;
 			System.out.println("PERMITSSSS"+GameServer.allvotesSem.availablePermits());
+			boolean acq = false, mafneed = false, docneed=false, copneed=false;
 			if(GameServer.allvotesSem.availablePermits()!=0)
 			{
 			GameServer.lock.lock();
@@ -54,23 +55,29 @@ abstract class Player{
 			}
 			else
 			{
+				acq=true;
 				int maxTally = 0;
 				Player mostVoted = null;
+				boolean tie = false;
 				for(Player p0:GameServer.players)
 				{		
 					if(maxTally == p0.tally && maxTally!=0)
 					{
 						mostVoted=null;
 						p0.tally=0;
-						break;
+						tie=true;
 					}
 					else if(maxTally<p0.tally)
 					{	maxTally=p0.tally;
-					mostVoted=p0;}
+					mostVoted=p0;
+					tie=false;}
 					p0.tally=0;
 				}
-				if(maxTally<nobodyVote)
+				if(maxTally<nobodyVote||tie)
+				{
 					mostVoted=null;
+					acq=false;
+				}
 				if(mostVoted!=null)
 				{
 					String targetrole = mostVoted.getRole();
@@ -121,21 +128,18 @@ abstract class Player{
 			}
 			if(null!=mostVoted)
 			{
-				GameServer.lock.lock();
-				GameServer.released.await();
-				GameServer.lock.unlock();
-				GameServer.allvotesSem.acquire();
 				String targetrole = mostVoted.getRole();
 				System.out.println("ROLE"+targetrole);
 				switch(targetrole)
 				{
 				case "Mafia":
-					GameServer.allmafSem.acquire();
+					mafneed=true;
 					break;
-				//case "Cop":
-					//GameServer.cops.remove(mostVoted);
+				case "Cop":
+					copneed=true;
+					break;
 				case "Doctor":
-					GameServer.alldocSem.acquire();
+					docneed=true;
 					break;
 				}
 			}
@@ -144,6 +148,14 @@ abstract class Player{
 			GameServer.allvotesSem.release();
 			GameServer.released.signalAll();
 			GameServer.lock.unlock();
+			if(acq){
+				System.out.println("General Permits"+GameServer.allvotesSem.availablePermits());
+				GameServer.allvotesSem.acquire();
+				System.out.println("General Permits"+GameServer.allvotesSem.availablePermits());}
+				if(mafneed)
+					GameServer.allmafSem.acquire();
+				if(docneed)
+					GameServer.alldocSem.acquire();
 			nobodyVote=0;
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block

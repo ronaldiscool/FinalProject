@@ -46,6 +46,7 @@ class ServerReader extends Thread
 	BufferedReader br;
 	Socket s;
 	PrintWriter pw;
+	String name;
 	public ServerReader(BufferedReader br, Socket s)
 	{
 		super();
@@ -59,6 +60,7 @@ class ServerReader extends Thread
 	{
 		try {
 			String line = br.readLine();
+			name = line;
 			GameServer.concatNames+=line+"~";
 			GameServer.name1 = GameServer.concatNames.split("~");
 
@@ -169,21 +171,26 @@ public class GameServer extends JFrame implements Runnable{
 		return null;
 	}
 	public static void parseTarget(String line) {
+		System.out.println("PSSMYTEMP"+line);
 		StringTokenizer st = new StringTokenizer(line, "~", false);
 		String name = st.nextToken();
-		//System.out.println("name: " + name);
+		name=name.trim();
+		System.out.println("name: " + name);
 		
 		// read Target
 		String target = st.nextToken();
-		//System.out.println("target: " + target);
+		target=target.trim();
+		
+		System.out.println("target: " + target);
 		
 		// read command
 		String command = st.nextToken();
-		//System.out.println("command: " + command);
+		command=command.trim();
+		System.out.println("command: " + command);
 		// commands at end of this function
 		
 		String content = st.nextToken();
-		//System.out.println("content: " + content);
+		System.out.println("content: " + content);
 		
 			String content1 = name + "~" +command+"~"+ content;
 			if (command.equalsIgnoreCase("vote")) {
@@ -191,6 +198,7 @@ public class GameServer extends JFrame implements Runnable{
 							sendMessage(content1,null);
 							Player ptarget;
 							Player	p = find_name(name);
+							System.out.println(name);
 							if(content.equals("NOBODY"))
 								ptarget=null;
 							else
@@ -212,6 +220,7 @@ public class GameServer extends JFrame implements Runnable{
 						}
 						else if (command.equalsIgnoreCase("chat")) {
 							if (target.equalsIgnoreCase("all")) {
+								System.out.println(content1);
 								sendMessage(content1,null);
 								}
 								else if (target.equalsIgnoreCase("mafia")) {
@@ -257,13 +266,14 @@ public class GameServer extends JFrame implements Runnable{
 	synchronized public static <T extends Player> void sendMessage(String line,  Vector<T> receivers)
 	{
 		// set receivers to vector of players
-
 			if(!initializing)
 			{
+				System.out.println("SENDPLZZZ"+line);
 				if(receivers==null)
 				{
 					for(Player player : players)
 					{
+						System.out.println("SENT");
 						ServerThread ct1 = player.st;
 						ct1.send(line);
 					}
@@ -346,6 +356,7 @@ public class GameServer extends JFrame implements Runnable{
 		sendMessage("DONE",null);
 		
 		concatNames=concatNames;
+		System.out.println("concatname"+concatNames);
 		name1 = concatNames.split("~");
 		long seed;
 		seed = System.nanoTime();
@@ -363,7 +374,7 @@ public class GameServer extends JFrame implements Runnable{
 		for(int i = 0; i < setup.numVil; i++)
 		{
 			int index=indices.get(pCount);
-			Villager p = new Villager(name1[index], st.get(index), readers.get(index));
+			Villager p = new Villager(readers.get(index).name, st.get(index), readers.get(index));
 			players.add(p);
 			villagers.add(p);
 			st.get(index).send("VILLAGER");
@@ -373,7 +384,7 @@ public class GameServer extends JFrame implements Runnable{
 		for(int i = 0; i < setup.numCop; i++)
 		{
 			int index=indices.get(pCount);
-			Cop p = new Cop(name1[index], st.get(index), readers.get(index));
+			Cop p = new Cop(readers.get(index).name, st.get(index), readers.get(index));
 			players.add(p);
 			cops.add(p);
 			st.get(index).send("COP");
@@ -384,7 +395,7 @@ public class GameServer extends JFrame implements Runnable{
 		{
 			int index=indices.get(pCount);
 
-			Doctor p = new Doctor(name1[index], st.get(index), readers.get(index));
+			Doctor p = new Doctor(readers.get(index).name, st.get(index), readers.get(index));
 			players.add(p);
 			doctors.add(p);
 			st.get(index).send("DOCTOR");
@@ -396,7 +407,7 @@ public class GameServer extends JFrame implements Runnable{
 		{
 			int index=indices.get(pCount);
 
-			Mafia p = new Mafia(name1[index], st.get(index), readers.get(index));
+			Mafia p = new Mafia(readers.get(index).name, st.get(index), readers.get(index));
 			players.add(p);
 			mafia.add(p);
 			st.get(index).send("MAFIA");

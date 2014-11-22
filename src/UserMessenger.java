@@ -50,7 +50,7 @@ public class UserMessenger extends JPanel {
 			timeCycle.setText("Day " + ++dayCount);
 			changeDay();
 		}
-		messageField.setText(messageField.getText()+"\n--------------------\n"+timeCycle.getText()+"\n"+deadPerson+" was killed.\n");
+		messageField.setText(messageField.getText()+"\n--------------------\n"+timeCycle.getText()+"\nLast round "+deadPerson+" was killed.\n");
 		inputField.setText("");
 		voteButton.setEnabled(true);
 		sendButton.setEnabled(true);

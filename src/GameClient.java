@@ -61,7 +61,7 @@ class Reader extends Thread
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			return;
 		}
 		if(line.equals("~~DIE~~"))
 		{
@@ -212,7 +212,7 @@ public class GameClient extends JFrame implements Runnable{
 			if(votechoice==1)
 				pisstemp = name + "~"+role+"~POWER~" + message;
 		}
-		System.out.println("pisstempgonnapiss");
+		System.out.println("pisstempgonnapiss"+pisstemp);
 		pw.println(pisstemp);
 		pw.flush();
 	}
