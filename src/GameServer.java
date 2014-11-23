@@ -307,7 +307,7 @@ public class GameServer extends JFrame implements Runnable{
 	public static void startup()
 	{
 		show = false;
-		GameClient gc =new GameClient();
+		GameClient gc =new GameClient(true);
 		Thread gcthread = new Thread(gc);
 		gcthread.start();
 
