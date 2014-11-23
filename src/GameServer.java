@@ -129,9 +129,11 @@ public class GameServer extends JFrame implements Runnable{
 	static Condition mafreleased = lock.newCondition();
 	static Condition alldocvotes = lock.newCondition();
 	static Condition doctorDone2 = lock.newCondition();
+	static Condition allcopvotes = lock.newCondition();
 	static Semaphore allvotesSem;
 	static Semaphore allmafSem;
 	static Semaphore alldocSem;
+	static Semaphore allcopSem;
 	static boolean show = true;
 	static boolean initializing = true;
 	static int numReg = 0;

@@ -99,6 +99,7 @@ public class SetUp extends JPanel {
 				GameServer.allvotesSem = new Semaphore(goodNum+badNum);
 				GameServer.allmafSem = new Semaphore(numMaf);
 				GameServer.alldocSem=new Semaphore(numDoc);
+				GameServer.allcopSem=new Semaphore(numCop);
 				if(goodNum+1 < badNum) // checks ratio NOTE: modify accordingly
 					messageLabel.setText("Error. You need to more citizens/cop/doctors.");
 				else
