@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -155,7 +156,9 @@ public class GameServer extends JFrame implements Runnable{
 
 		try {
 			ss = new ServerSocket(6789);
-		} catch (IOException e) {
+			//System.out.println("ADDRESS"+Inet4Address.getLocalHost().getHostAddress());
+			} 
+			catch (IOException e) {
 			e.printStackTrace();
 		}
 

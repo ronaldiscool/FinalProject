@@ -24,16 +24,20 @@ public class Doctor extends Villager {
 			{
 				int maxTally = 0;
 				Player mostVoted = null;
+				boolean tie = false;
 				for(Player p0:GameServer.players)
 				{		
 					if(maxTally == p0.tally && maxTally!=0)
 					{
 						mostVoted=null;
-						break;
+						p0.tally=0;
+						tie=true;
 					}
-					if(maxTally<p0.tally)
+					else if(maxTally<p0.tally)
 					{	maxTally=p0.tally;
-					mostVoted=p0;}
+					mostVoted=p0;
+					tie=false;}
+					p0.tally=0;
 				}
 				if(maxTally<nobodyVote)
 					mostVoted=null;

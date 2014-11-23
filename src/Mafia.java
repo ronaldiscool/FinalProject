@@ -8,7 +8,6 @@ class Mafia extends Player {
 	}
 	public void power(Player p) {
 		try {
-			System.out.println("DDDDDDDDDDDD");
 			if(GameServer.doctors.size()>0&&!GameServer.doctorDone)
 			{
 				System.out.println(GameServer.doctors.size()+"::A:A:A:A");
@@ -160,7 +159,8 @@ class Mafia extends Player {
 
 			nobodyVote=0;
 			GameServer.doctorDone=false;
-			System.out.println("MMMMMMMMMMMM");
+			for(Player p0 : GameServer.players)
+				p0.setStayAlive(false);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

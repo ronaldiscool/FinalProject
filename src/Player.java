@@ -39,8 +39,6 @@ abstract class Player{
 	
 	public void vote(Player p) {
 		try {
-			System.out.println("PERMITSSSS00000"+GameServer.allvotesSem.availablePermits());
-
 			GameServer.allvotesSem.acquire();
 			if(p==null){nobodyVote++;}
 			else
@@ -129,7 +127,6 @@ abstract class Player{
 			if(null!=mostVoted)
 			{
 				String targetrole = mostVoted.getRole();
-				System.out.println("ROLE"+targetrole);
 				switch(targetrole)
 				{
 				case "Mafia":
