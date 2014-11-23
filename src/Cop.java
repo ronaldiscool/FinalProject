@@ -54,13 +54,14 @@ class Cop extends Villager{
 							break;
 						}
 					}
+					GameServer.sendMessage("~~REPORT~~",GameServer.cops);
 					if(isMafia)
 					{
-						GameServer.sendMessage(mostVoted.getName() + "is part of the Mafia.", GameServer.cops);
+						GameServer.sendMessage(mostVoted.getName() + " is part of the Mafia.", GameServer.cops);
 					}
 					else 
 					{
-						GameServer.sendMessage(mostVoted.getName() + "is not part of the Mafia.", GameServer.cops);
+						GameServer.sendMessage(mostVoted.getName() + " is not part of the Mafia.", GameServer.cops);
 					}
 
 				}

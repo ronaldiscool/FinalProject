@@ -312,6 +312,7 @@ public class GameServer extends JFrame implements Runnable{
 
 		try {
 			Socket sss = ss.accept();
+			System.out.println("ADDD"+sss.getInetAddress());
 			ServerThread ST0 = new ServerThread(sss);
 			st.add(ST0);
 			//ST0.start();

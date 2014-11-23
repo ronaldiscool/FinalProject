@@ -51,6 +51,18 @@ class Reader extends Thread
 				//e.printStackTrace();
 			}
 		}
+		if(line.equals("~~REPORT~~"))
+		{
+			String line0;
+			try {
+				line0 = br.readLine();
+				um.addMessage(line0);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
 		if(line.equals("~~SAVED~~"))
 		{
 			try {
@@ -270,6 +282,7 @@ public class GameClient extends JFrame implements Runnable{
 	{
 		super("Mafia");
 		try {
+			System.out.println("STU");
 			Socket s = new Socket("localhost", 6789);
 			this.pw = new PrintWriter(s.getOutputStream());
 			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
