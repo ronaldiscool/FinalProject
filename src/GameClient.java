@@ -205,6 +205,10 @@ public class GameClient extends JFrame implements Runnable{
 	CardLayout CL = new CardLayout();
 	String name="HOST";
 	String role;
+	Socket s;
+	String ip;
+	int port;
+	boolean isHost;
 	
 	public void addName(String name) {
 		waitRoom.addName(name);
@@ -231,6 +235,46 @@ public class GameClient extends JFrame implements Runnable{
 	
 	private void GUIInit()
 	{
+		if(isHost){
+			try{
+				this.s = new Socket("localhost", 6789);
+				this.pw = new PrintWriter(s.getOutputStream());
+				this.br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+		}
+		
+		else{
+			try {			
+				JTextField ipField = new JTextField(30);
+			    JTextField portField = new JTextField(30);
+	
+			      JPanel myPanel = new JPanel();
+			      myPanel.add(new JLabel("IP Address:"));
+			      myPanel.add(ipField);
+			      myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+			      myPanel.add(new JLabel("Port:"));
+			      myPanel.add(portField);
+	
+			      int result = JOptionPane.showConfirmDialog(null, myPanel, 
+			               "Please Enter IP Address and Port Number", JOptionPane.OK_CANCEL_OPTION);
+			      if (result == JOptionPane.OK_OPTION) {
+			         ip=ipField.getText();
+			         port=Integer.parseInt(portField.getText());
+			      }
+			      
+			      else{
+			    	  System.exit(0);
+			      }
+			      
+				this.s = new Socket(ip, port);
+				this.pw = new PrintWriter(s.getOutputStream());
+				this.br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+		}
 
 		setSize(640,525);
 		setLocation(100,100);
@@ -278,17 +322,10 @@ public class GameClient extends JFrame implements Runnable{
 	}
 	
 	
-	public GameClient()
+	public GameClient(boolean isHost)
 	{
 		super("Mafia");
-		try {
-			System.out.println("STU");
-			Socket s = new Socket("localhost", 6789);
-			this.pw = new PrintWriter(s.getOutputStream());
-			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+		this.isHost=isHost;
 		GUIInit();
 	}	
 
@@ -301,7 +338,7 @@ public class GameClient extends JFrame implements Runnable{
 	
 	public static void main(String[] args)
 	{
-		Thread gc = new Thread(new GameClient());
+		Thread gc = new Thread(new GameClient(false));
 		
 		gc.start();
 	}
