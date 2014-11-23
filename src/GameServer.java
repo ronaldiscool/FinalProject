@@ -130,6 +130,7 @@ public class GameServer extends JFrame implements Runnable{
 	static Condition alldocvotes = lock.newCondition();
 	static Condition doctorDone2 = lock.newCondition();
 	static Condition allcopvotes = lock.newCondition();
+	static Condition copDone2 = lock.newCondition();
 	static Semaphore allvotesSem;
 	static Semaphore allmafSem;
 	static Semaphore alldocSem;
@@ -139,6 +140,7 @@ public class GameServer extends JFrame implements Runnable{
 	static int numReg = 0;
 	static BufferedReader br0;
 	volatile static boolean doctorDone = false;
+	volatile static boolean copDone = false;
 	
 	public GameServer()
 	{

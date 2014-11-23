@@ -67,6 +67,8 @@ class Cop extends Villager{
 				}
 				GameServer.lock.lock();
 				GameServer.allcopvotes.signalAll();
+				GameServer.copDone=true;
+				GameServer.copDone2.signalAll();
 				GameServer.lock.unlock();
 			}                                
 			GameServer.lock.lock();

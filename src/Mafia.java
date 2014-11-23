@@ -15,6 +15,13 @@ class Mafia extends Player {
 			GameServer.doctorDone2.await();
 			GameServer.lock.unlock();
 			}
+			if(GameServer.cops.size()>0&&!GameServer.copDone)
+			{
+				GameServer.lock.lock();
+			GameServer.copDone2.await();
+			GameServer.lock.unlock();
+			System.out.println(GameServer.doctors.size()+"::A:A:A:A");
+			}
 			System.out.println("MAFFFFFFearly"+GameServer.allmafSem.availablePermits());
 
 			GameServer.allmafSem.acquire();
@@ -159,6 +166,7 @@ class Mafia extends Player {
 
 			nobodyVote=0;
 			GameServer.doctorDone=false;
+			GameServer.copDone=false;
 			for(Player p0 : GameServer.players)
 				p0.setStayAlive(false);
 		} catch (InterruptedException e) {
