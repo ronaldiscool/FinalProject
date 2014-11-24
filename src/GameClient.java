@@ -258,6 +258,8 @@ public class GameClient extends JFrame implements Runnable{
 			      myPanel.add(Box.createHorizontalStrut(15)); // a spacer
 			      myPanel.add(new JLabel("Port:"));
 			      myPanel.add(portField);
+			      ipField.setText("localhost");
+			      portField.setText("6789");
 	
 			      int result = JOptionPane.showConfirmDialog(null, myPanel, 
 			               "Please Enter IP Address and Port Number", JOptionPane.OK_CANCEL_OPTION);
