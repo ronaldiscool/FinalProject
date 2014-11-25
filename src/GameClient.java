@@ -184,8 +184,13 @@ class Reader extends Thread
 				parsecommand(temp,br);
 			}
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		}
+		catch (Exception e) {
+			System.out.println("The server has been disconnected.");
+			gc.showWarningDialog("The server has been disconnected.\n"
+					+ "You should probably exit the game unless you like looking at a nonfunctional window.");
+			
+			//System.exit(0); // or exit the game for them, but change the above message first
 		}
 	}
 }
@@ -338,6 +343,15 @@ public class GameClient extends JFrame implements Runnable{
 	{
 		Reader r = new Reader(this,um);
 		r.start();
+	}
+	
+	public void showWarningDialog(String message) {
+		JOptionPane.showMessageDialog(
+				GameClient.this,
+				message,
+				"Warning",
+				JOptionPane.WARNING_MESSAGE
+		);
 	}
 	
 	public static void main(String[] args)
