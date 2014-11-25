@@ -8,7 +8,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -17,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 
 
 public class UserMessenger extends JPanel {
@@ -118,6 +122,29 @@ public class UserMessenger extends JPanel {
 		gbc.gridx=3;
 		voteButton = new JButton("Vote");
 		messagePanel.add(voteButton,gbc);
+		
+		
+		// pressing Enter key while focus is in input box will send message
+		InputMap input = inputField.getInputMap();
+		KeyStroke enter = KeyStroke.getKeyStroke("ENTER");
+		input.put(enter, "text-submit");
+		
+		/* uncomment this to allow newline in input box when pressing Shift+Enter
+		KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
+		input.put(shiftEnter, "insert-break");
+		*/
+		
+		ActionMap actions = inputField.getActionMap();
+		actions.put("text-submit", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String message = inputField.getText();
+				if (!message.equals("")) {
+					gc.sendMessage(message,0);
+				}
+				inputField.setText("");
+			}
+		});
 
 		
 		voteButton.addActionListener(new ActionListener() {
@@ -126,7 +153,7 @@ public class UserMessenger extends JPanel {
 				UserMessenger.this.voteButton.setEnabled(false);
 				UserMessenger.this.sendButton.setEnabled(false);
 				gc.sendMessage(target, 1);
-							}
+			}
 		}
 		);
 		
