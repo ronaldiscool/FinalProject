@@ -83,6 +83,6 @@ class Cop extends Villager{
 	}
 	
 	public String getRole() {
-		return "Detective";
+		return "Cop";
 	}
 }

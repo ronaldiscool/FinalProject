@@ -204,19 +204,19 @@ public class UserMessenger extends JPanel {
 		voteLabel.setFont(new Font("Dialog", Font.BOLD, 14));
 		
 		// Colors for the panels
-		timeCycle.setForeground(Color.WHITE);
-		charLabel.setForeground(Color.WHITE);
-		voteLabel.setForeground(Color.WHITE);
+		timeCycle.setForeground(Color.BLACK);
+		charLabel.setForeground(Color.BLACK);
+		voteLabel.setForeground(Color.BLACK);
 
-		textPanel.setBackground(Color.DARK_GRAY);
-		messagePanel.setBackground(Color.DARK_GRAY);
-		this.setBackground(Color.DARK_GRAY);
+		textPanel.setBackground(Color.LIGHT_GRAY);
+		messagePanel.setBackground(Color.LIGHT_GRAY);
+		this.setBackground(Color.LIGHT_GRAY);
 		
 		
-		messageField.setBackground(Color.LIGHT_GRAY);
-		inputField.setBackground(Color.LIGHT_GRAY);
-		votes.setBackground(Color.LIGHT_GRAY);
-		lyncher.setBackground(Color.LIGHT_GRAY);
+		messageField.setBackground(Color.WHITE);
+		inputField.setBackground(Color.WHITE);
+		votes.setBackground(Color.WHITE);
+		lyncher.setBackground(Color.WHITE);
 
 		lyncher.setBorder(BorderFactory.createLineBorder(Color.black));
 		textFieldPane.setBorder(BorderFactory.createLineBorder(Color.black));
