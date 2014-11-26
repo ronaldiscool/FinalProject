@@ -66,7 +66,11 @@ class Cop extends Villager{
 
 				}
 				else
+				{
+					GameServer.sendMessage("~~REPORT~~",GameServer.cops);
+
 					GameServer.sendMessage("No Report Tonight", null);
+				}
 				GameServer.lock.lock();
 				GameServer.allcopvotes.signalAll();
 				GameServer.copDone=true;
