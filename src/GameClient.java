@@ -52,6 +52,7 @@ class Reader extends Thread
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
 			}
+			return;
 		}
 		if(line.equals("~~REPORT~~"))
 		{

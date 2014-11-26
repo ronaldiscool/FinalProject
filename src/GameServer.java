@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -429,6 +430,12 @@ public class GameServer extends JFrame implements Runnable{
 
 	public static void main(String[] args)
 	{
+		try {
+			System.out.println(Inet4Address.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Thread gs =new Thread(new GameServer());	
 		gs.start();
 
