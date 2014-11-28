@@ -7,7 +7,8 @@ public abstract class DatabaseCommand implements Runnable {
 	public static final String DB_NAME = "mafia";
 	public static final String DRIVER = "com.mysql.jdbc.Driver";
 	public static final String USER = "root";
-	public static final String PASSWORD = "MediaPortal";
+	public static final String PASSWORD = "MediaPortal";	// Please set this to your password 
+	//TODO set password via GUI
 	
 	protected ReentrantLock queryLock;
 	
