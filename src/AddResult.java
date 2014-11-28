@@ -31,7 +31,7 @@ public class AddResult extends DatabaseCommand {
 		}
 	}
 
-	public boolean execute() {
+	protected boolean execute() {
 		try {
 			Class.forName(DRIVER);
 			Connection conn = DriverManager.getConnection(

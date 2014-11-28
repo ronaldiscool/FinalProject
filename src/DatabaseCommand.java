@@ -25,14 +25,14 @@ public abstract class DatabaseCommand implements Runnable {
 		queryLock.unlock();
 	}
 	
-	public abstract boolean execute();
+	protected abstract boolean execute();
 	
 	// TODO remove this
 	/* testing code -- to remove
 	public static void main(String [] args) {
 		ReentrantLock lock = new ReentrantLock();
 		AddResult test = new AddResult(lock, "jamesbond", "mafia", true);
-		test.execute();
+		test.run();
 	}
 	*/
 }
