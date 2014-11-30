@@ -19,10 +19,10 @@ public class AddResult extends DatabaseCommand {
 		this.username = username;
 
 
-		if (role.equalsIgnoreCase("mafia")) {
+		if (role.equalsIgnoreCase("mafia") | role.equalsIgnoreCase("stripper")) {
 			isMafia = true;
 		}
-		else if (role.equalsIgnoreCase("villager")) {
+		else if (role.equalsIgnoreCase("villager") | role.equalsIgnoreCase("cop") | role.equalsIgnoreCase("doctor")) {
 			isVillager = true;
 		}
 		
@@ -52,7 +52,6 @@ public class AddResult extends DatabaseCommand {
 			*/
 			
 			PreparedStatement pStmt = conn.prepareStatement(
-				//"INSERT INTO user (name,x) VALUES (?,?);"
 				"INSERT INTO user (username, times_played, overall_wins, overall_losses,"
 				+ " times_as_mafia, wins_as_mafia, losses_as_mafia,"
 				+ " times_as_villager, wins_as_villager, losses_as_villager) VALUES (?,1,0,0,0,0,0,0,0,0)"
@@ -63,6 +62,7 @@ public class AddResult extends DatabaseCommand {
 			pStmt.execute();
 			
 			updateStats(conn);
+			//System.out.println("Adding Result for " + username);
 			
 			return true;
 		}
@@ -82,8 +82,6 @@ public class AddResult extends DatabaseCommand {
 		try {
 			if (isMafia) {
 				if (wonGame) {
-					//Statement stmt = conn.createStatement();
-					//stmt.execute("SELECT * FROM words ORDER BY RAND() LIMIT 2;");
 					PreparedStatement pStmt = conn.prepareStatement(
 							"UPDATE user "
 							+ "SET overall_wins=overall_wins+1, "

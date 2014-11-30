@@ -16,6 +16,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
@@ -142,6 +143,8 @@ public class GameServer extends JFrame implements Runnable{
 	static BufferedReader br0;
 	volatile static boolean doctorDone = false;
 	volatile static boolean copDone = false;
+	
+	private static ReentrantLock queryLock = new ReentrantLock();
 	
 	public GameServer()
 	{
@@ -274,6 +277,12 @@ public class GameServer extends JFrame implements Runnable{
 	synchronized public static <T extends Player> void sendMessage(String line,  Vector<T> receivers)
 	{
 		// set receivers to vector of players
+		
+		//if (line.equalsIgnoreCase("~~GAME OVER~~")) {
+		//	saveResults();
+		//}
+		
+		
 			if(!initializing)
 			{
 				System.out.println("SENDPLZZZ"+line);
@@ -286,13 +295,15 @@ public class GameServer extends JFrame implements Runnable{
 						ct1.send(line);
 					}
 				}
-			else
-			{
-				for(T player : receivers)
+			
+				else
 				{
-					ServerThread ct1 = player.st;
-					ct1.send(line);
-				}}
+					for(T player : receivers)
+					{
+						ServerThread ct1 = player.st;
+						ct1.send(line);
+					}
+				}
 			}
 			if(initializing)
 			{
@@ -303,6 +314,29 @@ public class GameServer extends JFrame implements Runnable{
 
 	public static void removeThread(ServerThread ct) {
 		st.remove(ct);
+	}
+	
+	public static void saveLoseResult(Player p) {
+		DatabaseCommand command = new AddResult(queryLock, p.getName(), p.getRole(), false);
+		command.run();
+	}
+	
+	public static void saveMafiaWinResult() {
+		for (Mafia mafiaMember : mafia) {
+			DatabaseCommand command = new AddResult(queryLock, mafiaMember.getName(), mafiaMember.getRole(), true);
+			command.run();
+		}
+		for (Villager villager : villagers) {
+			DatabaseCommand command = new AddResult(queryLock, villager.getName(), villager.getRole(), false);
+			command.run();
+		}
+	}
+	
+	public static void saveVillagerWinResult() {
+		for (Villager villager : villagers) {
+			DatabaseCommand command = new AddResult(queryLock, villager.getName(), villager.getRole(), true);
+			command.run();
+		}
 	}
 
 	public static void startup()

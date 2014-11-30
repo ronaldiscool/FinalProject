@@ -19,9 +19,7 @@ public abstract class DatabaseCommand implements Runnable {
 	@Override
 	public void run() {
 		queryLock.lock();
-		System.out.print("Executing... ");
 		execute();
-		System.out.println("Done");
 		queryLock.unlock();
 	}
 	

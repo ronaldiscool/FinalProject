@@ -97,6 +97,7 @@ abstract class Player{
 					Vector<Player> killmv = new Vector<Player>();
 					killmv.add(mostVoted);
 					GameServer.sendMessage("~~DIE~~", killmv);
+					GameServer.saveLoseResult(mostVoted);
 					GameServer.players.remove(mostVoted);
 					for(Player p0 :GameServer.players)
 						System.out.println("TEST"+p0.name);
@@ -116,12 +117,14 @@ abstract class Player{
 				{
 					GameServer.sendMessage("~~GAME OVER~~", null);
 					GameServer.sendMessage("MAFIA",null);
+					GameServer.saveMafiaWinResult();
 					return;
 				}
 			if(GameServer.mafia.size()==0)
 			{
 				GameServer.sendMessage("~~GAME OVER~~", null);
 				GameServer.sendMessage("VILLAGERS",null);
+				GameServer.saveVillagerWinResult();
 				return;
 			}
 			if(null!=mostVoted)

@@ -282,7 +282,10 @@ public class GameClient extends JFrame implements Runnable{
 				this.pw = new PrintWriter(s.getOutputStream());
 				this.br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
+				System.out.println("No server was found.");
+				showErrorDialog("No server was found.\nPlease check that a server is running and the IP address is correct.");
+				System.exit(0);
 			} 
 		}
 
@@ -299,10 +302,24 @@ public class GameClient extends JFrame implements Runnable{
 			public void actionPerformed(ActionEvent ae)
 			{
 				name = nameField.getText();
-				pw.println(name);
-				pw.flush();
-				CardLayout CL1 = (CardLayout) jp.getLayout();
-				CL1.show(jp,"Wait Room");
+				boolean nameDoesNotExist = true;
+				
+				// NOTE: this does not yet check against list of names as they aren't visible yet
+				// TODO: fix this
+				for (Player p : GameServer.players) {
+					if (p.getName().equalsIgnoreCase(name)) {
+						nameDoesNotExist = false;
+					}
+				}
+				if (nameDoesNotExist) {
+					pw.println(name);
+					pw.flush();
+					CardLayout CL1 = (CardLayout) jp.getLayout();
+					CL1.show(jp,"Wait Room");
+				}
+				else {
+					// TODO display message to try a different name
+				}
 			}
 		});
 		
@@ -352,6 +369,15 @@ public class GameClient extends JFrame implements Runnable{
 				message,
 				"Warning",
 				JOptionPane.WARNING_MESSAGE
+		);
+	}
+	
+	public void showErrorDialog(String message) {
+		JOptionPane.showMessageDialog(
+				GameClient.this,
+				message,
+				"Error",
+				JOptionPane.ERROR_MESSAGE
 		);
 	}
 	
