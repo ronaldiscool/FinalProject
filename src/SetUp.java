@@ -16,6 +16,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 public class SetUp extends JPanel {
 	static final long serialVersionUID = 1;
@@ -25,6 +27,8 @@ public class SetUp extends JPanel {
 	private JComboBox<String> copBox;
 	private JLabel numLabel; // message that signals whether the options are valid
 	private JLabel messageLabel; // message that signals whether the options are valid
+	JTextField dbUsernameField;
+	JTextField dbPasswordField;	// JPasswordField can't be used, it encodes password
 	public int numPlayers;
 	public int numCop;
 	public int numVil;
@@ -84,6 +88,12 @@ public class SetUp extends JPanel {
 		mafiaBox.addItemListener(il);
 		copBox.addItemListener(il);
 
+		JLabel dbUsernameLabel = new JLabel("Database Username");
+		JLabel dbPasswordLabel = new JLabel("Database Password");
+		dbUsernameField = new JTextField(10);
+		dbUsernameField.setText("root");
+		dbPasswordField = new JTextField(10); 	// JPasswordField can't be used, it encodes password
+		//dbPasswordField.setForeground(Color.white);
 		
 		JButton okButton = new JButton("Okay"); // Confirmation button
 		okButton.addActionListener(new ActionListener() {
@@ -100,6 +110,10 @@ public class SetUp extends JPanel {
 				GameServer.allmafSem = new Semaphore(numMaf);
 				GameServer.alldocSem=new Semaphore(numDoc);
 				GameServer.allcopSem=new Semaphore(numCop);
+				
+				GameServer.setDBUsername(dbUsernameField.getText());
+				GameServer.setDBPassword(dbPasswordField.getText()); 
+				
 				if(goodNum+1 < badNum) // checks ratio NOTE: modify accordingly
 					messageLabel.setText("Error. You need to more citizens/cop/doctors.");
 				else
@@ -125,22 +139,39 @@ public class SetUp extends JPanel {
 		selectPanel.add(numLabel, gbc);
 		
 		gbc.gridx = 0;		gbc.gridy = 1;		gbc.gridwidth = 1;
-		selectPanel.add(citizenBox, gbc);
-		gbc.gridx = 1;
 		selectPanel.add(citizenLabel, gbc);
+		gbc.gridx = 1;
+		selectPanel.add(citizenBox, gbc);
+		
 		gbc.gridx = 0;		gbc.gridy = 2;
-		selectPanel.add(copBox, gbc);
-		gbc.gridx = 1;
 		selectPanel.add(copLabel, gbc);
+		gbc.gridx = 1;
+		selectPanel.add(copBox, gbc);
+		
 		gbc.gridx = 0;		gbc.gridy = 3;
-		selectPanel.add(doctorBox, gbc);
-		gbc.gridx = 1;
 		selectPanel.add(doctorLabel, gbc);
-		gbc.gridx = 0;		gbc.gridy = 4;
-		selectPanel.add(mafiaBox, gbc);
 		gbc.gridx = 1;
+		selectPanel.add(doctorBox, gbc);
+		
+		gbc.gridx = 0;		gbc.gridy = 4;
 		selectPanel.add(mafiaLabel, gbc);
+		gbc.gridx = 1;
+		selectPanel.add(mafiaBox, gbc);
+		
 		gbc.gridx = 0;		gbc.gridy = 5;
+		selectPanel.add(new JLabel(), gbc);
+		
+		gbc.gridx = 0;		gbc.gridy = 6;
+		selectPanel.add(dbUsernameLabel, gbc);
+		gbc.gridx = 1;
+		selectPanel.add(dbUsernameField, gbc);
+		
+		gbc.gridx = 0;		gbc.gridy = 7;
+		selectPanel.add(dbPasswordLabel, gbc);
+		gbc.gridx = 1;
+		selectPanel.add(dbPasswordField, gbc);
+		
+		gbc.gridx = 0;		gbc.gridy = 8;
 		gbc.gridx = 1;
 		selectPanel.add(okButton, gbc);
 		

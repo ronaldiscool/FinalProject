@@ -16,7 +16,6 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
@@ -144,6 +143,9 @@ public class GameServer extends JFrame implements Runnable{
 	volatile static boolean doctorDone = false;
 	volatile static boolean copDone = false;
 	
+	private static String dbUsername;
+	private static String dbPassword;
+	
 	private static ReentrantLock queryLock = new ReentrantLock();
 	
 	public GameServer()
@@ -172,6 +174,14 @@ public class GameServer extends JFrame implements Runnable{
 
 
 
+	}
+	
+	public static void setDBUsername(String username) {
+		dbUsername = username;
+	}
+	
+	public static void setDBPassword(String password) {
+		dbPassword = password;
 	}
 
 	static Player find_name(String s)
@@ -317,24 +327,24 @@ public class GameServer extends JFrame implements Runnable{
 	}
 	
 	public static void saveLoseResult(Player p) {
-		DatabaseCommand command = new AddResult(queryLock, p.getName(), p.getRole(), false);
+		DatabaseCommand command = new AddResult(dbUsername, dbPassword, queryLock, p.getName(), p.getRole(), false);
 		command.run();
 	}
 	
 	public static void saveMafiaWinResult() {
 		for (Mafia mafiaMember : mafia) {
-			DatabaseCommand command = new AddResult(queryLock, mafiaMember.getName(), mafiaMember.getRole(), true);
+			DatabaseCommand command = new AddResult(dbUsername, dbPassword, queryLock, mafiaMember.getName(), mafiaMember.getRole(), true);
 			command.run();
 		}
 		for (Villager villager : villagers) {
-			DatabaseCommand command = new AddResult(queryLock, villager.getName(), villager.getRole(), false);
+			DatabaseCommand command = new AddResult(dbUsername, dbPassword, queryLock, villager.getName(), villager.getRole(), false);
 			command.run();
 		}
 	}
 	
 	public static void saveVillagerWinResult() {
 		for (Villager villager : villagers) {
-			DatabaseCommand command = new AddResult(queryLock, villager.getName(), villager.getRole(), true);
+			DatabaseCommand command = new AddResult(dbUsername, dbPassword, queryLock, villager.getName(), villager.getRole(), true);
 			command.run();
 		}
 	}

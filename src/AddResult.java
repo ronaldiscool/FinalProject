@@ -13,8 +13,8 @@ public class AddResult extends DatabaseCommand {
 	boolean isVillager = false;
 	boolean wonGame = false;
 	
-	public AddResult(ReentrantLock queryLock, String username, String role, boolean wonGame) {
-		super(queryLock);
+	public AddResult(String dbUser, String dbPassword, ReentrantLock queryLock, String username, String role, boolean wonGame) {
+		super(dbUser, dbPassword, queryLock);
 		
 		this.username = username;
 
@@ -35,7 +35,7 @@ public class AddResult extends DatabaseCommand {
 		try {
 			Class.forName(DRIVER);
 			Connection conn = DriverManager.getConnection(
-				DB_ADDRESS+DB_NAME, USER, PASSWORD
+				DB_ADDRESS+DB_NAME, user, password
 			);
 			
 			/* replaced by ON DUPLICATE KEY UPDATE

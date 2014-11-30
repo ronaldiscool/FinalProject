@@ -6,14 +6,15 @@ public abstract class DatabaseCommand implements Runnable {
 	public static final String DB_ADDRESS = "jdbc:mysql://localhost/";
 	public static final String DB_NAME = "mafia";
 	public static final String DRIVER = "com.mysql.jdbc.Driver";
-	public static final String USER = "root";
-	public static final String PASSWORD = "MediaPortal";	// Please set this to your password 
-	//TODO set password via GUI
+	protected static String user ;
+	protected static String password;	// set via server setup GUI
 	
 	protected ReentrantLock queryLock;
 	
-	public DatabaseCommand(ReentrantLock queryLock) {
+	public DatabaseCommand(String username, String password, ReentrantLock queryLock) {
 		this.queryLock = queryLock;
+		DatabaseCommand.user = username;
+		DatabaseCommand.password = password;
 	}
 	
 	@Override
