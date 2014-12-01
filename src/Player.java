@@ -118,7 +118,6 @@ abstract class Player{
 					GameServer.sendMessage("~~GAME OVER~~", null);
 					GameServer.sendMessage("MAFIA",null);
 					GameServer.saveMafiaWinResult();
-					GameServer.allSaved = true;
 					return;
 				}
 			if(GameServer.mafia.size()==0)
@@ -126,7 +125,6 @@ abstract class Player{
 				GameServer.sendMessage("~~GAME OVER~~", null);
 				GameServer.sendMessage("VILLAGERS",null);
 				GameServer.saveVillagerWinResult();
-				GameServer.allSaved = true;
 				return;
 			}
 			if(null!=mostVoted)

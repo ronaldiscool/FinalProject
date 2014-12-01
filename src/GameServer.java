@@ -143,8 +143,6 @@ public class GameServer extends JFrame implements Runnable{
 	volatile static boolean doctorDone = false;
 	volatile static boolean copDone = false;
 	
-	public static boolean allSaved = false;
-	
 	private static String dbUsername;
 	private static String dbPassword;
 	

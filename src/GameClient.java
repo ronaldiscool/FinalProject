@@ -14,13 +14,17 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.Box;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 class Reader extends Thread
 {
@@ -333,6 +337,26 @@ public class GameClient extends JFrame implements Runnable{
 		
 		jp = new JPanel();
 		jp.setLayout(CL);
+		
+		// pressing Enter key while focus is in input box will submit
+		InputMap input = nameField.getInputMap();
+		KeyStroke enter = KeyStroke.getKeyStroke("ENTER");
+		input.put(enter, "text-submit");
+
+		ActionMap actions = nameField.getActionMap();
+		actions.put("text-submit", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String temp = nameField.getText();
+				if (!temp.equals("")) {
+					name = temp;
+					pw.println(name);
+					pw.flush();
+					CardLayout CL1 = (CardLayout) jp.getLayout();
+					CL1.show(jp,"Wait Room");
+				}
+			}
+		});
 
 		JButton ok = new JButton("OKAY");
 		ok.addActionListener(new ActionListener() // ok button leads to the wait room
@@ -343,7 +367,7 @@ public class GameClient extends JFrame implements Runnable{
 				boolean nameDoesNotExist = true;
 				
 				// NOTE: this does not yet check against list of names as they aren't visible yet
-				// TODO: fix this
+				// TODO: fix this, add to actions' actionPerformed when completed
 				for (Player p : GameServer.players) {
 					if (p.getName().equalsIgnoreCase(name)) {
 						nameDoesNotExist = false;
