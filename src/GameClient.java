@@ -143,12 +143,12 @@ class Reader extends Thread
 
 		}
 		
-		/*
+		
 		if (line.startsWith("~DB~")) {
-			System.out.println("now saving");
+			parseDBCommand(line);
 			return;
 		}
-		*/
+		
 	}
 	
 	public void run()
@@ -194,15 +194,16 @@ class Reader extends Thread
 
 			}
 			
-			String dbCommand = br.readLine();
-			
-			parseDBCommand(dbCommand);
+			//String dbCommand = br.readLine();
+			//parseDBCommand(dbCommand);
 			
 			String role = br.readLine();
 			
+			/*
 			while (role.startsWith("~DB~")) {
 				role = br.readLine();
 			}
+			*/
 			
 			gc.role=role;
 			gc.setTitle(gc.name+"-"+gc.role+"-DAY");
