@@ -495,7 +495,7 @@ public class GameServer extends JFrame implements Runnable{
 			pCount++;
 }
 		initializing=false;
-
+		GameServer.sendDBInfo();
 	}
 
 
