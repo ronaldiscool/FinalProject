@@ -20,6 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 class ServerRepainter extends Thread
@@ -379,6 +380,32 @@ public class GameServer extends JFrame implements Runnable{
 
 	public static void startup()
 	{
+		CheckDatabaseTableCommand command = new CheckDatabaseTableCommand(dbUsername, dbPassword, queryLock);
+		command.run();
+		if (command.isWrongCredentials()) {
+			Object [] options = {"Exit", "Dismiss"};
+			int selection = JOptionPane.showOptionDialog(
+					null,
+					"Database error: The database cannot be accessed with the username and password provided.\n"
+					+ "Please exit and make sure that the username and password are correct.\n"
+					+ "If you dismiss this message, the game results will not be saved.",
+					"Warning",
+					JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.WARNING_MESSAGE,
+					null,
+					options,
+					options[1]
+			);
+			if (selection == JOptionPane.OK_OPTION) {
+		         System.exit(0);
+			}
+		}
+		else if (command.isMissingDatabase()) {
+			System.out.println("Creating database");
+			CreateDatabaseCommand newDBCommand = new CreateDatabaseCommand(dbUsername, dbPassword, queryLock);
+			newDBCommand.run();
+		}
+		
 		show = false;
 		GameClient gc =new GameClient(true);
 		Thread gcthread = new Thread(gc);

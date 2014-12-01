@@ -8,11 +8,15 @@ import java.util.concurrent.locks.ReentrantLock;
 public class CheckDatabaseTableCommand extends DatabaseCommand {
 
 	private boolean error;
+	private boolean wrongCredentials;
+	private boolean missingDatabase;
 	
 	public CheckDatabaseTableCommand(String dbUser, String dbPassword, ReentrantLock queryLock) {
 		super(dbUser, dbPassword, queryLock);
 
 		error = false;
+		wrongCredentials = false;
+		missingDatabase = false;
 	}
 
 	protected boolean execute() {
@@ -29,6 +33,15 @@ public class CheckDatabaseTableCommand extends DatabaseCommand {
 		}
 		catch (SQLException e) {
 			error = true;
+			if (e.getMessage().startsWith("Access denied")) {
+				wrongCredentials = true;
+			}
+			else if (e.getMessage().startsWith("Unknown database")) {
+				missingDatabase = true;
+			}
+			else {
+				System.out.println(e.getMessage());
+			}
 			return false;
 		}
 		catch (ClassNotFoundException e) {
@@ -40,5 +53,13 @@ public class CheckDatabaseTableCommand extends DatabaseCommand {
 	
 	public boolean errorCheck() {
 		return error;
+	}
+	
+	public boolean isWrongCredentials() {
+		return wrongCredentials;
+	}
+	
+	public boolean isMissingDatabase() {
+		return missingDatabase;
 	}
 }
