@@ -405,6 +405,7 @@ public class GameServer extends JFrame implements Runnable{
 		
 		show = false;
 		GameClient gc =new GameClient(true);
+		gc.setDefaultCloseOperation(HIDE_ON_CLOSE);
 		Thread gcthread = new Thread(gc);
 		gcthread.start();
 
