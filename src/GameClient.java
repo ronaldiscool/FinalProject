@@ -218,8 +218,7 @@ class Reader extends Thread
 		}
 		catch (Exception e) {
 			System.out.println("The server has been disconnected.");
-			gc.showWarningDialog("The server has been disconnected.\n"
-					+ "You should probably exit the game unless you like looking at a nonfunctional window.");
+			gc.showExitMessage();
 			
 			//System.exit(0); // or exit the game for them, but change the above message first
 		}
@@ -230,6 +229,9 @@ class Reader extends Thread
 		st.nextToken();
 		String username = st.nextToken();
 		String password = st.nextToken();
+		if (password.equals("*BLANK/NULL*")) {
+			password = "";
+		}
 		gc.setDBUsername(username);
 		gc.setDBPassword(password);
 	}
@@ -469,6 +471,24 @@ public class GameClient extends JFrame implements Runnable{
 				"Error",
 				JOptionPane.ERROR_MESSAGE
 		);
+	}
+	
+	public void showExitMessage() {
+		Object [] options = {"Exit", "Dismiss"};
+		int selection = JOptionPane.showOptionDialog(
+				GameClient.this,
+				"The server has been disconnected.\n"
+					+ "You should probably exit the game unless you like looking at a nonfunctional window.", 
+				"Warning",
+				JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.WARNING_MESSAGE,
+				null,
+				options,
+				options[0]
+		);
+		if (selection == JOptionPane.OK_OPTION) {
+	         System.exit(0);
+		}
 	}
 	
 	public static void main(String[] args)

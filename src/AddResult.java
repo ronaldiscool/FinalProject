@@ -67,8 +67,10 @@ public class AddResult extends DatabaseCommand {
 			return true;
 		}
 		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("SQL error: " + e.getMessage());
+			System.out.println("Please ensure that the mafia table exists and that the database's username and password are correct.");
+			System.out.println("To create the mafia table, execute the included createDB.sql file in MySQL Workbench.");
 			return false;
 		}
 		catch (ClassNotFoundException e) {

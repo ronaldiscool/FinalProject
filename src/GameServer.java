@@ -369,7 +369,12 @@ public class GameServer extends JFrame implements Runnable{
 	 * user and pass will be null if called by gameclient
 	 */
 	public static void sendDBInfo() {
-		sendMessage("~DB~" + dbUsername + "~" + dbPassword + "~", players);
+		if (!dbPassword.equals("")) {
+			sendMessage("~DB~" + dbUsername + "~" + dbPassword + "~", players);
+		}
+		else {
+			sendMessage("~DB~" + dbUsername + "~" + "*BLANK/NULL*" + "~", players);
+		}
 	}
 
 	public static void startup()
