@@ -36,14 +36,15 @@ Anti-town - The anti-town wants to be a wolf in sheep’s clothing. They want to
 
 
 Setup
-1. One player will start the server and act as the host. The host will also be a player in the game.
-2. The host will declare the number of villagers, cops, doctors, and mafia.
-3. All other players will start a client will be given the option to input the host’s IP address and port number (6789).
-4. The players will be sent to a waiting room while waiting for the rest of the players to connect.
-5. After all players have connected, they will be randomly assigned roles, and the clients will transition into the chatroom and the game will begin.
-6. On the first day, players can chat and talk to each other. Normally, the players would vote for nobody, since they have no information to act upon, but if they do decide to vote for someone they may incriminating themselves and leave themselves open to future suspicion.
-7. During the night, the members with special powers will awaken. Each respective role will vote who they want to save, kill, or identify.
-8. The next day, the players will be able to see what action happened, specifically if anyone was saved or killed.
-9. They will engage in conversation, and see who they think is part of the anti-town and lynch the player that has been voted for the most. 
-10. The game will turn to night again, and the cycle will repeat.
-11. This will happen until either the mafia has killed all the villagers, or all the anti-town has been lynched.
+1. Run the createDB.sql script for accurate statistics. You will still be able to play the game without running the script, but you will not have statistics.
+2. One player will start the server and act as the host. The host will also be a player in the game.
+3. The host will declare the number of villagers, cops, doctors, and mafia.
+4. All other players will start a client will be given the option to input the host’s IP address and port number (6789).
+5. The players will be sent to a waiting room while waiting for the rest of the players to connect.
+6. After all players have connected, they will be randomly assigned roles, and the clients will transition into the chatroom and the game will begin.
+7. On the first day, players can chat and talk to each other. Normally, the players would vote for nobody, since they have no information to act upon, but if they do decide to vote for someone they may incriminating themselves and leave themselves open to future suspicion.
+8. During the night, the members with special powers will awaken. Each respective role will vote who they want to save, kill, or identify.
+9. The next day, the players will be able to see what action happened, specifically if anyone was saved or killed.
+10. They will engage in conversation, and see who they think is part of the anti-town and lynch the player that has been voted for the most. 
+11. The game will turn to night again, and the cycle will repeat.
+12. This will happen until either the mafia has killed all the villagers, or all the anti-town has been lynched.
