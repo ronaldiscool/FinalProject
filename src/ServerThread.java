@@ -29,6 +29,7 @@ public class ServerThread extends Thread{
 	public void run()
 	{
 		try {
+			GameServer.sendDBInfo();
 			BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			while(true)
 				{

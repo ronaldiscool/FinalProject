@@ -78,6 +78,7 @@ abstract class Player{
 				}
 				if(mostVoted!=null)
 				{
+					GameServer.saveLoseResult(mostVoted);
 					String targetrole = mostVoted.getRole();
 					switch(targetrole)
 					{
@@ -97,7 +98,6 @@ abstract class Player{
 					Vector<Player> killmv = new Vector<Player>();
 					killmv.add(mostVoted);
 					GameServer.sendMessage("~~DIE~~", killmv);
-					GameServer.saveLoseResult(mostVoted);
 					GameServer.players.remove(mostVoted);
 					for(Player p0 :GameServer.players)
 						System.out.println("TEST"+p0.name);
@@ -118,6 +118,7 @@ abstract class Player{
 					GameServer.sendMessage("~~GAME OVER~~", null);
 					GameServer.sendMessage("MAFIA",null);
 					GameServer.saveMafiaWinResult();
+					GameServer.allSaved = true;
 					return;
 				}
 			if(GameServer.mafia.size()==0)
@@ -125,6 +126,7 @@ abstract class Player{
 				GameServer.sendMessage("~~GAME OVER~~", null);
 				GameServer.sendMessage("VILLAGERS",null);
 				GameServer.saveVillagerWinResult();
+				GameServer.allSaved = true;
 				return;
 			}
 			if(null!=mostVoted)

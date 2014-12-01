@@ -39,6 +39,7 @@ class Reader extends Thread
 	private void parsecommand(String line, BufferedReader br)
 	{
 		System.out.println("LINE:"+line);
+		
 		if(line.equals("~~GAME OVER~~"))
 		{
 			um.addMessage("Game Over");
@@ -47,6 +48,7 @@ class Reader extends Thread
 			try {
 				String winner = br.readLine();
 				um.addMessage(winner+" WON");
+				gc.showUserStats();
 				return;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -83,6 +85,7 @@ class Reader extends Thread
 			um.addMessage("You died.");
 			um.sendButton.setEnabled(false);
 			um.voteButton.setEnabled(false);
+			gc.showUserStats();
 			return;
 		}
 		if(line.equals("~~KILLED~~"))
@@ -135,6 +138,13 @@ class Reader extends Thread
 			gc.getMessenger().updateVotes(name,content);
 
 		}
+		
+		/*
+		if (line.startsWith("~DB~")) {
+			System.out.println("now saving");
+			return;
+		}
+		*/
 	}
 	
 	public void run()
@@ -143,6 +153,8 @@ class Reader extends Thread
 			while(true)
 			{
 				String temp = br.readLine();
+				
+				System.out.println("TEMP: " + temp);
 
 				if(temp.equals("DONE"))
 				{
@@ -160,6 +172,11 @@ class Reader extends Thread
 					um.updateLyncher();
 					break;
 				}
+				
+				else if (temp.startsWith("~DB~")) {		// DO NOT REMOVE THIS, db info sometimes sent as TEMP
+					return;
+				}
+				
 				else
 					gc.concatNames = temp;
 
@@ -173,7 +190,16 @@ class Reader extends Thread
 
 			}
 			
+			String dbCommand = br.readLine();
+			
+			parseDBCommand(dbCommand);
+			
 			String role = br.readLine();
+			
+			while (role.startsWith("~DB~")) {
+				role = br.readLine();
+			}
+			
 			gc.role=role;
 			gc.setTitle(gc.name+"-"+gc.role+"-DAY");
 			
@@ -193,6 +219,15 @@ class Reader extends Thread
 			
 			//System.exit(0); // or exit the game for them, but change the above message first
 		}
+	}
+
+	private void parseDBCommand(String dbCommand) {
+		StringTokenizer st = new StringTokenizer(dbCommand, "~", false);
+		st.nextToken();
+		String username = st.nextToken();
+		String password = st.nextToken();
+		gc.setDBUsername(username);
+		gc.setDBPassword(password);
 	}
 }
 
@@ -217,6 +252,9 @@ public class GameClient extends JFrame implements Runnable{
 	String ip;
 	int port;
 	boolean isHost;
+	
+	private String dbUsername;
+	private String dbPassword;
 	
 	public void addName(String name) {
 		waitRoom.addName(name);
@@ -361,6 +399,34 @@ public class GameClient extends JFrame implements Runnable{
 	{
 		Reader r = new Reader(this,um);
 		r.start();
+	}
+	
+	public void setDBUsername(String username) {
+		dbUsername = username;
+	}
+	
+	public void setDBPassword(String password) {
+		dbPassword = password;
+	}
+	
+	public void showUserStats() {
+		int[] stats = GameServer.getUserStats(dbUsername, dbPassword, name);
+		JOptionPane.showMessageDialog(
+				GameClient.this,
+				"Here are your current stats:\n"
+				+ "\nTotal times played: " + stats[0] 
+				+ "\n               Total wins: " + stats[1] 
+				+ "\n           Total losses: " + stats[2] + "\n"
+				+ "\n      Times as Mafia: " + stats[3] 
+				+ "\n        Wins as Mafia: " + stats[4] 
+				+ "\n    Losses as Mafia: " + stats[5] + "\n"
+				+ "\n  Times as Villager: " + stats[6] 
+				+ "\n    Wins as Villager: " + stats[7] 
+				+ "\nLosses as Villager: " + stats[8] + "\n\n"
+				,
+				"Your Stats",
+				JOptionPane.INFORMATION_MESSAGE
+		);
 	}
 	
 	public void showWarningDialog(String message) {

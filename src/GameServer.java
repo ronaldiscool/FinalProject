@@ -143,6 +143,8 @@ public class GameServer extends JFrame implements Runnable{
 	volatile static boolean doctorDone = false;
 	volatile static boolean copDone = false;
 	
+	public static boolean allSaved = false;
+	
 	private static String dbUsername;
 	private static String dbPassword;
 	
@@ -347,6 +349,29 @@ public class GameServer extends JFrame implements Runnable{
 			DatabaseCommand command = new AddResult(dbUsername, dbPassword, queryLock, villager.getName(), villager.getRole(), true);
 			command.run();
 		}
+	}
+	
+	synchronized public static int[] getUserStats(String dbUsername, String dbPassword, String username) {
+		GetStatsCommand command = new GetStatsCommand(dbUsername, dbPassword, queryLock, username);
+		command.run();
+		return command.getResultsArray();
+	}
+	
+	/* deprecated
+	public static String getDBUsername() {
+		return dbUsername;
+	}
+	
+	public static String getDBPassword() {
+		return dbPassword;
+	}
+	*/
+	
+	/* sending db info to clients because db user and pass are static in this class, 
+	 * user and pass will be null if called by gameclient
+	 */
+	public static void sendDBInfo() {
+		sendMessage("~DB~" + dbUsername + "~" + dbPassword + "~", players);
 	}
 
 	public static void startup()

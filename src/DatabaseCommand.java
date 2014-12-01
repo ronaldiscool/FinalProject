@@ -6,7 +6,7 @@ public abstract class DatabaseCommand implements Runnable {
 	public static final String DB_ADDRESS = "jdbc:mysql://localhost/";
 	public static final String DB_NAME = "mafia";
 	public static final String DRIVER = "com.mysql.jdbc.Driver";
-	protected static String user ;
+	protected static String user;
 	protected static String password;	// set via server setup GUI
 	
 	protected ReentrantLock queryLock;
