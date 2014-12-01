@@ -192,11 +192,9 @@ public class GameServer extends JFrame implements Runnable{
 		return null;
 	}
 	public static void parseTarget(String line) {
-		System.out.println("PSSMYTEMP"+line);
 		StringTokenizer st = new StringTokenizer(line, "~", false);
 		String name = st.nextToken();
 		name=name.trim();
-		System.out.println("name: " + name);
 		
 		// read Target
 		String target = st.nextToken();
@@ -264,7 +262,7 @@ public class GameServer extends JFrame implements Runnable{
 								else if (target.equalsIgnoreCase("doctor")) {
 									sendMessage(content1,doctors);
 								}
-								else if (target.equalsIgnoreCase("cops")) {
+								else if (target.equalsIgnoreCase("cop")) {
 									sendMessage(content1,cops);
 								}
 							Player ptarget;
@@ -273,7 +271,6 @@ public class GameServer extends JFrame implements Runnable{
 								ptarget=null;
 							else
 								ptarget = find_name(content);
-							System.out.println(p.getName()+"ENTERED");
 							p.power(ptarget);
 						}
 						else {
@@ -400,8 +397,8 @@ public class GameServer extends JFrame implements Runnable{
 			e1.printStackTrace();
 		}
 
-		//gc.pw.println("HOST");
-		//gc.pw.flush();
+		gc.pw.println("HOST");
+		gc.pw.flush();
 		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 
