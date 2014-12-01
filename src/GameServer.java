@@ -400,8 +400,8 @@ public class GameServer extends JFrame implements Runnable{
 			e1.printStackTrace();
 		}
 
-		gc.pw.println("HOST");
-		gc.pw.flush();
+		//gc.pw.println("HOST");
+		//gc.pw.flush();
 		for(int i = 0; i <setup.numPlayers-1; i++)
 		{
 
@@ -502,12 +502,12 @@ public class GameServer extends JFrame implements Runnable{
 
 	public static void main(String[] args)
 	{
-		try {
+		/*try {
 			System.out.println(Inet4Address.getLocalHost().getHostAddress());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		Thread gs =new Thread(new GameServer());	
 		gs.start();
 
