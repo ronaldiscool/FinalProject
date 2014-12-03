@@ -109,6 +109,7 @@ public class GameServer extends JFrame implements Runnable{
 	public static int pCount = 0;
 	public volatile static Vector<String> names = new Vector<String>(); 
 	public static  Vector<Player> players= new Vector<Player>();
+	public static Vector<Player> origPlayers;
 	public static  Vector<ServerThread> st = new Vector<ServerThread>();
 	public static Vector<Villager> villagers= new Vector<Villager>();
 	public static Vector<Cop> cops= new Vector<Cop>();
@@ -153,7 +154,6 @@ public class GameServer extends JFrame implements Runnable{
 	{
 		super("Mafia");
 
-
 		// cardlayout for the messenger and the setup panel
 		serverPanel.setLayout(c1);
 		serverPanel.add(setup, "setup");
@@ -193,6 +193,9 @@ public class GameServer extends JFrame implements Runnable{
 		return null;
 	}
 	public static void parseTarget(String line) {
+		
+		System.out.println("parsing for target: " + line); //testing
+		
 		StringTokenizer st = new StringTokenizer(line, "~", false);
 		String name = st.nextToken();
 		name=name.trim();
@@ -214,69 +217,72 @@ public class GameServer extends JFrame implements Runnable{
 		
 			String content1 = name + "~" +command+"~"+ content;
 			if (command.equalsIgnoreCase("vote")) {
-							if (target.equalsIgnoreCase("all")) {
-							sendMessage(content1,null);
-							Player ptarget;
-							Player	p = find_name(name);
-							System.out.println(name);
-							if(content.equals("NOBODY"))
-								ptarget=null;
-							else
-								ptarget = find_name(content);
-							p.vote(ptarget);
-							}
-							/*else if (target.equalsIgnoreCase("mafia")) {
-								// targetMafia = true;
-							}
-							else if (target.equalsIgnoreCase("doctor")) {
-								// targetDoctor = true;
-							}
-							else if (target.equalsIgnoreCase("cops")) {
-								// targetCops = true;
-							}
-							else {
-								System.out.println("Error: target cannot be parsed");
-							}*/
-						}
-						else if (command.equalsIgnoreCase("chat")) {
-							if (target.equalsIgnoreCase("all")) {
-								System.out.println(content1);
-								sendMessage(content1,null);
-								}
-								else if (target.equalsIgnoreCase("mafia")) {
-									sendMessage(content1,mafia);
-								}
-								else if (target.equalsIgnoreCase("doctor")) {
-									sendMessage(content1,doctors);
-								}
-								else if (target.equalsIgnoreCase("cops")) {
-									sendMessage(content1,cops);
-								}
-								else {
-									System.out.println("Error: target cannot be parsed");
-								}
-						}
-						else if (command.equalsIgnoreCase("power")) {
-							if (target.equalsIgnoreCase("mafia")) {
-									sendMessage(content1,mafia);
-								}
-								else if (target.equalsIgnoreCase("doctor")) {
-									sendMessage(content1,doctors);
-								}
-								else if (target.equalsIgnoreCase("cop")) {
-									sendMessage(content1,cops);
-								}
-							Player ptarget;
-							Player	p = find_name(name);
-							if(content.equals("NOBODY"))
-								ptarget=null;
-							else
-								ptarget = find_name(content);
-							p.power(ptarget);
-						}
-						else {
-							System.out.println("Error: command cannot be parsed");
-						}
+				if (target.equalsIgnoreCase("all")) {
+					sendMessage(content1,null);
+					Player ptarget;
+					Player	p = find_name(name);
+					System.out.println(name);
+					if(content.equals("NOBODY"))
+						ptarget=null;
+					else
+						ptarget = find_name(content);
+					p.vote(ptarget);
+				}
+				/*else if (target.equalsIgnoreCase("mafia")) {
+					// targetMafia = true;
+				}
+				else if (target.equalsIgnoreCase("doctor")) {
+					// targetDoctor = true;
+				}
+				else if (target.equalsIgnoreCase("cops")) {
+					// targetCops = true;
+				}
+				else {
+					System.out.println("Error: target cannot be parsed");
+				}*/
+			}
+			else if (command.equalsIgnoreCase("chat")) {
+				if (target.equalsIgnoreCase("all")) {
+					System.out.println(content1);
+					sendMessage(content1,null);
+				}
+				else if (target.equalsIgnoreCase("mafia")) {
+					sendMessage(content1,mafia);
+				}
+				else if (target.equalsIgnoreCase("doctor")) {
+					sendMessage(content1,doctors);
+				}
+				else if (target.equalsIgnoreCase("cops")) {
+					sendMessage(content1,cops);
+				}
+				else {
+					System.out.println("Error: target cannot be parsed");
+				}
+			}
+			else if (command.equalsIgnoreCase("power")) {
+				if (target.equalsIgnoreCase("mafia")) {
+						sendMessage(content1,mafia);
+				}
+				else if (target.equalsIgnoreCase("doctor")) {
+					sendMessage(content1,doctors);
+				}
+				else if (target.equalsIgnoreCase("cop")) {
+					sendMessage(content1,cops);
+				}
+				Player ptarget;
+				Player	p = find_name(name);
+				if(content.equals("NOBODY"))
+					ptarget=null;
+				else
+					ptarget = find_name(content);
+				p.power(ptarget);
+			}
+			else if (command.equalsIgnoreCase("getstats")) {
+				getUserStats(content);
+			}
+			else {
+				System.out.println("Error: command cannot be parsed");
+			}
 
 		
 		
@@ -324,6 +330,18 @@ public class GameServer extends JFrame implements Runnable{
 		st.remove(ct);
 	}
 	
+	
+	
+	private static Player getOrigPlayer(String username) {
+		
+		for (Player p : origPlayers) {
+			if (p.getName().equals(username)) {
+				return p;
+			}
+		}
+		return null;
+	}
+	
 	public static void saveLoseResult(Player p) {
 		DatabaseCommand command = new AddResult(dbUsername, dbPassword, queryLock, p.getName(), p.getRole(), false);
 		command.run();
@@ -347,33 +365,11 @@ public class GameServer extends JFrame implements Runnable{
 		}
 	}
 	
-	synchronized public static int[] getUserStats(String dbUsername, String dbPassword, String username) {
-		GetStatsCommand command = new GetStatsCommand(dbUsername, dbPassword, queryLock, username);
+	synchronized public static void getUserStats(String username) {
+		GetStatsCommand command = new GetStatsCommand(dbUsername, dbPassword, queryLock, username, getOrigPlayer(username));
 		command.run();
-		return command.getResultsArray();
 	}
-	
-	/* deprecated
-	public static String getDBUsername() {
-		return dbUsername;
-	}
-	
-	public static String getDBPassword() {
-		return dbPassword;
-	}
-	*/
-	
-	/* sending db info to clients because db user and pass are static in this class, 
-	 * user and pass will be null if called by gameclient
-	 */
-	public static void sendDBInfo() {
-		if (!dbPassword.equals("")) {
-			sendMessage("~DB~" + dbUsername + "~" + dbPassword + "~", players);
-		}
-		else {
-			sendMessage("~DB~" + dbUsername + "~" + "*BLANK/NULL*" + "~", players);
-		}
-	}
+
 
 	public static void startup()
 	{
@@ -520,7 +516,12 @@ public class GameServer extends JFrame implements Runnable{
 			pCount++;
 }
 		initializing=false;
-		GameServer.sendDBInfo();
+		
+		origPlayers = new Vector<Player>();
+		//create copy of all original players for later use (in retrieving stats)
+		for (Player p : players) {
+			origPlayers.add(p);
+		}
 	}
 
 

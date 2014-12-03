@@ -3,20 +3,23 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 import java.util.concurrent.locks.ReentrantLock;
 
 
 public class GetStatsCommand extends DatabaseCommand {
 	
 	String username;
+	Player player;
 	
 	private int[] resultsArray;
 	
-	public GetStatsCommand(String dbUser, String dbPassword, ReentrantLock queryLock, String username) {
+	public GetStatsCommand(String dbUser, String dbPassword, ReentrantLock queryLock, String username, Player player) {
 		super(dbUser, dbPassword, queryLock);
 		
 		this.username = username;
-		resultsArray = new int[9];
+		this.player = player;
+		//resultsArray = new int[9];
 	}
 
 	protected boolean execute() {
@@ -36,7 +39,7 @@ public class GetStatsCommand extends DatabaseCommand {
 			
 			ResultSet rSet = pStmt.getResultSet();
 			
-			
+			/*
 			if (rSet.next()) {
 				resultsArray[0] = rSet.getInt("times_played");
 				resultsArray[1] = rSet.getInt("overall_wins");
@@ -48,6 +51,32 @@ public class GetStatsCommand extends DatabaseCommand {
 				resultsArray[7] = rSet.getInt("wins_as_villager");
 				resultsArray[8] = rSet.getInt("losses_as_villager");
 			}
+			*/
+			
+			String line = "0";
+			
+			if (rSet.next()) {
+				line = 
+						"~STATS~"
+						+ rSet.getInt("times_played") + "~"
+						+ rSet.getInt("overall_wins") + "~"
+						+ rSet.getInt("overall_losses") + "~"
+						+ rSet.getInt("times_as_mafia") + "~"
+						+ rSet.getInt("wins_as_mafia") + "~"
+						+ rSet.getInt("losses_as_mafia") + "~"
+						+ rSet.getInt("times_as_villager") + "~"
+						+ rSet.getInt("wins_as_villager") + "~"
+						+ rSet.getInt("losses_as_villager") + "~";
+			}
+			
+			if (player == null) {
+				System.out.println("NO PLAYER");
+			}
+			System.out.println("Sending stats to: " + player.getName());
+			
+			Vector<Player> playerVector = new Vector<Player>();
+			playerVector.add(player);
+			GameServer.sendMessage(line, playerVector);
 			
 			return true;
 		}
@@ -65,7 +94,9 @@ public class GetStatsCommand extends DatabaseCommand {
 		}
 	}
 	
+	/*
 	public int[] getResultsArray() {
 		return resultsArray;
 	}
+	*/
 }

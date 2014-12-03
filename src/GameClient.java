@@ -44,6 +44,12 @@ class Reader extends Thread
 	{
 		System.out.println("LINE:"+line);
 		
+		if (line.startsWith("~STATS~")) {
+			System.out.println("printing stats");
+			gc.convertToStatsArray(line);
+			return;
+		}
+		
 		if(line.equals("~~GAME OVER~~"))
 		{
 			um.addMessage("Game Over");
@@ -52,7 +58,7 @@ class Reader extends Thread
 			try {
 				String winner = br.readLine();
 				um.addMessage(winner+" WON");
-				gc.showUserStats();
+				gc.getUserStats();
 				return;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -89,7 +95,7 @@ class Reader extends Thread
 			um.addMessage("You died.");
 			um.sendButton.setEnabled(false);
 			um.voteButton.setEnabled(false);
-			gc.showUserStats();
+			gc.getUserStats();
 			return;
 		}
 		if(line.equals("~~KILLED~~"))
@@ -144,11 +150,6 @@ class Reader extends Thread
 		}
 		
 		
-		if (line.startsWith("~DB~")) {
-			parseDBCommand(line);
-			return;
-		}
-		
 	}
 	
 	public void run()
@@ -175,12 +176,7 @@ class Reader extends Thread
 					//gc.names0.add("HOST");
 					um.updateLyncher();
 					break;
-				}
-				
-				else if (temp.startsWith("~DB~")) {		// DO NOT REMOVE THIS, db info sometimes sent as TEMP
-					return;
-				}
-				
+				}	
 				else
 					gc.concatNames = temp;
 
@@ -218,23 +214,17 @@ class Reader extends Thread
 			
 		}
 		catch (Exception e) {
+			e.printStackTrace();	//testing
 			System.out.println("The server has been disconnected.");
 			gc.showExitMessage();
 			
+			
+				
+			
+			
+			
 			//System.exit(0); // or exit the game for them, but change the above message first
 		}
-	}
-
-	private void parseDBCommand(String dbCommand) {
-		StringTokenizer st = new StringTokenizer(dbCommand, "~", false);
-		st.nextToken();
-		String username = st.nextToken();
-		String password = st.nextToken();
-		if (password.equals("*BLANK/NULL*")) {
-			password = "";
-		}
-		gc.setDBUsername(username);
-		gc.setDBPassword(password);
 	}
 }
 
@@ -259,9 +249,6 @@ public class GameClient extends JFrame implements Runnable{
 	String ip;
 	int port;
 	boolean isHost;
-	
-	private String dbUsername;
-	private String dbPassword;
 	
 	public void addName(String name) {
 		waitRoom.addName(name);
@@ -428,16 +415,24 @@ public class GameClient extends JFrame implements Runnable{
 		r.start();
 	}
 	
-	public void setDBUsername(String username) {
-		dbUsername = username;
+	// sends command to server to get player stats
+	public void getUserStats() {
+		pw.println("~" + name + "~NULL~GETSTATS~" + name + "~");
+		pw.flush();
 	}
 	
-	public void setDBPassword(String password) {
-		dbPassword = password;
+	// this converts a stats message line to an array to be used to display user stats
+	public void convertToStatsArray(String statsLine) {
+		StringTokenizer st = new StringTokenizer(statsLine, "~", false);
+		String[] stats = new String[9];
+		st.nextToken();	//skip STATS token
+		for (int i = 0; i < 9; i++) {
+			stats[i] = st.nextToken();
+		}
+		showUserStats(stats);
 	}
 	
-	public void showUserStats() {
-		int[] stats = GameServer.getUserStats(dbUsername, dbPassword, name);
+	public void showUserStats(String[] stats) {
 		JOptionPane.showMessageDialog(
 				GameClient.this,
 				"Here are your current stats:\n"
