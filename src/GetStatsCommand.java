@@ -12,8 +12,6 @@ public class GetStatsCommand extends DatabaseCommand {
 	String username;
 	Player player;
 	
-	private int[] resultsArray;
-	
 	public GetStatsCommand(String dbUser, String dbPassword, ReentrantLock queryLock, String username, Player player) {
 		super(dbUser, dbPassword, queryLock);
 		
@@ -39,20 +37,6 @@ public class GetStatsCommand extends DatabaseCommand {
 			
 			ResultSet rSet = pStmt.getResultSet();
 			
-			/*
-			if (rSet.next()) {
-				resultsArray[0] = rSet.getInt("times_played");
-				resultsArray[1] = rSet.getInt("overall_wins");
-				resultsArray[2] = rSet.getInt("overall_losses");
-				resultsArray[3] = rSet.getInt("times_as_mafia");
-				resultsArray[4] = rSet.getInt("wins_as_mafia");
-				resultsArray[5] = rSet.getInt("losses_as_mafia");
-				resultsArray[6] = rSet.getInt("times_as_villager");
-				resultsArray[7] = rSet.getInt("wins_as_villager");
-				resultsArray[8] = rSet.getInt("losses_as_villager");
-			}
-			*/
-			
 			String line = "0";
 			
 			if (rSet.next()) {
@@ -67,10 +51,6 @@ public class GetStatsCommand extends DatabaseCommand {
 						+ rSet.getInt("times_as_villager") + "~"
 						+ rSet.getInt("wins_as_villager") + "~"
 						+ rSet.getInt("losses_as_villager") + "~";
-			}
-			
-			if (player == null) {
-				System.out.println("NO PLAYER");
 			}
 			System.out.println("Sending stats to: " + player.getName());
 			
@@ -93,10 +73,4 @@ public class GetStatsCommand extends DatabaseCommand {
 			return false;
 		}
 	}
-	
-	/*
-	public int[] getResultsArray() {
-		return resultsArray;
-	}
-	*/
 }

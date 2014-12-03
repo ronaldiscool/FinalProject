@@ -75,7 +75,7 @@ class ServerReader extends Thread
 			}
 			GameServer.sendMessage(GameServer.concatNames, null);
 			++GameServer.numReg;
-			System.out.println("RERGISTERED:"+GameServer.numReg+"  "+GameServer.setup.numPlayers);
+			System.out.println("REREGISTERED:"+GameServer.numReg+"  "+GameServer.setup.numPlayers);
 			if(GameServer.numReg==GameServer.setup.numPlayers)
 			{GameServer.lock.lock();
 			GameServer.read.signalAll();
@@ -193,8 +193,6 @@ public class GameServer extends JFrame implements Runnable{
 		return null;
 	}
 	public static void parseTarget(String line) {
-		
-		System.out.println("parsing for target: " + line); //testing
 		
 		StringTokenizer st = new StringTokenizer(line, "~", false);
 		String name = st.nextToken();

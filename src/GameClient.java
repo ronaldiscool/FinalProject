@@ -45,7 +45,6 @@ class Reader extends Thread
 		System.out.println("LINE:"+line);
 		
 		if (line.startsWith("~STATS~")) {
-			System.out.println("printing stats");
 			gc.convertToStatsArray(line);
 			return;
 		}
@@ -214,16 +213,8 @@ class Reader extends Thread
 			
 		}
 		catch (Exception e) {
-			e.printStackTrace();	//testing
 			System.out.println("The server has been disconnected.");
 			gc.showExitMessage();
-			
-			
-				
-			
-			
-			
-			//System.exit(0); // or exit the game for them, but change the above message first
 		}
 	}
 }
